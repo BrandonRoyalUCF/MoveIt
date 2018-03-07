@@ -13,4 +13,13 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <!-- Login Home Screen Values -->
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="user_customer">Customer</string>
+    <string name="user_driver">Driver</string>
+
 </resources>
