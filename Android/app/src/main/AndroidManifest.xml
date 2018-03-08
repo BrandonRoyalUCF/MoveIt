@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ClientSettings" />
-        <activity android:name=".DriverSettings"></activity>
+        <activity android:name=".DriverSettings" />
+        <activity android:name=".client_main_screen"></activity>
     </application>
 
 </manifest>
