@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mdo3.overhaul.DriverSettings">
+
+    <TextView
+        android:id="@+id/RangeText"
+        android:layout_width="108dp"
+        android:layout_height="57dp"
+        android:text="Range"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="33dp" />
+
+    <Spinner
+        android:id="@+id/RangeDropDown"
+        android:layout_width="124dp"
+        android:layout_height="59dp"
+        tools:layout_editor_absoluteX="244dp"
+        tools:layout_editor_absoluteY="33dp" />
+</android.support.constraint.ConstraintLayout>
