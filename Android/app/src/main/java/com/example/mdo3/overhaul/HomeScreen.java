@@ -50,7 +50,7 @@ public class HomeScreen extends AppCompatActivity
         setContentView(R.layout.activity_home_screen);
         mEmailView = (EditText) findViewById(R.id.login_email);
         mPasswordView = (EditText) findViewById(R.id.login_password);
-        loginSwitch = findViewById(R.id.login_switch);
+        loginSwitch = (Switch) findViewById(R.id.login_switch);
 
         mLoginFormView = findViewById(R.id.login_main_layout);
         mProgressView = findViewById(R.id.login_progress);
