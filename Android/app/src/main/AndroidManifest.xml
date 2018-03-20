@@ -23,14 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ClientSettings" />
-<<<<<<< HEAD
+
         <activity android:name=".DriverSettings"></activity>
-=======
-        <activity android:name=".DriverSettings" />
         <activity android:name=".client_main_screen"></activity>
-    </application>
->>>>>>> myersWilliam
 
     </application>
 </manifest>
