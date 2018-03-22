@@ -25,8 +25,14 @@
         <activity android:name=".DriverSettings" />
         <activity android:name=".client_main_screen" />
         <activity android:name=".ClientSettings" />
-        <activity android:name=".DriverSettings" />
-        <activity android:name=".client_main_screen" />
+        <activity
+            android:name=".WaitScreen"
+            android:label="@string/title_activity_wait_screen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".RateScreen"
+            android:label="@string/title_activity_rate_screen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
