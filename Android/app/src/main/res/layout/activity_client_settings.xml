@@ -6,22 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.example.mdo3.overhaul.ClientSettings">
 
-    <TextView
-        android:id="@+id/LoadAssistText"
-        android:layout_width="136dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="32dp"
-        android:text="Need Load Assist"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="56dp" />
-
-    <Switch
-        android:id="@+id/loadSwitch"
+    <Button
+        android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="On"
-        tools:layout_editor_absoluteX="280dp"
-        tools:layout_editor_absoluteY="56dp" />
+        android:text="Add Credit Card"
+        tools:layout_editor_absoluteX="121dp"
+        tools:layout_editor_absoluteY="63dp" />
 
 </android.support.constraint.ConstraintLayout>
