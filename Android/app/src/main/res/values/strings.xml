@@ -21,5 +21,8 @@
     <string name="user_password">Password</string>
     <string name="user_customer">Customer</string>
     <string name="user_driver">Driver</string>
+    <string name="title_activity_job_request">JobRequest</string>
+    <string name="title_activity_wait_screen">WaitScreen</string>
+    <string name="title_activity_rate_screen">RateScreen</string>
 
 </resources>

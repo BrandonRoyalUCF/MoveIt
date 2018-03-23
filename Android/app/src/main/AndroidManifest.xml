@@ -10,11 +10,10 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
         <activity
             android:name=".HomeScreen"
             android:label="@string/app_name">
@@ -24,12 +23,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-      
-        <activity android:name=".DriverSettings"></activity>
-        <activity android:name=".client_main_screen"></activity>
-        <activity android:name=".ClientSettings" />
         <activity android:name=".DriverSettings" />
-        <activity android:name=".client_main_screen"></activity>
-      
+        <activity android:name=".client_main_screen" />
+        <activity android:name=".ClientSettings" />
+        <activity
+            android:name=".WaitScreen"
+            android:label="@string/title_activity_wait_screen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".RateScreen"
+            android:label="@string/title_activity_rate_screen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
+
 </manifest>
