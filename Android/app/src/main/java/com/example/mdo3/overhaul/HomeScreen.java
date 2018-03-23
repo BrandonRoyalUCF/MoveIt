@@ -65,6 +65,14 @@ public class HomeScreen extends AppCompatActivity
                     loginSwitch.setText(R.string.user_customer);
             }
         });
+
+        System.out.println(testDB() + " TEST FINDME HERE");
+    }
+
+    public boolean testDB()
+    {
+        DataAcess da = new DataAcess();
+        return da.checkUserLogin("Test@test.com", "test");
     }
 
 
