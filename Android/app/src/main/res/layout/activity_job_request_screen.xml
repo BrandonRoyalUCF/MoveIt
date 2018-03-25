@@ -5,138 +5,141 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="134dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="11dp"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@android:color/transparent"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Request a Job"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/editText3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginStart="5dp"
-        android:backgroundTint="@android:color/transparent"
-        android:ems="10"
-        android:gravity="top"
-        android:inputType="textMultiLine"
-        android:singleLine="false"
-        android:text="Description:"
-        app:layout_constraintBottom_toTopOf="@+id/editText4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="362dp"
+            android:layout_height="106dp"
+            android:layout_alignEnd="@+id/editTextWeight"
+            android:layout_below="@+id/editText"
+            android:layout_marginTop="11dp"
+            android:backgroundTint="@android:color/transparent"
+            android:ems="10"
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:singleLine="false"
+            android:text="Description:"
+            tools:layout_editor_absoluteX="5dp"
+            tools:layout_editor_absoluteY="75dp" />
 
-    <EditText
-        android:id="@+id/editText4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginStart="6dp"
-        android:ems="10"
-        android:inputType="number"
-        android:text="Weight Estimate:"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="134dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:backgroundTint="@android:color/transparent"
+            android:ems="10"
+            android:inputType="none"
+            android:text="Request a Job"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="130dp"
+            tools:layout_editor_absoluteY="16dp" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="9dp"
-        android:text="Load Help Required"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox2"
-        app:layout_constraintEnd_toEndOf="@+id/checkBox2"
-        app:layout_constraintStart_toStartOf="@+id/checkBox2"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        <EditText
+            android:id="@+id/editTextWeight"
+            android:layout_width="362dp"
+            android:layout_height="46dp"
+            android:layout_below="@+id/editTextDescription"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="13dp"
+            android:ems="10"
+            android:inputType="number"
+            android:text="Weight Estimate:"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="189dp" />
 
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="192dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="5dp"
-        android:text="Unload Help Required"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        <EditText
+            android:id="@+id/editTextPickup"
+            android:layout_width="362dp"
+            android:layout_height="50dp"
+            android:layout_alignStart="@+id/editTextWeight"
+            android:layout_below="@+id/editTextWeight"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:text="Pickup:"
+            tools:layout_editor_absoluteX="9dp"
+            tools:layout_editor_absoluteY="243dp" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
-        android:text="Upload Image"
-        app:layout_constraintBottom_toTopOf="@+id/editText6"
-        app:layout_constraintStart_toStartOf="@+id/button2"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+        <EditText
+            android:id="@+id/editTextDestination"
+            android:layout_width="362dp"
+            android:layout_height="45dp"
+            android:layout_alignStart="@+id/editTextPickup"
+            android:layout_below="@+id/editTextPickup"
+            android:ems="10"
+            android:inputType="textPostalAddress"
+            android:text="Destination:"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="304dp" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="7dp"
-        android:text="Send Request"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText6" />
+        <CheckBox
+            android:id="@+id/checkBoxLoad"
+            android:layout_width="192dp"
+            android:layout_height="31dp"
+            android:layout_alignStart="@+id/editTextDestination"
+            android:layout_below="@+id/editTextDestination"
+            android:layout_marginTop="11dp"
+            android:text="Load Help Required"
+            tools:layout_editor_absoluteX="5dp"
+            tools:layout_editor_absoluteY="349dp" />
 
-    <EditText
-        android:id="@+id/editText5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:ems="10"
-        android:inputType="textPostalAddress"
-        android:text="Destination:"
-        app:layout_constraintBottom_toTopOf="@+id/checkBox"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        <CheckBox
+            android:id="@+id/checkBoxUnload"
+            android:layout_width="192dp"
+            android:layout_height="32dp"
+            android:layout_alignStart="@+id/checkBoxLoad"
+            android:layout_below="@+id/checkBoxLoad"
+            android:text="Unload Help Required"
+            tools:layout_editor_absoluteX="5dp"
+            tools:layout_editor_absoluteY="389dp" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="11dp"
-        android:layout_marginEnd="9dp"
-        android:layout_marginStart="9dp"
-        android:ems="10"
-        android:inputType="textPostalAddress"
-        android:text="Pickup:"
-        app:layout_constraintBottom_toTopOf="@+id/editText5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        <Button
+            android:id="@+id/button_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/editText"
+            android:layout_below="@+id/checkBoxUnload"
+            android:layout_marginTop="11dp"
+            android:text="Upload Image"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="423dp" />
 
-    <EditText
-        android:id="@+id/editText6"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginStart="6dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:text="Total Price:"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        <EditText
+            android:id="@+id/editTextPrice"
+            android:layout_width="362dp"
+            android:layout_height="40dp"
+            android:layout_alignStart="@+id/checkBoxUnload"
+            android:layout_below="@+id/button_upload"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:text="Total Price:"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="472dp" />
+
+        <Button
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/checkBoxUnload"
+            android:layout_marginStart="33dp"
+            android:text="Send Request"
+            tools:layout_editor_absoluteX="130dp"
+            tools:layout_editor_absoluteY="512dp" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/editTextPrice"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="34dp"
+            android:text="Cancel" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
