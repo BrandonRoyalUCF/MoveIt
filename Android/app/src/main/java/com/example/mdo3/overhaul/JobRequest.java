@@ -42,7 +42,7 @@ public class JobRequest extends AppCompatActivity {
             // Need to eventually have it actually save data to the database
             public void onClick(View v) {
                 finish();
-                Intent myIntent = new Intent(JobRequest.this, client_main_screen.class);
+                Intent myIntent = new Intent(JobRequest.this, ClientMainScreen.class);
                 JobRequest.this.startActivity(myIntent);
             }
         };

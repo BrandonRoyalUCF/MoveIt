@@ -31,7 +31,7 @@ public class ClientSettings extends AppCompatActivity {
             // Need to eventually have it actually save data to the database
             public void onClick(View v) {
                 finish();
-                Intent myIntent = new Intent(ClientSettings.this, client_main_screen.class);
+                Intent myIntent = new Intent(ClientSettings.this, ClientMainScreen.class);
                 ClientSettings.this.startActivity(myIntent);
             }
         };

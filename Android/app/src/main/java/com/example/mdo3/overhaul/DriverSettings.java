@@ -19,7 +19,7 @@ public class DriverSettings extends AppCompatActivity {
             // Need to eventually have it actually save data to the database
             public void onClick(View v) {
                 finish();
-                Intent myIntent = new Intent(DriverSettings.this, client_main_screen.class);
+                Intent myIntent = new Intent(DriverSettings.this, DriverMainScreen.class);
                 DriverSettings.this.startActivity(myIntent);
             }
         };

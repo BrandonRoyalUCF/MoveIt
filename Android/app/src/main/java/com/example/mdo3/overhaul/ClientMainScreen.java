@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.content.Intent;
 
-public class client_main_screen extends Activity {
+public class ClientMainScreen extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +19,8 @@ public class client_main_screen extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                Intent myIntent = new Intent(client_main_screen.this, JobRequest.class);
-                client_main_screen.this.startActivity(myIntent);
+                Intent myIntent = new Intent(ClientMainScreen.this, JobRequest.class);
+                ClientMainScreen.this.startActivity(myIntent);
             }
         };
         Button requestBtn = (Button) findViewById(R.id.button_request_driver);
@@ -31,20 +31,20 @@ public class client_main_screen extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                Intent myIntent = new Intent(client_main_screen.this, ClientSettings.class);
-                client_main_screen.this.startActivity(myIntent);
+                Intent myIntent = new Intent(ClientMainScreen.this, ClientSettings.class);
+                ClientMainScreen.this.startActivity(myIntent);
             }
         };
-        Button settingstBtn = (Button) findViewById(R.id.button_settings);
-        settingstBtn.setOnClickListener(settingsListen);
+        Button settingsBtn = (Button) findViewById(R.id.button_settings);
+        settingsBtn.setOnClickListener(settingsListen);
 
         //Logout Button
         OnClickListener logoutListen = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-                Intent myIntent = new Intent(client_main_screen.this, HomeScreen.class);
-                client_main_screen.this.startActivity(myIntent);
+                Intent myIntent = new Intent(ClientMainScreen.this, HomeScreen.class);
+                ClientMainScreen.this.startActivity(myIntent);
             }
         };
         Button logoutBtn = (Button) findViewById(R.id.button_logout);

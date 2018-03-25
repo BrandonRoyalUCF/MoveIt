@@ -10,19 +10,13 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -89,9 +83,19 @@ public class HomeScreen extends AppCompatActivity
                 // Currently the credentials are based off of one of the dummy credentials listed with the other main variables.
                 if (mEmailView.getText().toString().equals("foo@example.com") ) {
                     if (mPasswordView.getText().toString().equals("hello") ) {
-                        finish();
-                        Intent myIntent = new Intent(HomeScreen.this, client_main_screen.class);
-                        HomeScreen.this.startActivity(myIntent);
+
+                        if (loginSwitch.isChecked()){
+                            // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
+                            finish();
+                            Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
+                            HomeScreen.this.startActivity(myIntent);
+                        }
+                        else {
+                            // Otherwise, that means the switch is still showing Customer, so go to the CUstomer main screen.
+                            finish();
+                            Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
+                            HomeScreen.this.startActivity(myIntent);
+                        }
                     }
                     else {
                         // Just a placeholder for now

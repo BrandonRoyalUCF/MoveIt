@@ -24,8 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".DriverSettings" />
-        <activity android:name=".client_main_screen" />
+        <activity android:name=".ClientMainScreen" />
         <activity android:name=".ClientSettings" />
+        <activity android:name=".JobRequest" />
         <activity
             android:name=".WaitScreen"
             android:label="@string/title_activity_wait_screen"
@@ -33,7 +34,8 @@
         <activity
             android:name=".RateScreen"
             android:label="@string/title_activity_rate_screen"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".DriverMainScreen" />
     </application>
 
 </manifest>
