@@ -34,6 +34,10 @@
             android:name=".RateScreen"
             android:label="@string/title_activity_rate_screen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
-    </application>
+        <activity
+            android:name=".JobRequest"
+            android:label="JobRequest">
+        </activity>
 
+    </application>
 </manifest>
