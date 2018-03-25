@@ -6,19 +6,46 @@
     android:layout_height="match_parent"
     tools:context="com.example.mdo3.overhaul.client_main_screen">
 
-    <Button
-        android:id="@+id/button_request_driver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Request Driver"
-        tools:layout_editor_absoluteX="124dp"
-        tools:layout_editor_absoluteY="39dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/button_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="settings"
-        tools:layout_editor_absoluteX="280dp"
-        tools:layout_editor_absoluteY="447dp" />
+        <Button
+            android:id="@+id/button_logout"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="56dp"
+            android:layout_marginEnd="21dp"
+            android:text="Logout"
+            tools:layout_editor_absoluteX="82dp"
+            tools:layout_editor_absoluteY="320dp" />
+
+        <Button
+            android:id="@+id/button_settings"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/button_logout"
+            android:layout_alignBottom="@+id/button_logout"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="18dp"
+            android:text="settings"
+            tools:layout_editor_absoluteX="500dp"
+            tools:layout_editor_absoluteY="256dp" />
+
+        <Button
+            android:id="@+id/button_request_driver"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="29dp"
+            android:text="Request Driver"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="39dp" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

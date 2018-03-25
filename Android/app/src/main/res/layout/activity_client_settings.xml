@@ -6,12 +6,29 @@
     android:layout_height="match_parent"
     tools:context="com.example.mdo3.overhaul.ClientSettings">
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Credit Card"
-        tools:layout_editor_absoluteX="121dp"
-        tools:layout_editor_absoluteY="63dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/button_credit_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="63dp"
+            android:text="Add Credit Card"
+            tools:layout_editor_absoluteX="121dp"
+            tools:layout_editor_absoluteY="63dp" />
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="77dp"
+            android:text="Save Settings" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

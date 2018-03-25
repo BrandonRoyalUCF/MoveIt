@@ -23,6 +23,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -65,6 +66,48 @@ public class HomeScreen extends AppCompatActivity
                     loginSwitch.setText(R.string.user_customer);
             }
         });
+
+        //Sign Up Button
+        OnClickListener signUpListen = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Just a placeholder so I can test that clicking on this button actually works.
+                Toast.makeText(HomeScreen.this, "Not ready for sign up yet!", Toast.LENGTH_SHORT).show();
+            }
+        };
+        Button signUpBtn = (Button) findViewById(R.id.button_sign_up);
+        signUpBtn.setOnClickListener(signUpListen);
+
+        //Login Button
+        OnClickListener loginListen = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Currently hardcoded login process. Once we get the process of confirming accounts via the database
+                // set up, we would replace this whole if-block with a call to the function that actually handles the
+                // login processing (or whatever else may be required). Setting the Intent may still be required.
+
+                // Currently the credentials are based off of one of the dummy credentials listed with the other main variables.
+                if (mEmailView.getText().toString().equals("foo@example.com") ) {
+                    if (mPasswordView.getText().toString().equals("hello") ) {
+                        finish();
+                        Intent myIntent = new Intent(HomeScreen.this, client_main_screen.class);
+                        HomeScreen.this.startActivity(myIntent);
+                    }
+                    else {
+                        // Just a placeholder for now
+                        Toast.makeText(HomeScreen.this, "Please input correct credentials! hello", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    // Just a placeholder for now
+                    Toast.makeText(HomeScreen.this, "Please input correct credentials! foo@example.com and hello", Toast.LENGTH_SHORT).show();
+                }
+
+                // TODO: Modify this function to determine whether to go to the Client or Driver main screen!!
+            }
+        };
+        Button loginBtn = (Button) findViewById(R.id.button_log_in);
+        loginBtn.setOnClickListener(loginListen);
     }
 
 
