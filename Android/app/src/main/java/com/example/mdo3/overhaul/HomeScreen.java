@@ -245,24 +245,18 @@ public class HomeScreen extends AppCompatActivity
         protected Boolean doInBackground(Void... params)
         {
             // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
+            boolean result = false;
+            try
+            {
+               DataAcess DA = new DataAcess();
+               result = DA.checkUserLogin(mEmail,mPassword);
                 Thread.sleep(2000);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException e)
+            {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            return result;
         }
 
         @Override
@@ -296,8 +290,8 @@ public class HomeScreen extends AppCompatActivity
     {
         //TODO: Add intent
         if(DEBUG){System.out.println("DEBUG: Login Button Button Pressed");}
-        //Intent intent = new Intent();
-       // startActivity(intent);
+        Intent intent = new Intent(this, JobRequest.class);
+       startActivity(intent);
 
 
     }
