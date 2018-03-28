@@ -8,6 +8,7 @@ import android.media.Image;
 
 public class Item {
 
+    private int id;
     private int transactionId;
     private String name;
     private String description;
@@ -17,9 +18,10 @@ public class Item {
     private float width;
     private byte[] picture;
 
-    public Item(int IdTransaction, String Name, String Description,
+    public Item(int IdItem, int IdTransaction, String Name, String Description,
                 float Weight, float Height, float Length, float Width, byte[] Picture)
     {
+        this.id = IdItem;
         this.transactionId = IdTransaction;
         this.name = Name;
         this.description = Description;
@@ -29,4 +31,14 @@ public class Item {
         this.width = Width;
         this.picture = Picture;
     }
+
+    public int getId() { return this.id; }
+    public int getTransactionId() { return this.transactionId; }
+    public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
+    public float getWeight() { return this.weight; }
+    public float getHeight() { return this.height; }
+    public float getLength() { return this.length; }
+    public float getWidth() { return this.width; }
+    public byte[] getPicture() { return this.picture; }
 }

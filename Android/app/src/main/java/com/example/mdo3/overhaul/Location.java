@@ -6,21 +6,25 @@ package com.example.mdo3.overhaul;
 
 public class Location {
 
+    private int id;
     private int transactionId;
     private String startAddress;
     private String endAddress;
     private boolean isCompleted;
 
-    public Location(int IdTransaction, String StartAddress, String EndAddress, boolean IsCompleted)
+    public Location(int IdLocation, int IdTransaction, String StartAddress, String EndAddress, boolean IsCompleted)
     {
+        this.id = IdLocation;
         this.transactionId = IdTransaction;
         this.startAddress = StartAddress;
         this.endAddress = EndAddress;
         this.isCompleted = IsCompleted;
     }
 
+    public int getId() { return this.id; }
+    public int getTransactionId() { return this.transactionId; }
     public String getStartAddress() { return this.startAddress; }
     public String getEndAddress() { return this.endAddress; }
-    public boolean getIsCompleted(){ return this.isCompleted; }
+    public boolean isCompleted(){ return this.isCompleted; }
 
 }

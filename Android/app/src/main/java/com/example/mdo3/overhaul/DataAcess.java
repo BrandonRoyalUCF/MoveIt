@@ -18,9 +18,10 @@ public class DataAcess {
 
     public DataAcess()
     {
-
+        //No params needed currently
     }
 
+    //General connect to database method to be used in all data calls
     private Connection ConnectToDB()
     {
         Connection connection = null;
@@ -41,6 +42,7 @@ public class DataAcess {
 
         return connection;
     }
+
 
     public UserDetails checkUserLogin(String UserName, String PassWord)
     {
@@ -163,10 +165,10 @@ public class DataAcess {
         }
     }
 
-    public Boolean insertDriverProfile()
+    public Boolean insertDriverProfile(int idUser, String driverLicenseNumber, String carMake, String carModel, String licensePlateNumber)
     {
         try{
-            insertDriverProfileAsync idp =  new insertDriverProfileAsync();
+            insertDriverProfileAsync idp =  new insertDriverProfileAsync(idUser, driverLicenseNumber, carMake, carModel, licensePlateNumber);
             return idp.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
@@ -174,15 +176,46 @@ public class DataAcess {
 
     private class insertDriverProfileAsync extends AsyncTask<Void, Void, Boolean>
     {
-        public  insertDriverProfileAsync()
-        {
 
+        private int idUser;
+        private String driverLicenseNumber;
+        private String carMake;
+        private String carModel;
+        private String licensePlateNumber;
+
+        public  insertDriverProfileAsync(int idUser, String driverLicenseNumber, String carMake, String carModel, String licensePlateNumber)
+        {
+            this.idUser = idUser;
+            this.driverLicenseNumber = driverLicenseNumber;
+            this.carMake = carMake;
+            this.carModel = carModel;
+            this.licensePlateNumber = licensePlateNumber;
         }
 
         @Override
         protected Boolean doInBackground(Void... params)
         {
+            try {
+                Connection conn = DataAcess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_InsertDriver @idUser = ?, @DriverLiscenseNumber = ?, @CarMake = ?, @CarModel = ?, @LiscensePlateNumber = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idUser);
+                pstmt.setString(2, this.driverLicenseNumber);
+                pstmt.setString(3, this.carMake);
+                pstmt.setString(4, this.carModel);
+                pstmt.setString(5, this.licensePlateNumber);
+                ResultSet rs = pstmt.executeQuery();
+
+                if(rs.next())
+                    return true;
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Adding Driver: " + e.toString());}
             return false;
         }
     }
+
+
 }
