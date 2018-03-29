@@ -8,20 +8,32 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <Button
-            android:id="@+id/button_cancel"
+            android:id="@+id/button_decline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/button_accept"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="33dp"
-            tools:text="CANCEL" />
+            android:layout_marginTop="17dp"
+            tools:text="Decline" />
+
+        <Button
+            android:id="@+id/button_accept"
+            android:layout_width="150dp"
+            android:layout_height="75dp"
+            android:layout_below="@+id/scrollView2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            tools:text="Accept" />
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="300dp"
-            android:layout_height="150dp"
+            android:layout_height="350dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="39dp">
