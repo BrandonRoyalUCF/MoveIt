@@ -142,25 +142,67 @@ public class DataAcess {
         }
     }
 
-    public Boolean insertTransactionAndItemsAsync()
+    public Boolean insertTransactionAndItems(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted, String itemName,
+                                             String itemDescription, float weight, float height, float width, float length, byte[] picture,
+                                                String startAddress, String endAddress)
     {
         try{
-            insertTransactionandItems iti =  new insertTransactionandItems();
+            insertTransactionAndItemsAsync iti =  new insertTransactionAndItemsAsync(idUser, transactionTitle, transactionDescription, datePosted,
+                                                                            itemName, itemDescription, weight, height, width, length, picture, startAddress, endAddress);
             return iti.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
     }
 
-    private class insertTransactionandItems extends AsyncTask<Void, Void, Boolean>
+    private class insertTransactionAndItemsAsync extends AsyncTask<Void, Void, Boolean>
     {
-        public insertTransactionandItems()
-        {
 
+        private int idUser; private String transactionTitle; private String transactionDescription;
+        private Timestamp datePosted; private String itemName; private String itemDescription; private float weight; private float height;
+        private float width; private float length; private byte[] picture; private String startAddress; private String endAddress;
+
+        public insertTransactionAndItemsAsync(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted,
+                                              String itemName, String itemDescription, float weight, float height, float width, float length, byte[] picture,
+                                                String startAddress, String endAddress)
+        {
+            this.idUser = idUser; this.transactionTitle = transactionTitle; this.transactionDescription = transactionDescription;
+            this.datePosted = datePosted; this.itemName = itemName; this.itemDescription = itemDescription;
+            this.weight = weight; this.height = height; this.width = width; this.length = length;
+            this.picture = picture; this.startAddress = startAddress; this.endAddress = endAddress;
         }
 
         @Override
         protected Boolean doInBackground(Void... params)
         {
+            try {
+                Connection conn = DataAcess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_InsertTransaction @iduser = ?, @transactionTitle = ?, @transactionDescription = ?, @datePosted = ?," +
+                                    " @startLocation = ?, @endLocation = ?, @itemName = ?, @itemDescription = ?, @weight = ?, @height = ?, " +
+                                    " @width = ?, @length = ?, @picture = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idUser);
+                pstmt.setString(2, this.transactionTitle);
+                pstmt.setString(3, this.transactionDescription);
+                pstmt.setTimestamp(4, this.datePosted);
+                pstmt.setString(5, this.startAddress);
+                pstmt.setString(6, this.endAddress);
+                pstmt.setString(7, this.itemName);
+                pstmt.setString(8, this.itemDescription);
+                pstmt.setFloat(9, this.weight);
+                pstmt.setFloat(10, this.height);
+                pstmt.setFloat(11, this.width);
+                pstmt.setFloat(12, this.length);
+                pstmt.setBytes(13, this.picture);
+
+                ResultSet rs = pstmt.executeQuery();
+
+                if(rs.next())
+                    return true;
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Adding Transaction: " + e.toString());}
             return false;
         }
     }
@@ -215,6 +257,55 @@ public class DataAcess {
             } catch (Exception e) {System.out.println("Error Adding Driver: " + e.toString());}
             return false;
         }
+    }
+
+    public Boolean insertDriverRating(int idDriver, int idUserWhoRated, int idTransaction, int rating)
+    {
+        try{
+            insertDriverRatingAsync idr =  new insertDriverRatingAsync(idDriver, idUserWhoRated, idTransaction, rating);
+            return idr.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class insertDriverRatingAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idDriver;
+        private int idUserWhoRated;
+        private int idTransaction;
+        private int rating;
+
+        public insertDriverRatingAsync(int idDriver, int idUserWhoRated, int idTransaction, int rating)
+        {
+            this.idDriver = idDriver;
+            this.idUserWhoRated = idUserWhoRated;
+            this.idTransaction = idTransaction;
+            this.rating = rating;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAcess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_InsertDriverRating @idDriver = ?, @idUserWhoRated = ?, @idTransaction = ?, @rating = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idDriver);
+                pstmt.setInt(2, this.idUserWhoRated);
+                pstmt.setInt(3, this.idTransaction);
+                pstmt.setInt(4, this.rating);
+                ResultSet rs = pstmt.executeQuery();
+
+                if(rs.next())
+                    return true;
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Adding Driver Rating: " + e.toString());}
+            return false;
+        }
+
     }
 
 

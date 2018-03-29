@@ -17,6 +17,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+IF EXISTS ( SELECT * 
+            FROM   sysobjects 
+            WHERE  id = object_id(N'[dbo].[usp_InsertTransaction]') 
+                   and OBJECTPROPERTY(id, N'IsProcedure') = 1 )
+BEGIN
+    DROP PROCEDURE [dbo].[usp_InsertTransaction]
+END
+
 CREATE PROCEDURE [dbo].[usp_InsertTransaction]
 	@idUser int,
 	@transactionTitle varchar(50),
@@ -24,6 +32,13 @@ CREATE PROCEDURE [dbo].[usp_InsertTransaction]
 	@datePosted datetime2(7),
 	@startLocation varchar(50),
 	@endLocation varchar(50),
+	@itemName varchar(50),
+	@itemDescription varchar (50),
+	@weight float,
+	@height float,
+	@width float,
+	@length float,
+	@picture varbinary(MAX),
 	@idTransaction int OUTPUT
 AS
 
@@ -34,6 +49,9 @@ AS
 
 	INSERT INTO [Location](id_Transaction, StartLocation, EndLocation)
 	VALUES (@idTransaction, @startLocation, @endLocation)
+
+	INSERT INTO [Item] (id_Transaction, Name, Description, Weight, Height, Length, Width, Picture)
+	VALUES (@idTransaction, @itemName, @itemDescription, @weight, @height, @width, @length, @picture)
 
 	RETURN @idTransaction
 GO

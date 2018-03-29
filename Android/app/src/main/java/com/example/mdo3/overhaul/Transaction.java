@@ -16,9 +16,11 @@ public class Transaction {
     private Timestamp datePosted;
     private Timestamp dateClosed;
     private boolean isCompleted;
+    private Item[] items;
+    private Location location;
 
     public Transaction(int Id, int UserId, String Title, String Description, Timestamp DatePosted,
-                       Timestamp DateClosed, boolean IsCompleted)
+                       Timestamp DateClosed, boolean IsCompleted, Item[] Items, Location location)
     {
         this.id = Id;
         this.userId = UserId;
@@ -27,6 +29,8 @@ public class Transaction {
         this.datePosted = DatePosted;
         this.dateClosed = DateClosed;
         this.isCompleted = IsCompleted;
+        this.items = Items;
+        this.location = location;
     }
 
     public int getId() { return this.id; }
@@ -36,5 +40,7 @@ public class Transaction {
     public Timestamp getDatePosted() { return this.datePosted; }
     public Timestamp getDateClosed() { return this.dateClosed; }
     public boolean isCompleted() { return this.isCompleted; }
+    public Item[] getItems() { return this.items; }
+    public Location getLocation() { return this.location; }
 
 }

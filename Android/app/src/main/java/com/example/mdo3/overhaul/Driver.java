@@ -5,14 +5,16 @@ package com.example.mdo3.overhaul;
  */
 
 public class Driver {
+
     private int id;
     private int idUser;
     private String driverLicenseNumber;
     private String carMake;
     private String carModel;
     private String licensePlateNumber;
+    private float rating;
 
-    public Driver(int Id, int IdUser, String DriverLicenseNumber, String CarMake, String CarModel, String LicensePlateNumber)
+    public Driver(int Id, int IdUser, String DriverLicenseNumber, String CarMake, String CarModel, String LicensePlateNumber, float Rating)
     {
         this.id = Id;
         this.idUser  = IdUser;
@@ -20,12 +22,14 @@ public class Driver {
         this.carMake = CarMake;
         this.carModel = CarModel;
         this.licensePlateNumber = LicensePlateNumber;
+        this.rating = Rating;
     }
 
-    public int getId() {return id;}
-    public int getIdUser() {return idUser;}
-    public String getDriverLicenseNumber() {return driverLicenseNumber;}
-    public String getCarMake() {return carMake;}
-    public String getCarModel() {return carModel;}
-    public String getLicensePlateNumber() {return licensePlateNumber;}
+    public int getId() {return this.id;}
+    public int getIdUser() {return this.idUser;}
+    public String getDriverLicenseNumber() {return this.driverLicenseNumber;}
+    public String getCarMake() {return this.carMake;}
+    public String getCarModel() {return this.carModel;}
+    public String getLicensePlateNumber() {return this.licensePlateNumber;}
+    public float getRating() {return this.rating;}
 }
