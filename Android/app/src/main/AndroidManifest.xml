@@ -36,6 +36,7 @@
             android:label="@string/title_activity_rate_screen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".DriverMainScreen" />
+        <activity android:name=".DriverRequestScreen"></activity>
     </application>
 
 </manifest>
