@@ -25,4 +25,22 @@
     <string name="title_activity_wait_screen">WaitScreen</string>
     <string name="title_activity_rate_screen">RateScreen</string>
 
+    <!-- activity_credit_card_info.xml -->
+    <string name="cc_title">Credit Card Information</string>
+    <string name="cc_number">Credit Card Number</string>
+    <string name="cc_types">MasterCard,Visa,Discover,American Express,</string>
+    <string name="cc_date">Ex: 01/20</string>
+    <string name="cc_scode">Security Code</string>
+    <string name="cc_cancel">Cancel</string>
+    <string name="cc_submit">Submit</string>
+
+    <!-- Driver Account Information -->
+    <string name="acc_title">Account Information</string>
+    <string name="acc_number">Account Number</string>
+    <string name="acc_number2">Retype Account Number</string>
+    <string name="acc_routing">Routing Number</string>
+    <string name="acc_bank">Bank</string>
+    <string name="acc_cancel">Cancel</string>
+    <string name="acc_submit">Submit</string>
+
 </resources>

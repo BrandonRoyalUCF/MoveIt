@@ -37,6 +37,7 @@ public class HomeScreen extends AppCompatActivity
     private View mLoginFormView;
     private Switch loginSwitch;
     private boolean DEBUG = true;
+    private UserDetails usrDets = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -244,19 +245,19 @@ public class HomeScreen extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... params)
         {
-            // TODO: attempt authentication against a network service.
-            boolean result = false;
+            usrDets = null;
             try
             {
                DataAcess DA = new DataAcess();
-               result = DA.checkUserLogin(mEmail,mPassword);
+                usrDets = DA.checkUserLogin(mEmail,mPassword);
                 Thread.sleep(2000);
+
             } catch (InterruptedException e)
             {
                 return false;
             }
 
-            return result;
+            return (usrDets != null ? true : false);
         }
 
         @Override
@@ -265,7 +266,8 @@ public class HomeScreen extends AppCompatActivity
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (success)
+            {
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

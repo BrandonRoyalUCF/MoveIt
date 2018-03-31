@@ -19,9 +19,9 @@
             android:backgroundTint="@android:color/transparent"
             android:ems="10"
             android:gravity="top"
+            android:hint="Description"
             android:inputType="textMultiLine"
             android:singleLine="false"
-            android:text="Description:"
             tools:layout_editor_absoluteX="5dp"
             tools:layout_editor_absoluteY="75dp" />
 
@@ -48,8 +48,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="13dp"
             android:ems="10"
+            android:hint="Weight Estimate:"
             android:inputType="number"
-            android:text="Weight Estimate:"
             tools:layout_editor_absoluteX="6dp"
             tools:layout_editor_absoluteY="189dp" />
 
@@ -60,8 +60,8 @@
             android:layout_alignStart="@+id/editTextWeight"
             android:layout_below="@+id/editTextWeight"
             android:ems="10"
+            android:hint="Pickup:"
             android:inputType="textPostalAddress"
-            android:text="Pickup:"
             tools:layout_editor_absoluteX="9dp"
             tools:layout_editor_absoluteY="243dp" />
 
@@ -72,8 +72,8 @@
             android:layout_alignStart="@+id/editTextPickup"
             android:layout_below="@+id/editTextPickup"
             android:ems="10"
+            android:hint="Destination:"
             android:inputType="textPostalAddress"
-            android:text="Destination:"
             tools:layout_editor_absoluteX="10dp"
             tools:layout_editor_absoluteY="304dp" />
 
@@ -116,8 +116,8 @@
             android:layout_alignStart="@+id/checkBoxUnload"
             android:layout_below="@+id/button_upload"
             android:ems="10"
+            android:hint="Total Price:"
             android:inputType="numberDecimal"
-            android:text="Total Price:"
             tools:layout_editor_absoluteX="6dp"
             tools:layout_editor_absoluteY="472dp" />
 
