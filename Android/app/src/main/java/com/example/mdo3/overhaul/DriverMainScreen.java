@@ -16,6 +16,10 @@ public class DriverMainScreen extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main_screen);
 
+        // TODO: Extra buttons for Pick-Up and Drop-Off
+        // https://developers.google.com/maps/documentation/android-api/intents
+        // https://stackoverflow.com/questions/45293200/android-studio-redirecting-to-the-phones-google-maps-app-with-a-start-and-end
+
         //Placeholder Button
         View.OnClickListener requestListen = new View.OnClickListener() {
             @Override

@@ -46,6 +46,15 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             tools:layout_editor_absoluteY="39dp" />
+
+        <fragment
+            android:id="@+id/map_View"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="300dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
