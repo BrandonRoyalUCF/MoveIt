@@ -62,7 +62,7 @@ public class DriverMainScreen extends Activity{
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
 
-        requestActive = false; // Remove later, only for debugging right now.
+        requestActive = true; // Remove later, only for debugging right now.
 
         Button pickUpBtn = (Button) findViewById(R.id.button_pickup);
         Button dropOffBtn = (Button) findViewById(R.id.button_dropoff);
