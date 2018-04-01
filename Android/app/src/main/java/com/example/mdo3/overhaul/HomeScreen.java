@@ -10,19 +10,14 @@ import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -42,6 +37,7 @@ public class HomeScreen extends AppCompatActivity
     private View mLoginFormView;
     private Switch loginSwitch;
     private boolean DEBUG = true;
+    private UserDetails usrDets = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,6 +61,58 @@ public class HomeScreen extends AppCompatActivity
                     loginSwitch.setText(R.string.user_customer);
             }
         });
+
+        //Sign Up Button
+        OnClickListener signUpListen = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Just a placeholder so I can test that clicking on this button actually works.
+                Toast.makeText(HomeScreen.this, "Not ready for sign up yet!", Toast.LENGTH_SHORT).show();
+            }
+        };
+        Button signUpBtn = (Button) findViewById(R.id.button_sign_up);
+        signUpBtn.setOnClickListener(signUpListen);
+
+        //Login Button
+        OnClickListener loginListen = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Currently hardcoded login process. Once we get the process of confirming accounts via the database
+                // set up, we would replace this whole if-block with a call to the function that actually handles the
+                // login processing (or whatever else may be required). Setting the Intent may still be required.
+
+                // Currently the credentials are based off of one of the dummy credentials listed with the other main variables.
+                if (mEmailView.getText().toString().equals("foo@example.com") ) {
+                    if (mPasswordView.getText().toString().equals("hello") ) {
+
+                        if (loginSwitch.isChecked()){
+                            // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
+                            finish();
+                            Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
+                            HomeScreen.this.startActivity(myIntent);
+                        }
+                        else {
+                            // Otherwise, that means the switch is still showing Customer, so go to the CUstomer main screen.
+                            finish();
+                            Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
+                            HomeScreen.this.startActivity(myIntent);
+                        }
+                    }
+                    else {
+                        // Just a placeholder for now
+                        Toast.makeText(HomeScreen.this, "Please input correct credentials! hello", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    // Just a placeholder for now
+                    Toast.makeText(HomeScreen.this, "Please input correct credentials! foo@example.com and hello", Toast.LENGTH_SHORT).show();
+                }
+
+                // TODO: Modify this function to determine whether to go to the Client or Driver main screen!!
+            }
+        };
+        Button loginBtn = (Button) findViewById(R.id.button_log_in);
+        loginBtn.setOnClickListener(loginListen);
     }
 
 
@@ -197,25 +245,19 @@ public class HomeScreen extends AppCompatActivity
         @Override
         protected Boolean doInBackground(Void... params)
         {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
+            usrDets = null;
+            try
+            {
+               DataAcess DA = new DataAcess();
+                usrDets = DA.checkUserLogin(mEmail,mPassword);
                 Thread.sleep(2000);
-            } catch (InterruptedException e) {
+
+            } catch (InterruptedException e)
+            {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            return (usrDets != null ? true : false);
         }
 
         @Override
@@ -224,7 +266,8 @@ public class HomeScreen extends AppCompatActivity
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (success)
+            {
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -249,8 +292,8 @@ public class HomeScreen extends AppCompatActivity
     {
         //TODO: Add intent
         if(DEBUG){System.out.println("DEBUG: Login Button Button Pressed");}
-        //Intent intent = new Intent();
-       // startActivity(intent);
+        Intent intent = new Intent(this, JobRequest.class);
+       startActivity(intent);
 
 
     }
