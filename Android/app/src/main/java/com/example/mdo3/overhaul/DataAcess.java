@@ -204,18 +204,19 @@ public class DataAcess {
             try {
                 Connection conn = DataAcess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertTransaction @iduser = ?, @transactionTitle = ?, @transactionDescription = ?, @datePosted = ?," +
-                                    " @startLocation = ?, @endLocation = ?, @weight = ?";
+                String query = "EXEC dbo.usp_InsertTransaction @iduser = ?, @Title = ?, @Description = ?, @DatePosted = ?," +
+                                    " @TotalWeight = ?, @LoadHelp = ?, @UnloadHelp = ?, @Price = ?";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idUser);
                 pstmt.setString(2, this.transactionTitle);
                 pstmt.setString(3, this.transactionDescription);
                 pstmt.setTimestamp(4, this.datePosted);
-                pstmt.setString(5, this.startAddress);
-                pstmt.setString(6, this.endAddress);
-                pstmt.setFloat(7, this.weight);
-                pstmt.setBytes(8, this.picture);
+                pstmt.setFloat(5, this.weight);
+                pstmt.setBoolean(6, this.loadHelp);
+                pstmt.setBoolean(7, this.unloadHelp);
+                pstmt.setFloat(8, this.price);
+                //pstmt.setBytes(8, this.picture);
 
                 ResultSet rs = pstmt.executeQuery();
 

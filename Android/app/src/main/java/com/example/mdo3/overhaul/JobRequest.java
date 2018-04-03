@@ -7,22 +7,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
 import java.sql.Timestamp;
 import java.util.Date;
 
 public class JobRequest extends AppCompatActivity {
 
-    private int id;
     private int userId;
     private EditText title;
     private EditText description;
     private Timestamp datePosted;
-    private boolean mLoadHelp;
-    private boolean mUnloadHelp;
+    private CheckBox mLoadHelp;
+    private CheckBox mUnloadHelp;
     private boolean isCompleted;
     private EditText mPickupLocation;
     private EditText mDestination;
@@ -33,6 +32,14 @@ public class JobRequest extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_request_screen);
+        title = (EditText) findViewById(R.id.editText3);
+        description = (EditText) findViewById((R.id.editTextDescription));
+        mLoadHelp = (CheckBox) findViewById(R.id.checkBoxLoad);
+        mUnloadHelp = (CheckBox) findViewById(R.id.checkBoxUnload);
+        mPickupLocation = (EditText) findViewById(R.id.editTextPickup);
+        mDestination = (EditText) findViewById(R.id.editTextDestination);
+        mWeight = (EditText) findViewById(R.id.editTextWeight);
+        mPrice = (EditText) findViewById(R.id.editTextPrice);
 
         //Upload Images Button
         View.OnClickListener uploadListen = new View.OnClickListener() {
@@ -54,28 +61,21 @@ public class JobRequest extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Just a placeholder so I can test that clicking on this button actually works.
-                title = (EditText) findViewById(R.id.editText3);
-                description = (EditText) findViewById((R.id.editTextDescription));
                 String sTitle = title.getText().toString();
                 String sDescription = description.getText().toString();
 
                 // Get load and unload checkboxes
-                CheckBox loadHelp = (CheckBox) findViewById(R.id.checkBoxLoad);
-                mLoadHelp = loadHelp.isChecked();
-                CheckBox unloadHelp = (CheckBox) findViewById(R.id.checkBoxUnload);
-                mUnloadHelp = unloadHelp.isChecked();
+
+                boolean loadHelp = mLoadHelp.isChecked();
+                boolean unloadHelp = mUnloadHelp.isChecked();
                 Date date = new Date();
                 datePosted = new Timestamp(date.getTime());
 
                 // Get Locations
-                mPickupLocation = (EditText) findViewById(R.id.editTextPickup);
-                mDestination = (EditText) findViewById(R.id.editTextDestination);
                 String sPickupLocation = mPickupLocation.getText().toString();
                 String sDestination = mDestination.getText().toString();
 
                 // Get price and weight floats
-                mWeight = (EditText) findViewById(R.id.editTextWeight);
-                mPrice = (EditText) findViewById(R.id.editTextPrice);
                 String sWeight = mWeight.getText().toString();
                 float weight = Float.parseFloat(sWeight);
                 String sPrice = mPrice.getText().toString();
@@ -86,7 +86,7 @@ public class JobRequest extends AppCompatActivity {
 
                 Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
                 Transaction trans = new Transaction(userId, sTitle, sDescription, datePosted,
-                                                    isCompleted, mLoadHelp, mUnloadHelp, sPickupLocation,
+                                                    isCompleted, loadHelp, unloadHelp, sPickupLocation,
                                                     sDestination, weight, price);
                 DataAcess DA = new DataAcess();
                 DA.insertTransactionAndItems(trans);
@@ -107,5 +107,70 @@ public class JobRequest extends AppCompatActivity {
         };
         Button cancelBtn = (Button) findViewById(R.id.button_cancel);
         cancelBtn.setOnClickListener(cancelListen);
+
+        mWeight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                {
+                    String sWeight = mWeight.getText().toString();
+                    float weight = Float.parseFloat(sWeight);
+                    float price = weight * 0.10f;
+                    String sPrice = String.valueOf(price);
+                    mPrice.setText(sPrice);
+                }
+            }
+        });
+
+        mDestination.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                {
+                    if (!mPickupLocation.getText().toString().isEmpty())
+                    {
+                        // This value will be the distance between the start and end
+                        // once we get Google Maps API in
+                        float distance = 4.0f;
+                        float mpg = 20.0f;
+                        float gasPrice = 4.0f;
+                        float price = (distance / mpg) * gasPrice;
+                        String sPrice = mPrice.getText().toString();
+                        float oldPrice = Float.parseFloat(sPrice);
+                        price += oldPrice;
+                        sPrice = String.valueOf(price);
+                        mPrice.setText(sPrice);
+                    }
+                }
+            }
+        });
+
+        mLoadHelp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    String sPrice = mPrice.getText().toString();
+                    float price = Float.parseFloat(sPrice);
+                    price += 5.0;
+                    sPrice = String.valueOf(price);
+                    mPrice.setText(sPrice);
+                }
+            }
+        });
+
+        mUnloadHelp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    String sPrice = mPrice.getText().toString();
+                    float price = Float.parseFloat(sPrice);
+                    price += 5.0;
+                    sPrice = String.valueOf(price);
+                    mPrice.setText(sPrice);
+                }
+            }
+        });
     }
 }
