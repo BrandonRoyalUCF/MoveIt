@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -65,9 +65,10 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="64dp"
         android:layout_marginTop="128dp"
+        android:onClick="submitButton"
         android:text="Submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/comments" />
 
     <Button
         android:id="@+id/button4"
@@ -75,8 +76,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginTop="128dp"
+        android:onClick="cancelButton"
         android:text="Cancel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/comments" />
 
 </android.support.constraint.ConstraintLayout>
