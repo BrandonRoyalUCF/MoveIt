@@ -35,6 +35,8 @@
             android:label="@string/title_activity_rate_screen"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".DriverMainScreen" />
+        <activity android:name=".DriverRequestScreen" />
+        <activity android:name=".DriverActiveJobScreen" />
         <activity
             android:name=".credit_card_info"
             android:parentActivityName=".HomeScreen">
