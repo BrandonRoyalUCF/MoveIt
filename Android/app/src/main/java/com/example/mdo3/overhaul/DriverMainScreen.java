@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Toast;
+import android.widget.Switch;
 import android.net.Uri;
 
 /**
@@ -23,33 +25,6 @@ public class DriverMainScreen extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main_screen);
 
-        // TODO: Extra buttons for Pick-Up and Drop-Off
-        // https://developers.google.com/maps/documentation/android-api/intents
-        // https://stackoverflow.com/questions/45293200/android-studio-redirecting-to-the-phones-google-maps-app-with-a-start-and-end
-
-        //Placeholder Button
-        View.OnClickListener requestListen = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Just a placeholder so I can test that clicking on this button actually works.
-                Toast.makeText(DriverMainScreen.this, "Just a placeholder!", Toast.LENGTH_SHORT).show();
-            }
-        };
-        Button requestBtn = (Button) findViewById(R.id.button_placeholder);
-        requestBtn.setOnClickListener(requestListen);
-
-        //Settings Button
-        View.OnClickListener settingsListen = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                Intent myIntent = new Intent(DriverMainScreen.this, DriverSettings.class);
-                DriverMainScreen.this.startActivity(myIntent);
-            }
-        };
-        Button settingsBtn = (Button) findViewById(R.id.button_settings);
-        settingsBtn.setOnClickListener(settingsListen);
-
         //Logout Button
         View.OnClickListener logoutListen = new View.OnClickListener() {
             @Override
@@ -62,11 +37,19 @@ public class DriverMainScreen extends Activity{
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
 
-        requestActive = true; // Remove later, only for debugging right now.
+        requestActive = false; // Remove later, only for debugging right now.
 
+        Switch activitySwh = (Switch) findViewById(R.id.switch_active);
+        Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
+        Button editVehicleBtn = (Button) findViewById(R.id.button_edit_vehicle);
         Button pickUpBtn = (Button) findViewById(R.id.button_pickup);
         Button dropOffBtn = (Button) findViewById(R.id.button_dropoff);
         if (requestActive){
+            // Hide regular driver settings
+            activitySwh.setVisibility(View.INVISIBLE);
+            changeAccBtn.setVisibility(View.INVISIBLE);
+            editVehicleBtn.setVisibility(View.INVISIBLE);
+
             // Make sure the buttons are visible, and that they send the user to Google Maps
             // for the pick-up or drop-off.
             pickUpBtn.setVisibility(View.VISIBLE);
@@ -100,6 +83,37 @@ public class DriverMainScreen extends Activity{
             // Hide the buttons and don't give them an OnClick action.
             pickUpBtn.setVisibility(View.INVISIBLE);
             dropOffBtn.setVisibility(View.INVISIBLE);
+
+            // Make sure the buttons are visible
+            activitySwh.setVisibility(View.VISIBLE);
+            activitySwh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+            {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    if(isChecked)
+                        activitySwh.setText("Active");
+                    else
+                        activitySwh.setText("Inactive");
+                }
+            });
+
+            changeAccBtn.setVisibility(View.VISIBLE);
+            View.OnClickListener changeListen = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(DriverMainScreen.this, "Coming soon!", Toast.LENGTH_SHORT).show();
+                }
+            };
+            changeAccBtn.setOnClickListener(changeListen);
+
+            editVehicleBtn.setVisibility(View.VISIBLE);
+            View.OnClickListener vehicleListen = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(DriverMainScreen.this, "Also coming soon!", Toast.LENGTH_SHORT).show();
+                }
+            };
+            editVehicleBtn.setOnClickListener(vehicleListen);
         }
     }
 }

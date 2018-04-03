@@ -13,57 +13,64 @@
 
         <Button
             android:id="@+id/button_logout"
-            tools:layout_editor_absoluteX="82dp"
-            tools:layout_editor_absoluteY="320dp"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/button_dropoff"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="56dp"
-            android:layout_marginEnd="21dp"
-            android:text="Logout" />
+            android:layout_marginBottom="51dp"
+            android:text="Logout"
+            tools:layout_editor_absoluteX="82dp"
+            tools:layout_editor_absoluteY="320dp" />
 
         <Button
-            android:id="@+id/button_settings"
-            tools:layout_editor_absoluteX="500dp"
-            tools:layout_editor_absoluteY="256dp"
-            android:layout_width="150dp"
+            android:id="@+id/button_change_account"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button_logout"
-            android:layout_alignBottom="@+id/button_logout"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="18dp"
-            android:text="settings" />
-
-        <Button
-            android:id="@+id/button_placeholder"
+            android:layout_alignStart="@+id/switch_active"
+            android:layout_below="@+id/switch_active"
+            android:layout_marginTop="22dp"
+            android:text="Change Account"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="39dp"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="29dp"
-            android:text="Placeholder" />
+            tools:layout_editor_absoluteY="39dp" />
 
         <Button
             android:id="@+id/button_pickup"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button_settings"
-            android:layout_alignStart="@+id/button_settings"
-            android:layout_marginBottom="31dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:text="Go to Pick-Up" />
 
         <Button
             android:id="@+id/button_dropoff"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/button_pickup"
-            android:layout_alignBottom="@+id/button_pickup"
-            android:layout_alignEnd="@+id/button_logout"
+            android:layout_alignStart="@+id/button_pickup"
+            android:layout_below="@+id/button_pickup"
+            android:layout_marginTop="17dp"
             android:text="Go to Drop-Off" />
+
+        <Switch
+            android:id="@+id/switch_active"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_edit_account"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="33dp"
+            android:text="Inactive"
+            android:textOff="Inactive"
+            android:textOn="Active" />
+
+        <Button
+            android:id="@+id/button_edit_vehicle"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/button_change_account"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="Edit Vehicle" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import android.os.Handler;
+import android.widget.Toast;
 
 public class ClientMainScreen extends Activity implements OnMapReadyCallback{
     // Set this variable based on whether or not a request is active, and thus whether or not to show the driver map.
@@ -51,17 +52,16 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         Button requestBtn = (Button) findViewById(R.id.button_request_driver);
         requestBtn.setOnClickListener(requestListen);
 
-        //Settings Button
-        OnClickListener settingsListen = new OnClickListener() {
+        //Edit Account Button
+        OnClickListener accountListen = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                Intent myIntent = new Intent(ClientMainScreen.this, ClientSettings.class);
-                ClientMainScreen.this.startActivity(myIntent);
+                // Just a placeholder for now
+                Toast.makeText(ClientMainScreen.this, "Edit account info later!", Toast.LENGTH_SHORT).show();
             }
         };
-        Button settingsBtn = (Button) findViewById(R.id.button_settings);
-        settingsBtn.setOnClickListener(settingsListen);
+        Button accountBtn = (Button) findViewById(R.id.button_edit_account);
+        accountBtn.setOnClickListener(accountListen);
 
         //Logout Button
         OnClickListener logoutListen = new OnClickListener() {
