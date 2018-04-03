@@ -66,8 +66,19 @@ public class HomeScreen extends AppCompatActivity
         OnClickListener signUpListen = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Just a placeholder so I can test that clicking on this button actually works.
-                Toast.makeText(HomeScreen.this, "Not ready for sign up yet!", Toast.LENGTH_SHORT).show();
+
+                if (loginSwitch.isChecked()){
+                    // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
+                    finish();
+                    Intent myIntent = new Intent(HomeScreen.this, DriverRegistration.class);
+                    HomeScreen.this.startActivity(myIntent);
+                }
+                else {
+                    // Otherwise, that means the switch is still showing Customer, so go to the CUstomer main screen.
+                    finish();
+                    Intent myIntent = new Intent(HomeScreen.this, UserRegistration.class);
+                    HomeScreen.this.startActivity(myIntent);
+                }
             }
         };
         Button signUpBtn = (Button) findViewById(R.id.button_sign_up);
