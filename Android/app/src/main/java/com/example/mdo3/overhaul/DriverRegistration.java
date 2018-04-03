@@ -36,7 +36,7 @@ public class DriverRegistration extends Activity {
     }
 
     public void register() {
-        initialize();
+        //initialize();
 
     }
 }
