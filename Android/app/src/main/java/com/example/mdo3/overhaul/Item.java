@@ -8,7 +8,7 @@ import android.media.Image;
  * Deprecated but kept in case future change of individual items for a request
  */
 
-@Deprecated
+
 public class Item {
 
     private int id;
