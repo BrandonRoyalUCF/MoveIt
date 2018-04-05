@@ -206,7 +206,7 @@ public class DataAcess {
             try {
                 Connection conn = DataAcess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertTransaction @iduser = ?, @Title = ?, @Description = ?, @DatePosted = ?," +
+                String query = "EXEC dbo.usp_InsertTransaction @id_Customer = ?, @Title = ?, @Description = ?, @DatePosted = ?," +
                                     " @TotalWeight = ?, @LoadHelp = ?, @UnloadHelp = ?, @Price = ?";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);

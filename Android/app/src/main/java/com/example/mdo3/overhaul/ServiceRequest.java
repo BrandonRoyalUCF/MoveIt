@@ -44,6 +44,22 @@ public class ServiceRequest {
         this.price = price;
     }
 
+    public ServiceRequest(int IdCustomer, String Title, String Description, Timestamp DatePosted,
+                          boolean loadHelp, boolean unloadHelp, String pickupLocation,
+                          String destination, float weight, float price)
+    {
+        this.idCustomer = IdCustomer;
+        this.title = Title;
+        this.description = Description;
+        this.datePosted = DatePosted;
+        this.pickupLocation = pickupLocation;
+        this.destination = destination;
+        this.loadHelp = loadHelp;
+        this.unloadHelp = unloadHelp;
+        this.weight = weight;
+        this.price = price;
+    }
+
     public int getId() { return this.id; }
     public int getIdCustomer() { return this.idCustomer; }
     public int getIdDriverWhoCompleted() { return  this.idDriverWhoCompleted;}
@@ -58,6 +74,5 @@ public class ServiceRequest {
     public boolean needUnloadHelp() { return this.unloadHelp; }
     public float getWeight() { return this.weight; }
     public float getPrice() { return this.price; }
-    public float getDistanceInMiles() {return this.distanceInMiles;}
 
 }
