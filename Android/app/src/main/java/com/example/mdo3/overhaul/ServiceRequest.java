@@ -7,10 +7,11 @@ import java.sql.Timestamp;
  * Created by Royal on 3/26/2018.
  */
 
-public class Transaction {
+public class ServiceRequest {
 
     private int id;
-    private int userId;
+    private int idCustomer;
+    private Integer idDriverWhoCompleted;
     private String title;
     private String description;
     private Timestamp datePosted;
@@ -22,12 +23,15 @@ public class Transaction {
     private String destination;
     private float weight;
     private float price;
+    private float distanceInMiles;
 
-    public Transaction(int UserId, String Title, String Description, Timestamp DatePosted,
+    public ServiceRequest(int Id, int IdCustomer, Integer IdDriverWhoCompleted, String Title, String Description, Timestamp DatePosted, Timestamp DateClosed,
                        boolean IsCompleted, boolean loadHelp, boolean unloadHelp,
-                       String pickupLocation, String destination, float weight, float price)
+                       String pickupLocation, String destination, float weight, float price, float distanceInMiles)
     {
-        this.userId = UserId;
+        this.id = Id;
+        this.idCustomer = IdCustomer;
+        this.idDriverWhoCompleted = IdDriverWhoCompleted;
         this.title = Title;
         this.description = Description;
         this.datePosted = DatePosted;
@@ -41,7 +45,8 @@ public class Transaction {
     }
 
     public int getId() { return this.id; }
-    public int getUserId() { return this.userId; }
+    public int getIdCustomer() { return this.idCustomer; }
+    public int getIdDriverWhoCompleted() { return  this.idDriverWhoCompleted;}
     public String getTitle() { return this.title; }
     public String getDescription() { return this.description; }
     public Timestamp getDatePosted() { return this.datePosted; }
@@ -53,5 +58,6 @@ public class Transaction {
     public boolean needUnloadHelp() { return this.unloadHelp; }
     public float getWeight() { return this.weight; }
     public float getPrice() { return this.price; }
+    public float getDistanceInMiles() {return this.distanceInMiles;}
 
 }

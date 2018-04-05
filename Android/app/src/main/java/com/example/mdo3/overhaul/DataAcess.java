@@ -2,7 +2,6 @@ package com.example.mdo3.overhaul;
 import java.sql.*;
 import java.sql.PreparedStatement;
 import android.os.AsyncTask;
-import android.os.StrictMode;
 
 /**
  * Created by Royal on 3/23/2018.
@@ -70,7 +69,7 @@ public class DataAcess {
             try {
                 Connection conn = DataAcess.this.ConnectToDB();
 
-                String query = "SELECT id, UserName, FirstName, LastName, PassWord, isActive FROM UserInfo WHERE UserName = ? AND PassWord = ?";
+                String query = "SELECT id, UserName, FirstName, LastName, PhoneNumber, Picture, isActive FROM UserInfo WHERE UserName = ? AND PassWord = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, this.userName);
                 pstmt.setString(2, this.passWord);
@@ -80,8 +79,10 @@ public class DataAcess {
                     String UserName = rs.getString("UserName");
                     String FirstName = rs.getString("FirstName");
                     String LastName = rs.getString("LastName");
+                    String PhoneNumber = rs.getString("PhoneNumber");
+                    byte[] Picture = rs.getBytes("Picture");
                     boolean isActive = rs.getBoolean("isActive");
-                    UserDetails userDetails = new UserDetails(UserId, UserName, FirstName, LastName, isActive);
+                    UserDetails userDetails = new UserDetails(UserId, UserName, FirstName, LastName, PhoneNumber, Picture, isActive);
                     return userDetails;
                 }
 
@@ -91,10 +92,10 @@ public class DataAcess {
         }
     }
 
-    public Boolean insertUser(String UserName, String PassWord, String FirstName, String LastName)
+    public Boolean insertUser(String UserName, String PassWord, String FirstName, String LastName, String PhoneNumber)
     {
         try{
-            insertUserAsync iu =  new insertUserAsync(UserName, PassWord, FirstName, LastName);
+            insertUserAsync iu =  new insertUserAsync(UserName, PassWord, FirstName, LastName, PhoneNumber);
             return iu.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
@@ -107,15 +108,15 @@ public class DataAcess {
         String passWord;
         String firstName;
         String lastName;
-        boolean isActive;
+        String phoneNumber;
 
-        public insertUserAsync(String UserName, String PassWord, String FirstName, String LastName)
+        public insertUserAsync(String UserName, String PassWord, String FirstName, String LastName, String PhoneNumber)
         {
             this.userName = UserName;
             this.passWord = PassWord;
             this.firstName = FirstName;
             this.lastName = LastName;
-            this.isActive = true;
+            this.phoneNumber = PhoneNumber;
         }
 
         @Override
@@ -124,13 +125,14 @@ public class DataAcess {
             try {
                 Connection conn = DataAcess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertUser @UserName = ?, @PassWord = ?, @FirstName = ?, @LastName = ?";
+                String query = "EXEC dbo.usp_InsertUser @UserName = ?, @PassWord = ?, @FirstName = ?, @LastName = ?, @PhoneNumber = ?";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, this.userName);
                 pstmt.setString(2, this.passWord);
                 pstmt.setString(3, this.firstName);
                 pstmt.setString(4, this.lastName);
+                pstmt.setString(5, this.phoneNumber);
                 ResultSet rs = pstmt.executeQuery();
 
                 if(rs.next())
@@ -142,11 +144,11 @@ public class DataAcess {
         }
     }
 
-
-    public Boolean insertTransactionAndItems(Transaction transaction)
+    
+    public Boolean insertTransactionAndItems(ServiceRequest transaction)
     {
         try{
-            insertTransactionAndItemsAsync iti =  new insertTransactionAndItemsAsync(transaction.getUserId(),
+            insertTransactionAndItemsAsync iti =  new insertTransactionAndItemsAsync(transaction.getIdCustomer(),
                                                     transaction.getTitle(), transaction.getDescription(),
                                                     transaction.getDatePosted(), transaction.getWeight(),
                                                     transaction.getPickupLocation(), transaction.getDestination(),

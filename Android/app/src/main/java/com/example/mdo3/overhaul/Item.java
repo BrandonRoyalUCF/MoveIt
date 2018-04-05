@@ -4,8 +4,11 @@ import android.media.Image;
 
 /**
  * Created by Royal on 3/26/2018.
+ *
+ * Deprecated but kept in case future change of individual items for a request
  */
 
+@Deprecated
 public class Item {
 
     private int id;
