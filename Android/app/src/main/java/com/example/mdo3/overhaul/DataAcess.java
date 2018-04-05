@@ -91,7 +91,7 @@ public class DataAcess {
         }
     }
 
-    public Boolean insertUserAsync(String UserName, String PassWord, String FirstName, String LastName)
+    public Boolean insertUser(String UserName, String PassWord, String FirstName, String LastName)
     {
         try{
             insertUserAsync iu =  new insertUserAsync(UserName, PassWord, FirstName, LastName);
@@ -308,5 +308,63 @@ public class DataAcess {
 
     }
 
+    public Boolean insertUserPaymentInfo(int idUser, String cardNumber, String billingAddress, String expirationMonth, String expirationYear, String CVV, String billingName)
+    {
+        try{
+            insertUserPaymentInfoAsync idr =  new insertUserPaymentInfoAsync(idUser, cardNumber, billingAddress, expirationMonth, expirationYear, CVV, billingName);
+            return idr.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class insertUserPaymentInfoAsync extends AsyncTask<Void, Void, Boolean>
+    {
+
+        private int idUser;
+        private String cardNumber;
+        private String billingAddress;
+        private String expirationMonth;
+        private String expirationYear;
+        private String CVV;
+        private String billingName;
+
+        public insertUserPaymentInfoAsync(int idUser, String cardNumber, String billingAddress, String expirationMonth, String expirationYear, String CVV, String billingName)
+        {
+            this.idUser = idUser;
+            this.cardNumber = cardNumber;
+            this.billingAddress = billingAddress;
+            this.expirationMonth = expirationMonth;
+            this.expirationYear = expirationYear;
+            this.CVV = CVV;
+            this.billingName = billingName;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAcess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_InsertUserPaymentInfo @idUser = ?, @idUserWhoRated = ?, @idTransaction = ?, @rating = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idUser);
+                pstmt.setString(2, this.cardNumber);
+                pstmt.setString(3, this.billingAddress);
+                pstmt.setString(4, this.expirationMonth);
+                pstmt.setString(5, this.expirationYear);
+                pstmt.setString(6, this.CVV);
+                pstmt.setString(7, this.billingName);
+                ResultSet rs = pstmt.executeQuery();
+
+                if(rs.next())
+                    return true;
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Adding Driver Rating: " + e.toString());}
+            return false;
+        }
+
+    }
 
 }
