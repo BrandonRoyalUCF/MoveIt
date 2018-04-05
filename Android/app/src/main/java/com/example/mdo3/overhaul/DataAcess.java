@@ -142,6 +142,21 @@ public class DataAcess {
         }
     }
 
+
+    public Boolean insertTransactionAndItems(Transaction transaction)
+    {
+        try{
+            insertTransactionAndItemsAsync iti =  new insertTransactionAndItemsAsync(transaction.getUserId(),
+                                                    transaction.getTitle(), transaction.getDescription(),
+                                                    transaction.getDatePosted(), transaction.getWeight(),
+                                                    transaction.getPickupLocation(), transaction.getDestination(),
+                                                    transaction.needLoadHelp(), transaction.needUnloadHelp(),
+                                                    transaction.getPrice());
+            return iti.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
     public Boolean insertTransactionAndItems(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted, String itemName,
                                              String itemDescription, float weight, float height, float width, float length, byte[] picture,
                                                 String startAddress, String endAddress)
@@ -160,6 +175,7 @@ public class DataAcess {
         private int idUser; private String transactionTitle; private String transactionDescription;
         private Timestamp datePosted; private String itemName; private String itemDescription; private float weight; private float height;
         private float width; private float length; private byte[] picture; private String startAddress; private String endAddress;
+        private float price; private boolean loadHelp; private boolean unloadHelp;
 
         public insertTransactionAndItemsAsync(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted,
                                               String itemName, String itemDescription, float weight, float height, float width, float length, byte[] picture,
@@ -171,30 +187,36 @@ public class DataAcess {
             this.picture = picture; this.startAddress = startAddress; this.endAddress = endAddress;
         }
 
+        public insertTransactionAndItemsAsync(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted,
+                                              float itemWeight, String pickupLocation, String destination,
+                                              boolean loadHelp, boolean unloadHelp, float price)
+        {
+            this.idUser = idUser; this.transactionTitle = transactionTitle; this.transactionDescription = transactionDescription;
+            this.datePosted = datePosted; this.weight = itemWeight; /*this.picture = picture;*/
+            this.startAddress = pickupLocation; this.endAddress = destination;
+            this.loadHelp = loadHelp; this.unloadHelp = unloadHelp; this.price = price;
+        }
+
+
         @Override
         protected Boolean doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAcess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertTransaction @iduser = ?, @transactionTitle = ?, @transactionDescription = ?, @datePosted = ?," +
-                                    " @startLocation = ?, @endLocation = ?, @itemName = ?, @itemDescription = ?, @weight = ?, @height = ?, " +
-                                    " @width = ?, @length = ?, @picture = ?";
+                String query = "EXEC dbo.usp_InsertTransaction @iduser = ?, @Title = ?, @Description = ?, @DatePosted = ?," +
+                                    " @TotalWeight = ?, @LoadHelp = ?, @UnloadHelp = ?, @Price = ?";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idUser);
                 pstmt.setString(2, this.transactionTitle);
                 pstmt.setString(3, this.transactionDescription);
                 pstmt.setTimestamp(4, this.datePosted);
-                pstmt.setString(5, this.startAddress);
-                pstmt.setString(6, this.endAddress);
-                pstmt.setString(7, this.itemName);
-                pstmt.setString(8, this.itemDescription);
-                pstmt.setFloat(9, this.weight);
-                pstmt.setFloat(10, this.height);
-                pstmt.setFloat(11, this.width);
-                pstmt.setFloat(12, this.length);
-                pstmt.setBytes(13, this.picture);
+                pstmt.setFloat(5, this.weight);
+                pstmt.setBoolean(6, this.loadHelp);
+                pstmt.setBoolean(7, this.unloadHelp);
+                pstmt.setFloat(8, this.price);
+                //pstmt.setBytes(8, this.picture);
 
                 ResultSet rs = pstmt.executeQuery();
 
