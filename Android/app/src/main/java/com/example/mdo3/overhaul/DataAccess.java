@@ -7,7 +7,7 @@ import android.os.AsyncTask;
  * Created by Royal on 3/23/2018.
  */
 
-public class DataAcess {
+public class DataAccess {
 
     final private String dbHost = "overhauldb.cweh7b1mnc5s.us-east-1.rds.amazonaws.com";
     final private String dbUserName = "OverHaul";
@@ -15,7 +15,7 @@ public class DataAcess {
     final private String dbName = "OverHaul_Main";
     final private String dbClass = "net.sourceforge.jtds.jdbc.Driver";
 
-    public DataAcess()
+    public DataAccess()
     {
         //No params needed currently
     }
@@ -67,7 +67,7 @@ public class DataAcess {
         protected UserDetails doInBackground(Void... params)
         {
             try {
-                Connection conn = DataAcess.this.ConnectToDB();
+                Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "SELECT id, UserName, FirstName, LastName, PhoneNumber, Picture, isActive FROM UserInfo WHERE UserName = ? AND PassWord = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
@@ -123,7 +123,7 @@ public class DataAcess {
         protected Boolean doInBackground(Void... params)
         {
             try {
-                Connection conn = DataAcess.this.ConnectToDB();
+                Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertUser @UserName = ?, @PassWord = ?, @FirstName = ?, @LastName = ?, @PhoneNumber = ?";
 
@@ -204,7 +204,7 @@ public class DataAcess {
         protected Boolean doInBackground(Void... params)
         {
             try {
-                Connection conn = DataAcess.this.ConnectToDB();
+                Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertTransaction @id_Customer = ?, @Title = ?, @Description = ?, @DatePosted = ?," +
                                     " @TotalWeight = ?, @LoadHelp = ?, @UnloadHelp = ?, @Price = ?";
@@ -262,7 +262,7 @@ public class DataAcess {
         protected Boolean doInBackground(Void... params)
         {
             try {
-                Connection conn = DataAcess.this.ConnectToDB();
+                Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertDriver @idUser = ?, @DriverLiscenseNumber = ?, @CarMake = ?, @CarModel = ?, @LiscensePlateNumber = ?";
 
@@ -311,7 +311,7 @@ public class DataAcess {
         protected Boolean doInBackground(Void... params)
         {
             try {
-                Connection conn = DataAcess.this.ConnectToDB();
+                Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertDriverRating @idDriver = ?, @idUserWhoRated = ?, @idTransaction = ?, @rating = ?";
 
@@ -367,7 +367,7 @@ public class DataAcess {
         protected Boolean doInBackground(Void... params)
         {
             try {
-                Connection conn = DataAcess.this.ConnectToDB();
+                Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertUserPaymentInfo @idUser = ?, @idUserWhoRated = ?, @idTransaction = ?, @rating = ?";
 
