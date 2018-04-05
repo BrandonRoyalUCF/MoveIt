@@ -74,7 +74,7 @@ public class HomeScreen extends AppCompatActivity
                     HomeScreen.this.startActivity(myIntent);
                 }
                 else {
-                    // Otherwise, that means the switch is still showing Customer, so go to the CUstomer main screen.
+                    // Otherwise, that means the switch is still showing Customer, so go to the Customer main screen.
                     finish();
                     Intent myIntent = new Intent(HomeScreen.this, UserRegistration.class);
                     HomeScreen.this.startActivity(myIntent);
