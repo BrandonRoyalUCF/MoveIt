@@ -85,11 +85,13 @@ public class JobRequest extends AppCompatActivity {
 
 
                 Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
+                /*
                 Transaction trans = new Transaction(userId, sTitle, sDescription, datePosted,
                                                     isCompleted, loadHelp, unloadHelp, sPickupLocation,
                                                     sDestination, weight, price);
                 DataAcess DA = new DataAcess();
                 DA.insertTransactionAndItems(trans);
+                */
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
