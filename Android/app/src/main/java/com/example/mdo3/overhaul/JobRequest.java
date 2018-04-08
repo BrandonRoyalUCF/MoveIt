@@ -88,7 +88,9 @@ public class JobRequest extends AppCompatActivity {
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
-                da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                boolean worked = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                if(!worked)
+                    System.out.println("INSERT FAILED ******************");
 
                 finish();
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
