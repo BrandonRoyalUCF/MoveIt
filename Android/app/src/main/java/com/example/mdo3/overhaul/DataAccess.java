@@ -2,6 +2,7 @@ package com.example.mdo3.overhaul;
 import java.sql.*;
 import java.sql.PreparedStatement;
 import android.os.AsyncTask;
+import java.util.*;
 
 /**
  * Created by Royal on 3/23/2018.
@@ -42,34 +43,32 @@ public class DataAccess {
         return connection;
     }
 
-
-    public UserDetails checkUserLogin(String UserName, String PassWord)
+    public Customer checkCustomerLogin(String UserName, String PassWord)
     {
         try{
-            checkUserLoginAsync ul =  new checkUserLoginAsync(UserName, PassWord);
-            return ul.execute().get();
+            checkCustomerLoginAsync cl =  new checkCustomerLoginAsync(UserName, PassWord);
+            return cl.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
     }
 
-    ///check if a login attempt is valid, if so return the user object, else return null
-    private class checkUserLoginAsync extends AsyncTask<Void, Void, UserDetails>
+    private class checkCustomerLoginAsync extends AsyncTask<Void, Void, Customer>
     {
         String userName;
         String passWord;
-        public checkUserLoginAsync(String UserName, String PassWord)
+        public checkCustomerLoginAsync(String UserName, String PassWord)
         {
             this.userName = UserName;
             this.passWord = PassWord;
         }
 
         @Override
-        protected UserDetails doInBackground(Void... params)
+        protected Customer doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT id, UserName, FirstName, LastName, PhoneNumber, Picture, isActive FROM UserInfo WHERE UserName = ? AND PassWord = ?";
+                String query = "SELECT id, UserName, Name, PhoneNumber, DateRegistered, isActive FROM CustomerInfo WHERE UserName = ? AND PassWord = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, this.userName);
                 pstmt.setString(2, this.passWord);
@@ -77,13 +76,12 @@ public class DataAccess {
                 if (rs.next() ) {
                     int UserId = rs.getInt("id");
                     String UserName = rs.getString("UserName");
-                    String FirstName = rs.getString("FirstName");
-                    String LastName = rs.getString("LastName");
+                    String Name = rs.getString("Name");
                     String PhoneNumber = rs.getString("PhoneNumber");
-                    byte[] Picture = rs.getBytes("Picture");
+                    Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
                     boolean isActive = rs.getBoolean("isActive");
-                    UserDetails userDetails = new UserDetails(UserId, UserName, FirstName, LastName, PhoneNumber, Picture, isActive);
-                    return userDetails;
+                    Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
+                    return customer;
                 }
 
                 conn.close();
@@ -92,31 +90,103 @@ public class DataAccess {
         }
     }
 
-    public Boolean insertUser(String UserName, String PassWord, String FirstName, String LastName, String PhoneNumber)
+    public Driver checkDriverLogin(String UserName, String PassWord)
     {
         try{
-            insertUserAsync iu =  new insertUserAsync(UserName, PassWord, FirstName, LastName, PhoneNumber);
-            return iu.execute().get();
+            checkDriverLoginAsync dl =  new checkDriverLoginAsync(UserName, PassWord);
+            return dl.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
     }
 
-    //Insert a new user into the database
-    private class insertUserAsync extends AsyncTask<Void, Void, Boolean>
+    private class checkDriverLoginAsync extends AsyncTask<Void, Void, Driver>
     {
         String userName;
         String passWord;
-        String firstName;
-        String lastName;
-        String phoneNumber;
-
-        public insertUserAsync(String UserName, String PassWord, String FirstName, String LastName, String PhoneNumber)
+        public checkDriverLoginAsync(String UserName, String PassWord)
         {
             this.userName = UserName;
             this.passWord = PassWord;
-            this.firstName = FirstName;
-            this.lastName = LastName;
-            this.phoneNumber = PhoneNumber;
+        }
+
+        @Override
+        protected Driver doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AverageRating, NumberRatings FROM DriverInfo WHERE UserName = ? AND PassWord = ?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.userName);
+                pstmt.setString(2, this.passWord);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next() ) {
+                    int id = rs.getInt("id");
+                    String UserName = rs.getString("UserName");
+                    String Name = rs.getString("Name");
+                    String PhoneNumber = rs.getString("PhoneNumber");
+                    String DriverLicenseNumber = rs.getString("DriverLicenseNumber");
+                    byte[] Picture = rs.getBytes("Picture");
+                    Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("isActive");
+                    float AvgRating = rs.getFloat("AverageRating");
+                    int NumRating = rs.getInt("NumberRatings");
+
+                    Vehicle vehicle = null;
+                    query = "SELECT id, CarMake, CarModel, CarYear, LicensePlateNumber, LoadCapacity, Picture FROM Vehicle WHERE id_Driver = ?";
+                    pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(1, id);
+                    rs = pstmt.executeQuery();
+                    if (rs.next() )
+                    {
+                        int idVehicle = rs.getInt("id");
+                        String CarMake = rs.getString("CarMake");
+                        String CarModel = rs.getString("CarModel");
+                        int CarYear = rs.getInt("CarYear");
+                        String LicensePlate = rs.getString("LicensePlateNumber");
+                        float LoadCapacity = rs.getFloat("LoadCapacity");
+                        byte[] CarPicture = rs.getBytes("Picture");
+                        vehicle = new Vehicle(idVehicle, id, CarMake, CarModel, CarYear, LicensePlate, LoadCapacity, CarPicture);
+                    }
+                    Driver driver = new Driver(id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AvgRating, NumRating, vehicle);
+                    return driver;
+                }
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Logging In: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Boolean insertCustomer(String UserName, String PassWord, String Name, String PhoneNumber, Timestamp DateRegistered, String CardNumber, String BillingAddress,
+                                    String ExpMonth, String ExpYear, String CVV, String BillingName)
+    {
+        try{
+            insertCustomerAsync ic =  new insertCustomerAsync(UserName, PassWord, Name, PhoneNumber, DateRegistered, CardNumber, BillingAddress, ExpMonth, ExpYear, CVV, BillingName);
+            return ic.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class insertCustomerAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private String userName;
+        private String passWord;
+        private String name;
+        private String phoneNumber;
+        private Timestamp dateRegistered;
+        private String cardNumber;
+        private String billingAddress;
+        private String expMonth;
+        private String expYear;
+        private String CVV;
+        private String billingName;
+
+        public insertCustomerAsync(String UserName, String PassWord, String Name, String PhoneNumber, Timestamp DateRegistered, String CardNumber, String BillingAddress,
+                                   String ExpMonth, String ExpYear, String CVV, String BillingName)
+        {
+            this.userName = UserName; this.passWord = PassWord; this.name = Name; this.phoneNumber = PhoneNumber; this.dateRegistered = DateRegistered;
+            this.cardNumber = CardNumber; this.billingAddress = BillingAddress; this.expMonth = ExpMonth; this.expYear = ExpYear; this.CVV = CVV; this.billingName = BillingName;
         }
 
         @Override
@@ -125,14 +195,95 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertUser @UserName = ?, @PassWord = ?, @FirstName = ?, @LastName = ?, @PhoneNumber = ?";
+                String query = "EXEC dbo.usp_InsertCustomer @UserName = ?, @PassWord = ?, @Name = ?, @PhoneNumber = ?, @DateRegistered = ?, " +
+                                " @CardNumber = ?, @BillingAddress = ?, @ExpirationMonth = ?, @ExpirationYear = ?, @CVV = ?, @BillingName = ? ";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, this.userName);
                 pstmt.setString(2, this.passWord);
-                pstmt.setString(3, this.firstName);
-                pstmt.setString(4, this.lastName);
-                pstmt.setString(5, this.phoneNumber);
+                pstmt.setString(3, this.name);
+                pstmt.setString(4, this.phoneNumber);
+                pstmt.setTimestamp(5, this.dateRegistered);
+                pstmt.setString(6, this.cardNumber);
+                pstmt.setString(7, this.billingAddress);
+                pstmt.setString(8, this.expMonth);
+                pstmt.setString(9, this.expYear);
+                pstmt.setString(10, this.CVV);
+                pstmt.setString(11, this.billingName);
+                ResultSet rs = pstmt.executeQuery();
+
+                if(rs.next())
+                    return true;
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            return false;
+        }
+
+    }
+
+    public Boolean insertDriver(String UserName, String PassWord, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered,
+                                    String CarMake, String CarModel, int CarYear, String LicensePlateNumber, float LoadCapacity,
+                                    String BankAccountNumber, String RoutingNumber, String BillingName)
+    {
+        try{
+            insertDriverAsync id =  new insertDriverAsync(UserName, PassWord, Name, PhoneNumber,DriverLicenseNumber, DateRegistered, CarMake, CarModel,
+                                        CarYear, LicensePlateNumber, LoadCapacity, BankAccountNumber, RoutingNumber, BillingName);
+            return id.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class insertDriverAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private String userName;
+        private String passWord;
+        private String name;
+        private String phoneNumber;
+        private String driverLicenseNumber;
+        private Timestamp dateRegistered;
+        private String make;
+        private String model;
+        private int year;
+        private String licensePlate;
+        private float loadCapacity;
+        private String bankAccountNumber;
+        private String routingNumber;
+        private String billingName;
+
+        public insertDriverAsync(String UserName, String PassWord, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered,
+                                 String CarMake, String CarModel, int CarYear, String LicensePlateNumber, float LoadCapacity,
+                                 String BankAccountNumber, String RoutingNumber, String BillingName)
+        {
+            this.userName = UserName; this.passWord = PassWord; this.name = Name; this.phoneNumber = PhoneNumber; this.driverLicenseNumber = DriverLicenseNumber; this.dateRegistered = DateRegistered;
+            this.make = CarMake; this.model = CarModel; this.year = CarYear; this.licensePlate = LicensePlateNumber; this.bankAccountNumber = BankAccountNumber; this.routingNumber = RoutingNumber;
+            this.billingName = BillingName;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_InsertDriver @UserName = ?, @PassWord = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ?, " +
+                        " @CarMake = ?, @CarModel = ?, @CarYear = ?, @LicensePlateNumber = ?, @LoadCapacity = ?, @BankAccountNumber = ?, @RoutingNumber = ?, @BillingName = ? ";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.userName);
+                pstmt.setString(2, this.passWord);
+                pstmt.setString(3, this.name);
+                pstmt.setString(4, this.phoneNumber);
+                pstmt.setString(5, this.driverLicenseNumber);
+                pstmt.setTimestamp(6, this.dateRegistered);
+                pstmt.setString(7, this.make);
+                pstmt.setString(8, this.model);
+                pstmt.setInt(9, this.year);
+                pstmt.setString(10, this.licensePlate);
+                pstmt.setFloat(11, this.loadCapacity);
+                pstmt.setString(12, this.bankAccountNumber);
+                pstmt.setString(13, this.routingNumber);
+                pstmt.setString(14, this.billingName);
                 ResultSet rs = pstmt.executeQuery();
 
                 if(rs.next())
@@ -144,61 +295,31 @@ public class DataAccess {
         }
     }
 
-
-    public Boolean insertTransactionAndItems(ServiceRequest transaction)
+    public Boolean insertServiceRequest(int idCustomer, String Title, String Description, float Weight, Timestamp DatePosted, float Price,
+                                             boolean LoadHelp, boolean UnloadHelp, byte[] Picture, String StartAddress, String EndAddress)
     {
         try{
-            insertTransactionAndItemsAsync iti =  new insertTransactionAndItemsAsync(transaction.getIdCustomer(),
-                                                    transaction.getTitle(), transaction.getDescription(),
-                                                    transaction.getDatePosted(), transaction.getWeight(),
-                                                    transaction.getPickupLocation(), transaction.getDestination(),
-                                                    transaction.needLoadHelp(), transaction.needUnloadHelp(),
-                                                    transaction.getPrice());
-            return iti.execute().get();
+            insertServiceRequestAsync isr =  new insertServiceRequestAsync(idCustomer, Title, Description, Weight, DatePosted, Price, LoadHelp, UnloadHelp,
+                                                    Picture, StartAddress, EndAddress);
+            return isr.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
     }
 
-    public Boolean insertTransactionAndItems(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted, String itemName,
-                                             String itemDescription, float weight, float height, float width, float length, byte[] picture,
-                                                String startAddress, String endAddress)
-    {
-        try{
-            insertTransactionAndItemsAsync iti =  new insertTransactionAndItemsAsync(idUser, transactionTitle, transactionDescription, datePosted,
-                                                                            itemName, itemDescription, weight, height, width, length, picture, startAddress, endAddress);
-            return iti.execute().get();
-        } catch (Exception e) {System.out.println(e);}
-        return null;
-    }
-
-    private class insertTransactionAndItemsAsync extends AsyncTask<Void, Void, Boolean>
+    private class insertServiceRequestAsync extends AsyncTask<Void, Void, Boolean>
     {
 
-        private int idUser; private String transactionTitle; private String transactionDescription;
-        private Timestamp datePosted; private String itemName; private String itemDescription; private float weight; private float height;
-        private float width; private float length; private byte[] picture; private String startAddress; private String endAddress;
-        private float price; private boolean loadHelp; private boolean unloadHelp;
+        private int idCustomer; private String title; private String description; private float weight; private Timestamp datePosted;
+        private float price; private boolean loadHelp; private boolean unloadHelp; private byte[] picture; private String startAddress;
+        private String endAddress;
 
-        public insertTransactionAndItemsAsync(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted,
-                                              String itemName, String itemDescription, float weight, float height, float width, float length, byte[] picture,
-                                                String startAddress, String endAddress)
+        public insertServiceRequestAsync(int idCustomer, String Title, String Description, float Weight, Timestamp DatePosted, float Price,
+                                         boolean LoadHelp, boolean UnloadHelp, byte[] Picture, String StartAddress, String EndAddress)
         {
-            this.idUser = idUser; this.transactionTitle = transactionTitle; this.transactionDescription = transactionDescription;
-            this.datePosted = datePosted; this.itemName = itemName; this.itemDescription = itemDescription;
-            this.weight = weight; this.height = height; this.width = width; this.length = length;
-            this.picture = picture; this.startAddress = startAddress; this.endAddress = endAddress;
+            this.idCustomer = idCustomer; this.title = Title; this.description = Description; this.weight = Weight; this.datePosted = DatePosted;
+            this.price = Price; this.loadHelp = LoadHelp; this.unloadHelp = UnloadHelp; this.picture = Picture; this.startAddress = StartAddress;
+            this.endAddress = EndAddress;
         }
-
-        public insertTransactionAndItemsAsync(int idUser, String transactionTitle, String transactionDescription, Timestamp datePosted,
-                                              float itemWeight, String pickupLocation, String destination,
-                                              boolean loadHelp, boolean unloadHelp, float price)
-        {
-            this.idUser = idUser; this.transactionTitle = transactionTitle; this.transactionDescription = transactionDescription;
-            this.datePosted = datePosted; this.weight = itemWeight; /*this.picture = picture;*/
-            this.startAddress = pickupLocation; this.endAddress = destination;
-            this.loadHelp = loadHelp; this.unloadHelp = unloadHelp; this.price = price;
-        }
-
 
         @Override
         protected Boolean doInBackground(Void... params)
@@ -206,19 +327,21 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertTransaction @id_Customer = ?, @Title = ?, @Description = ?, @DatePosted = ?," +
-                                    " @TotalWeight = ?, @LoadHelp = ?, @UnloadHelp = ?, @Price = ?";
+                String query = "EXEC dbo.usp_InsertServiceRequest @idCustomer = ?, @Title = ?, @Description = ?, @TotalWeight = ?, @DatePosted = ?," +
+                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?. @StartLocation = ?, @EndLocation = ? ";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setInt(1, this.idUser);
-                pstmt.setString(2, this.transactionTitle);
-                pstmt.setString(3, this.transactionDescription);
-                pstmt.setTimestamp(4, this.datePosted);
-                pstmt.setFloat(5, this.weight);
-                pstmt.setBoolean(6, this.loadHelp);
-                pstmt.setBoolean(7, this.unloadHelp);
-                pstmt.setFloat(8, this.price);
-                //pstmt.setBytes(8, this.picture);
+                pstmt.setInt(1, this.idCustomer);
+                pstmt.setString(2, this.title);
+                pstmt.setString(3, this.description);
+                pstmt.setFloat(4, this.weight);
+                pstmt.setTimestamp(5, this.datePosted);
+                pstmt.setFloat(6, this.price);
+                pstmt.setBoolean(7, this.loadHelp);
+                pstmt.setBoolean(8, this.unloadHelp);
+                pstmt.setBytes(8, this.picture);
+                pstmt.setString(9, this.startAddress);
+                pstmt.setString(10, this.endAddress);
 
                 ResultSet rs = pstmt.executeQuery();
 
@@ -231,62 +354,12 @@ public class DataAccess {
         }
     }
 
-    public Boolean insertDriverProfile(int idUser, String driverLicenseNumber, String carMake, String carModel, String licensePlateNumber)
+
+
+    public Boolean insertDriverRating(int idDriver, int idCustomerWhoRated, int idServiceRequest, int rating, String comment, float newDriverAvg, int newDriverCount)
     {
         try{
-            insertDriverProfileAsync idp =  new insertDriverProfileAsync(idUser, driverLicenseNumber, carMake, carModel, licensePlateNumber);
-            return idp.execute().get();
-        } catch (Exception e) {System.out.println(e);}
-        return null;
-    }
-
-    private class insertDriverProfileAsync extends AsyncTask<Void, Void, Boolean>
-    {
-
-        private int idUser;
-        private String driverLicenseNumber;
-        private String carMake;
-        private String carModel;
-        private String licensePlateNumber;
-
-        public  insertDriverProfileAsync(int idUser, String driverLicenseNumber, String carMake, String carModel, String licensePlateNumber)
-        {
-            this.idUser = idUser;
-            this.driverLicenseNumber = driverLicenseNumber;
-            this.carMake = carMake;
-            this.carModel = carModel;
-            this.licensePlateNumber = licensePlateNumber;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params)
-        {
-            try {
-                Connection conn = DataAccess.this.ConnectToDB();
-
-                String query = "EXEC dbo.usp_InsertDriver @idUser = ?, @DriverLiscenseNumber = ?, @CarMake = ?, @CarModel = ?, @LiscensePlateNumber = ?";
-
-                PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setInt(1, this.idUser);
-                pstmt.setString(2, this.driverLicenseNumber);
-                pstmt.setString(3, this.carMake);
-                pstmt.setString(4, this.carModel);
-                pstmt.setString(5, this.licensePlateNumber);
-                ResultSet rs = pstmt.executeQuery();
-
-                if(rs.next())
-                    return true;
-
-                conn.close();
-            } catch (Exception e) {System.out.println("Error Adding Driver: " + e.toString());}
-            return false;
-        }
-    }
-
-    public Boolean insertDriverRating(int idDriver, int idUserWhoRated, int idTransaction, int rating)
-    {
-        try{
-            insertDriverRatingAsync idr =  new insertDriverRatingAsync(idDriver, idUserWhoRated, idTransaction, rating);
+            insertDriverRatingAsync idr =  new insertDriverRatingAsync(idDriver, idCustomerWhoRated, idServiceRequest, rating, comment, newDriverAvg, newDriverCount);
             return idr.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
@@ -295,16 +368,22 @@ public class DataAccess {
     private class insertDriverRatingAsync extends AsyncTask<Void, Void, Boolean>
     {
         private int idDriver;
-        private int idUserWhoRated;
-        private int idTransaction;
+        private int idCustomerWhoRated;
+        private int idServiceRequest;
         private int rating;
+        private String comment;
+        private float newDriverAvg;
+        private int newDriverCount;
 
-        public insertDriverRatingAsync(int idDriver, int idUserWhoRated, int idTransaction, int rating)
+        public insertDriverRatingAsync(int idDriver, int idCustomerWhoRated, int idServiceRequest, int rating, String comment, float newDriverAvg, int newDriverCount)
         {
             this.idDriver = idDriver;
-            this.idUserWhoRated = idUserWhoRated;
-            this.idTransaction = idTransaction;
+            this.idCustomerWhoRated = idCustomerWhoRated;
+            this.idServiceRequest = idServiceRequest;
             this.rating = rating;
+            this.comment = comment;
+            this.newDriverAvg = newDriverAvg;
+            this.newDriverCount = newDriverCount;
         }
 
         @Override
@@ -313,13 +392,17 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertDriverRating @idDriver = ?, @idUserWhoRated = ?, @idTransaction = ?, @rating = ?";
+                String query = "EXEC dbo.usp_InsertDriverRating @idDriver = ?, @idCustomerWhoRated = ?, @idServiceRequest = ?, @Rating = ?, @Comment = ?, @NewDriverAverage = ?, " +
+                        "@NewDriverCount = ?";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idDriver);
-                pstmt.setInt(2, this.idUserWhoRated);
-                pstmt.setInt(3, this.idTransaction);
+                pstmt.setInt(2, this.idCustomerWhoRated);
+                pstmt.setInt(3, this.idServiceRequest);
                 pstmt.setInt(4, this.rating);
+                pstmt.setString(5, this.comment);
+                pstmt.setFloat(6, this.newDriverAvg);
+                pstmt.setInt(7, this.newDriverCount);
                 ResultSet rs = pstmt.executeQuery();
 
                 if(rs.next())
@@ -332,63 +415,67 @@ public class DataAccess {
 
     }
 
-    public Boolean insertUserPaymentInfo(int idUser, String cardNumber, String billingAddress, String expirationMonth, String expirationYear, String CVV, String billingName)
+    public ArrayList<ServiceRequest> getServiceRequests()
     {
         try{
-            insertUserPaymentInfoAsync idr =  new insertUserPaymentInfoAsync(idUser, cardNumber, billingAddress, expirationMonth, expirationYear, CVV, billingName);
-            return idr.execute().get();
+            getServiceRequestsAsync gsr =  new getServiceRequestsAsync();
+            return gsr.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
     }
 
-    private class insertUserPaymentInfoAsync extends AsyncTask<Void, Void, Boolean>
+    private class getServiceRequestsAsync extends AsyncTask<Void, Void, ArrayList<ServiceRequest>>
     {
 
-        private int idUser;
-        private String cardNumber;
-        private String billingAddress;
-        private String expirationMonth;
-        private String expirationYear;
-        private String CVV;
-        private String billingName;
-
-        public insertUserPaymentInfoAsync(int idUser, String cardNumber, String billingAddress, String expirationMonth, String expirationYear, String CVV, String billingName)
+        public getServiceRequestsAsync()
         {
-            this.idUser = idUser;
-            this.cardNumber = cardNumber;
-            this.billingAddress = billingAddress;
-            this.expirationMonth = expirationMonth;
-            this.expirationYear = expirationYear;
-            this.CVV = CVV;
-            this.billingName = billingName;
+
         }
 
         @Override
-        protected Boolean doInBackground(Void... params)
+        protected ArrayList<ServiceRequest> doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_InsertUserPaymentInfo @idUser = ?, @idUserWhoRated = ?, @idTransaction = ?, @rating = ?";
+                String query =
+                        "SELECT ServiceRequest.id, id_Customer, id_DriverWhoCompleted, Title, Description, TotalWeight, DatePosted, DateClosed, Price, LoadHelp, " +
+                                "UnloadHelp, isCompleted, inProgress, StartLocation, EndLocation " +
+                        "FROM ServiceRequest LEFT JOIN Location on Location.id_ServiceRequest = ServiceRequest.id";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setInt(1, this.idUser);
-                pstmt.setString(2, this.cardNumber);
-                pstmt.setString(3, this.billingAddress);
-                pstmt.setString(4, this.expirationMonth);
-                pstmt.setString(5, this.expirationYear);
-                pstmt.setString(6, this.CVV);
-                pstmt.setString(7, this.billingName);
                 ResultSet rs = pstmt.executeQuery();
 
-                if(rs.next())
-                    return true;
+                ArrayList<ServiceRequest> ServiceRequests = new ArrayList<ServiceRequest>();
+
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    int idCustomer = rs.getInt("id_Customer");
+                    Integer idDriverWhoCompleted = rs.getInt("id_DriverWhoCompleted");
+                    String title = rs.getString("Title");
+                    String description = rs.getString("Description");
+                    float weight = rs.getFloat("TotalWeight");
+                    Timestamp datePosted = rs.getTimestamp("DatePosted");
+                    Timestamp dateClosed = rs.getTimestamp("DateClosed");
+                    float price = rs.getFloat("Price");
+                    boolean loadHelp = rs.getBoolean("LoadHelp");
+                    boolean unloadHelp = rs.getBoolean("UnloadHelp");
+                    byte[] picture = rs.getBytes("Picture");
+                    boolean isCompleted = rs.getBoolean("isCompleted");
+                    boolean inProgress = rs.getBoolean("inProgress");
+                    String startLocation = rs.getString("StartLocation");
+                    String endLocation = rs.getString("EndLocation");
+
+                    ServiceRequest sr = new ServiceRequest(id, idCustomer, idDriverWhoCompleted, title, description, weight, datePosted, dateClosed, price,
+                                                                loadHelp, unloadHelp, picture, isCompleted, inProgress, startLocation, endLocation);
+                    ServiceRequests.add(sr);
+                }
 
                 conn.close();
             } catch (Exception e) {System.out.println("Error Adding Driver Rating: " + e.toString());}
-            return false;
+            return null;
         }
-
     }
 
 }

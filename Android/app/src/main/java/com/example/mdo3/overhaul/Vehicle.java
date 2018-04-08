@@ -9,23 +9,29 @@ public class Vehicle {
     private int idDriver;
     private String make;
     private String model;
+    private int year;
     private String licensePlate;
+    private float loadCapacity;
     private byte[] picture;
 
-    public Vehicle(int Id, int IdDriver, String Make, String Model, String LicensePlate, byte[] Picture)
+    public Vehicle(int Id, int IdDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity, byte[] Picture)
     {
         this.id = Id;
         this.idDriver = IdDriver;
         this.make = Make;
         this.model = Model;
+        this.year = Year;
         this.licensePlate = LicensePlate;
+        this.loadCapacity = LoadCapacity;
         this.picture = Picture;
     }
 
-    public int getId() {return id;}
-    public int getIdDriver() {return idDriver;}
-    public String getMake() {return make;}
-    public String getModel() {return model;}
-    public String getLicensePlate() {return licensePlate;}
-    public byte[] getPicture() {return picture;}
+    public int getId() {return this.id;}
+    public int getIdDriver() {return this.idDriver;}
+    public String getMake() {return this.make;}
+    public String getModel() {return this.model;}
+    public int getYear() {return this.year;}
+    public String getLicensePlate() {return this.licensePlate;}
+    private float getLoadCapacity() {return this.loadCapacity;}
+    public byte[] getPicture() {return this.picture;}
 }

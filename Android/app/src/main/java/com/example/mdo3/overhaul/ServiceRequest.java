@@ -14,34 +14,38 @@ public class ServiceRequest {
     private Integer idDriverWhoCompleted;
     private String title;
     private String description;
+    private float weight;
     private Timestamp datePosted;
     private Timestamp dateClosed;
-    private boolean isCompleted;
+    private float price;
     private boolean loadHelp;
     private boolean unloadHelp;
-    private String pickupLocation;
-    private String destination;
-    private float weight;
-    private float price;
-    private float distanceInMiles;
+    private byte[] picture;
+    private boolean isCompleted;
+    private boolean inProgress;
 
-    public ServiceRequest(int Id, int IdCustomer, Integer IdDriverWhoCompleted, String Title, String Description, Timestamp DatePosted, Timestamp DateClosed,
-                       boolean IsCompleted, boolean loadHelp, boolean unloadHelp,
-                       String pickupLocation, String destination, float weight, float price, float distanceInMiles)
+    private String startLocation;
+    private String endLocation;
+
+    public ServiceRequest(int Id, int IdCustomer, Integer IdDriverWhoCompleted, String Title, String Description, float Weight, Timestamp DatePosted, Timestamp DateClosed,
+                       float Price,  boolean LoadHelp, boolean UnloadHelp, byte[] Picture, boolean IsCompleted, boolean InProgress, String StartLocation, String EndLocation)
     {
         this.id = Id;
         this.idCustomer = IdCustomer;
         this.idDriverWhoCompleted = IdDriverWhoCompleted;
         this.title = Title;
         this.description = Description;
+        this.weight = Weight;
         this.datePosted = DatePosted;
         this.isCompleted = IsCompleted;
-        this.pickupLocation = pickupLocation;
-        this.destination = destination;
-        this.loadHelp = loadHelp;
-        this.unloadHelp = unloadHelp;
-        this.weight = weight;
-        this.price = price;
+        this.price = Price;
+        this.loadHelp = LoadHelp;
+        this.unloadHelp = UnloadHelp;
+        this.picture = Picture;
+        this.isCompleted = IsCompleted;
+        this.inProgress = InProgress;
+        this.startLocation = StartLocation;
+        this.endLocation = EndLocation;
     }
 
     public ServiceRequest(int IdCustomer, String Title, String Description, Timestamp DatePosted,
@@ -52,8 +56,8 @@ public class ServiceRequest {
         this.title = Title;
         this.description = Description;
         this.datePosted = DatePosted;
-        this.pickupLocation = pickupLocation;
-        this.destination = destination;
+        this.startLocation = pickupLocation;
+        this.endLocation = destination;
         this.loadHelp = loadHelp;
         this.unloadHelp = unloadHelp;
         this.weight = weight;
@@ -65,14 +69,18 @@ public class ServiceRequest {
     public int getIdDriverWhoCompleted() { return  this.idDriverWhoCompleted;}
     public String getTitle() { return this.title; }
     public String getDescription() { return this.description; }
-    public Timestamp getDatePosted() { return this.datePosted; }
-    public Timestamp getDateClosed() { return this.dateClosed; }
-    public boolean isCompleted() { return this.isCompleted; }
-    public String getPickupLocation() { return this.pickupLocation; }
-    public String getDestination() { return this.destination; }
-    public boolean needLoadHelp() { return this.loadHelp; }
-    public boolean needUnloadHelp() { return this.unloadHelp; }
     public float getWeight() { return this.weight; }
     public float getPrice() { return this.price; }
+    public Timestamp getDatePosted() { return this.datePosted; }
+    public Timestamp getDateClosed() { return this.dateClosed; }
+    public boolean needLoadHelp() { return this.loadHelp; }
+    public boolean needUnloadHelp() { return this.unloadHelp; }
+    public byte[] getPicture() {return this.picture; }
+    public boolean isCompleted() { return this.isCompleted; }
+    public boolean isInProgress() {return this.inProgress;}
+    public String getStartLocation() { return this.startLocation; }
+    public String getEndLocation() { return this.endLocation; }
+
+
 
 }

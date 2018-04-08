@@ -85,11 +85,11 @@ public class JobRequest extends AppCompatActivity {
 
 
                 Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
-                ServiceRequest trans = new ServiceRequest(userId, sTitle, sDescription, datePosted,
-                                                    loadHelp, unloadHelp, sPickupLocation,
-                                                    sDestination, weight, price);
-                DataAcess DA = new DataAcess();
-                DA.insertTransactionAndItems(trans);
+
+                //insert a new service request into the database
+                DataAccess da = new DataAccess();
+                da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+
                 finish();
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
                 JobRequest.this.startActivity(myIntent);
