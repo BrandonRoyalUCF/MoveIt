@@ -8,23 +8,27 @@ import java.sql.Timestamp;
 public class Customer {
 
     private int id;
-    private int idUser;
+    private String userName;
+    private String name;
+    private String phoneNumber;
     private boolean isActive;
     private Timestamp dateRegistered;
-    private float rating;
 
-    public Customer(int Id, int IdUser, Timestamp DateRegistered, boolean IsActive, float Rating)
+
+    public Customer(int Id, String UserName, String Name, String PhoneNumber, Timestamp DateRegistered, boolean IsActive)
     {
         this.id = Id;
-        this.idUser = IdUser;
+        this.userName = UserName;
+        this.name = Name;
+        this.phoneNumber = PhoneNumber;
         this.isActive = IsActive;
         this.dateRegistered = DateRegistered;
-        this.rating = Rating;
     }
 
     public int getId() {return this.id;}
-    public int getIdUser() {return this.idUser;}
+    public String getUserName() {return this.userName;}
     public Timestamp getDateRegistered() {return this.dateRegistered;}
     public boolean getIsActive() {return this.isActive;}
-    public float getRating() {return this.rating;}
+    public String getPhoneNumber() {return this.phoneNumber;}
+    public String getName() {return this.name;}
 }

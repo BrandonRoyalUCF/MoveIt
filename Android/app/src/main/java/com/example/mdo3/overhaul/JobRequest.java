@@ -16,7 +16,7 @@ import java.util.Date;
 
 public class JobRequest extends AppCompatActivity {
 
-    private int userId;
+    private int userId = 1;
     private EditText title;
     private EditText description;
     private Timestamp datePosted;
@@ -85,13 +85,16 @@ public class JobRequest extends AppCompatActivity {
 
 
                 Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
-                /*
-                Transaction trans = new Transaction(userId, sTitle, sDescription, datePosted,
-                                                    isCompleted, loadHelp, unloadHelp, sPickupLocation,
-                                                    sDestination, weight, price);
-                DataAcess DA = new DataAcess();
-                DA.insertTransactionAndItems(trans);
-                */
+
+                //insert a new service request into the database
+                DataAccess da = new DataAccess();
+                boolean worked = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                if(!worked)
+                    System.out.println("INSERT FAILED ******************");
+
+                finish();
+                Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
+                JobRequest.this.startActivity(myIntent);
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
