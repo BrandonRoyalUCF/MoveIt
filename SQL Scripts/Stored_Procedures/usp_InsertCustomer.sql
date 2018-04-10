@@ -31,14 +31,17 @@ AS
 		RAISERROR (100,-1,-1, 'Error: The user name already exists in the system.');
 	END
 
-	INSERT INTO CustomerInfo(UserName, PassWord, Name, PhoneNumber, DateRegistered, IsActive)
-	VALUES (@UserName, @PassWord, @Name, @PhoneNumber, @DateRegistered, 1)
+	ELSE
+	BEGIN
 
-	DECLARE @idCustomer int = (SELECT SCOPE_IDENTITY())
+		INSERT INTO CustomerInfo(UserName, PassWord, Name, PhoneNumber, DateRegistered, IsActive)
+		VALUES (@UserName, @PassWord, @Name, @PhoneNumber, @DateRegistered, 1)
 
-	INSERT INTO CustomerPaymentInfo(CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName)
-	VALUES (@CardNumber, @BillingAddress, @ExpirationMonth, @ExpirationYear, @CVV, @BillingName)
+		DECLARE @idCustomer int = (SELECT SCOPE_IDENTITY())
 
+		INSERT INTO CustomerPaymentInfo(CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName)
+		VALUES (@CardNumber, @BillingAddress, @ExpirationMonth, @ExpirationYear, @CVV, @BillingName)
+	END
 
 GO
 

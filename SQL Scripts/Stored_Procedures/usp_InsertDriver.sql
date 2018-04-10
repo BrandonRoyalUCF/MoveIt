@@ -35,16 +35,20 @@ AS
 		RAISERROR (100,-1,-1, 'Error: The user name already exists in the system.');
 	END
 
-	INSERT INTO DriverInfo(UserName, [PassWord], [Name], PhoneNumber, DriverLicenseNumber, DateRegistered, IsActive)                      
-	VALUES (@UserName, @PassWord, @Name, @PhoneNumber, @DriverLicenseNumber, @DateRegistered,1)
+	ELSE
+	BEGIN
 
-	DECLARE @idDriver int = (SELECT SCOPE_IDENTITY())
+		INSERT INTO DriverInfo(UserName, [PassWord], [Name], PhoneNumber, DriverLicenseNumber, DateRegistered, IsActive)                      
+		VALUES (@UserName, @PassWord, @Name, @PhoneNumber, @DriverLicenseNumber, @DateRegistered,1)
 
-	INSERT INTO Vehicle(id_Driver, CarMake, CarModel, CarYear, LicensePlateNumber, LoadCapacity)
-	VALUES (@idDriver, @CarMake, @CarModel, @CarYear, @LicensePlateNumber, @LoadCapacity)
+		DECLARE @idDriver int = (SELECT SCOPE_IDENTITY())
 
-	INSERT INTO DriverPaymentInfo(id_Driver, BankAccountNumber, RoutingNumber, BillingName)
-	VALUES (@idDriver, @BankAccountNumber, @RoutingNumber, @BillingName)
+		INSERT INTO Vehicle(id_Driver, CarMake, CarModel, CarYear, LicensePlateNumber, LoadCapacity)
+		VALUES (@idDriver, @CarMake, @CarModel, @CarYear, @LicensePlateNumber, @LoadCapacity)
+
+		INSERT INTO DriverPaymentInfo(id_Driver, BankAccountNumber, RoutingNumber, BillingName)
+		VALUES (@idDriver, @BankAccountNumber, @RoutingNumber, @BillingName)
+	END
 GO
 
 
