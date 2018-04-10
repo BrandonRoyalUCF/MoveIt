@@ -140,7 +140,7 @@ public class DataAccess {
                     pstmt = conn.prepareStatement(query);
                     pstmt.setInt(1, id);
                     rs = pstmt.executeQuery();
-                    conn.close();
+
                     if (rs.next() )
                     {
                         int idVehicle = rs.getInt("id");
@@ -156,7 +156,7 @@ public class DataAccess {
                     return driver;
                 }
 
-
+                conn.close();
             } catch (Exception e) {System.out.println("Error Logging In: " + e.toString());}
             return null;
         }
@@ -460,7 +460,7 @@ public class DataAccess {
                 ResultSet rs = pstmt.executeQuery();
 
                 ArrayList<ServiceRequest> ServiceRequests = new ArrayList<ServiceRequest>();
-                conn.close();
+
 
                 while(rs.next())
                 {
@@ -485,6 +485,8 @@ public class DataAccess {
                                                                 loadHelp, unloadHelp, picture, isCompleted, inProgress, startLocation, endLocation);
                     ServiceRequests.add(sr);
                 }
+
+                conn.close();
                 return ServiceRequests;
 
 
