@@ -73,7 +73,7 @@ public class DataAccess {
                 pstmt.setString(1, this.userName);
                 pstmt.setString(2, this.passWord);
                 ResultSet rs = pstmt.executeQuery();
-                conn.close();
+
                 if (rs.next() ) {
                     int UserId = rs.getInt("id");
                     String UserName = rs.getString("UserName");
@@ -84,6 +84,8 @@ public class DataAccess {
                     Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
                     return customer;
                 }
+
+                conn.close();
 
 
             } catch (Exception e) {System.out.println("Error Logging In: " + e.toString());}
