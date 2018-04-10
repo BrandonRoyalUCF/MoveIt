@@ -339,9 +339,9 @@ public class DataAccess {
                 pstmt.setFloat(6, this.price);
                 pstmt.setBoolean(7, this.loadHelp);
                 pstmt.setBoolean(8, this.unloadHelp);
-                pstmt.setBytes(8, this.picture);
-                pstmt.setString(9, this.startAddress);
-                pstmt.setString(10, this.endAddress);
+                pstmt.setBytes(9, this.picture);
+                pstmt.setString(10, this.startAddress);
+                pstmt.setString(11, this.endAddress);
 
                 ResultSet rs = pstmt.executeQuery();
 
