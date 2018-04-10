@@ -328,7 +328,7 @@ public class DataAccess {
                 Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertServiceRequest @idCustomer = ?, @Title = ?, @Description = ?, @TotalWeight = ?, @DatePosted = ?," +
-                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?. @StartLocation = ?, @EndLocation = ? ";
+                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?, @StartLocation = ?, @EndLocation = ? ";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idCustomer);
