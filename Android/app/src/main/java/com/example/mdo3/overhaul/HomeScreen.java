@@ -47,8 +47,7 @@ public class HomeScreen extends AppCompatActivity
     private final int DRIVER = 2;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         mEmailView = (EditText) findViewById(R.id.login_email);
@@ -58,11 +57,9 @@ public class HomeScreen extends AppCompatActivity
         mLoginFormView = findViewById(R.id.login_main_layout);
         mProgressView = findViewById(R.id.login_progress);
 
-        loginSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(isChecked)
+        loginSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
                     loginSwitch.setText(R.string.user_driver);
                 else
                     loginSwitch.setText(R.string.user_customer);
@@ -74,13 +71,12 @@ public class HomeScreen extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                if (loginSwitch.isChecked()){
+                if (loginSwitch.isChecked()) {
                     // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
                     finish();
                     Intent myIntent = new Intent(HomeScreen.this, DriverRegistration.class);
                     HomeScreen.this.startActivity(myIntent);
-                }
-                else {
+                } else {
                     // Otherwise, that means the switch is still showing Customer, so go to the Customer main screen.
                     finish();
                     Intent myIntent = new Intent(HomeScreen.this, UserRegistration.class);
@@ -101,33 +97,8 @@ public class HomeScreen extends AppCompatActivity
 
                 // Currently the credentials are based off of one of the dummy credentials listed with the other main variables.
 
-               /* if (mEmailView.getText().toString().equals("foo@example.com") ) {
-                    if (mPasswordView.getText().toString().equals("hello") ) {
 
-                        if (loginSwitch.isChecked()){
-                            // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
-                            finish();
-                            Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
-                            HomeScreen.this.startActivity(myIntent);
-                        }
-                        else {
-                            // Otherwise, that means the switch is still showing Customer, so go to the CUstomer main screen.
-                            finish();
-                            Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
-                            HomeScreen.this.startActivity(myIntent);
-                        }
-                    }
-                    else {
-                        // Just a placeholder for now
-                        Toast.makeText(HomeScreen.this, "Please input correct credentials! hello", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    // Just a placeholder for now
-                    Toast.makeText(HomeScreen.this, "Please input correct credentials! foo@example.com and hello", Toast.LENGTH_SHORT).show();
-                }
-                */
-               //attemptLogin();
+                attemptLogin();
             }
         };
         Button loginBtn = (Button) findViewById(R.id.button_log_in);
@@ -135,28 +106,8 @@ public class HomeScreen extends AppCompatActivity
 
 
         System.out.println("Register new account");
-        DataAccess da = new DataAccess();
-        Date date = new Date();
-        Timestamp ts = new Timestamp(date.getTime());
-        Boolean result = da.insertCustomer("martin14do@gmail.com",
-                "Martindo123!",
-                "Martin Do",
-                "407-867-5309",
-                ts,
-                "123-123-123-123",
-                "1234 class lane",
-                "06",
-                "2018",
-                "222",
-                "Martin Do");
-
-        System.out.println("Account Created");
-
-        if(result )
-            attemptLogin();
-        else
-            return;
     }
+
 
 
     /**
@@ -166,6 +117,10 @@ public class HomeScreen extends AppCompatActivity
      */
     private void attemptLogin()
     {
+        customerDets = null;
+        driverDets = null;
+        DataAccess DA = new DataAccess();
+
         if (mAuthTask != null)
         {
             return;
@@ -217,8 +172,30 @@ public class HomeScreen extends AppCompatActivity
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, loginSwitch.isChecked());
-            mAuthTask.execute();
+            if(loginSwitch.isChecked())
+            {
+                System.out.println("Logging in as Driver");
+                driverDets = DA.checkDriverLogin(email, password);
+                if (driverDets != null)
+                {
+                    Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
+                    HomeScreen.this.startActivity(myIntent);
+                }
+            }
+            else
+            {
+                System.out.println("Logging in as Customer");
+                customerDets = DA.checkCustomerLogin(email, password);
+
+                    if(customerDets != null)
+                    {
+                        Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
+                        HomeScreen.this.startActivity(myIntent);
+
+                    }
+            }
+
+            showProgress(false);
         }
     }
 
