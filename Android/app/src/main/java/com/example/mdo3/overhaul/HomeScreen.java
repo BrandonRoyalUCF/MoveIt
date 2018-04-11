@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -37,11 +40,14 @@ public class HomeScreen extends AppCompatActivity
     private View mLoginFormView;
     private Switch loginSwitch;
     private boolean DEBUG = true;
-    private UserDetails usrDets = null;
+    private Customer customerDets = null;
+    private Driver driverDets = null;
+
+    private final int CUSTOMER = 1;
+    private final int DRIVER = 2;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         mEmailView = (EditText) findViewById(R.id.login_email);
@@ -51,11 +57,9 @@ public class HomeScreen extends AppCompatActivity
         mLoginFormView = findViewById(R.id.login_main_layout);
         mProgressView = findViewById(R.id.login_progress);
 
-        loginSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                if(isChecked)
+        loginSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
                     loginSwitch.setText(R.string.user_driver);
                 else
                     loginSwitch.setText(R.string.user_customer);
@@ -67,13 +71,12 @@ public class HomeScreen extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                if (loginSwitch.isChecked()){
+                if (loginSwitch.isChecked()) {
                     // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
                     finish();
                     Intent myIntent = new Intent(HomeScreen.this, DriverRegistration.class);
                     HomeScreen.this.startActivity(myIntent);
-                }
-                else {
+                } else {
                     // Otherwise, that means the switch is still showing Customer, so go to the Customer main screen.
                     finish();
                     Intent myIntent = new Intent(HomeScreen.this, UserRegistration.class);
@@ -93,38 +96,18 @@ public class HomeScreen extends AppCompatActivity
                 // login processing (or whatever else may be required). Setting the Intent may still be required.
 
                 // Currently the credentials are based off of one of the dummy credentials listed with the other main variables.
-                if (mEmailView.getText().toString().equals("foo@example.com") ) {
-                    if (mPasswordView.getText().toString().equals("hello") ) {
 
-                        if (loginSwitch.isChecked()){
-                            // If the switch is checked, that means the text is set to Driver. Go to the Driver main screen.
-                            finish();
-                            Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
-                            HomeScreen.this.startActivity(myIntent);
-                        }
-                        else {
-                            // Otherwise, that means the switch is still showing Customer, so go to the CUstomer main screen.
-                            finish();
-                            Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
-                            HomeScreen.this.startActivity(myIntent);
-                        }
-                    }
-                    else {
-                        // Just a placeholder for now
-                        Toast.makeText(HomeScreen.this, "Please input correct credentials! hello", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    // Just a placeholder for now
-                    Toast.makeText(HomeScreen.this, "Please input correct credentials! foo@example.com and hello", Toast.LENGTH_SHORT).show();
-                }
 
-                // TODO: Modify this function to determine whether to go to the Client or Driver main screen!!
+                attemptLogin();
             }
         };
         Button loginBtn = (Button) findViewById(R.id.button_log_in);
         loginBtn.setOnClickListener(loginListen);
+
+
+        System.out.println("Register new account");
     }
+
 
 
     /**
@@ -134,6 +117,10 @@ public class HomeScreen extends AppCompatActivity
      */
     private void attemptLogin()
     {
+        customerDets = null;
+        driverDets = null;
+        DataAccess DA = new DataAccess();
+
         if (mAuthTask != null)
         {
             return;
@@ -158,6 +145,8 @@ public class HomeScreen extends AppCompatActivity
             cancel = true;
         }
 
+        System.out.println("Password valid");
+
         // Check for a valid email address.
         if (TextUtils.isEmpty(email))
         {
@@ -178,24 +167,83 @@ public class HomeScreen extends AppCompatActivity
             focusView.requestFocus();
         } else
         {
+            System.out.println("Password valid");
+            System.out.print("Logging now......");
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            if(loginSwitch.isChecked())
+            {
+                System.out.println("Logging in as Driver");
+                driverDets = DA.checkDriverLogin(email, password);
+                if (driverDets != null)
+                {
+                    Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
+                    HomeScreen.this.startActivity(myIntent);
+                }
+            }
+            else
+            {
+                System.out.println("Logging in as Customer");
+                customerDets = DA.checkCustomerLogin(email, password);
+
+                    if(customerDets != null)
+                    {
+                        Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
+                        HomeScreen.this.startActivity(myIntent);
+
+                    }
+            }
+
+            showProgress(false);
         }
     }
 
     private boolean isEmailValid(String email)
     {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
+        Boolean result = false;
+        String[] end = {".com", ".edu"};
+
+        for(String str : end)
+            if(email.contains(str))
+                result = true;
+
+        if(email.contains("@"))
+            result = true;
+
+        return result;
     }
 
     private boolean isPasswordValid(String password)
     {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
+        Boolean result = false;
+        Boolean hasCap = false;
+        Boolean hasSpecChar = false;
+        Boolean hasNumber = false;
+
+        //check for length of password
+        if(password.length() < 4 || password.length() > 15)
+            result = false;
+        else
+            result = true;
+
+        //checks for....
+        for(int i = 0; i < password.length(); i++)
+        {
+            int x = (int) password.charAt(i);
+            //has capital letter
+            if ( x >= 65 && x <= 90)
+                hasCap = true;
+
+            //has special character
+            if ((x >= 33 && x <= 47) || (x >= 58 && x <= 64) || (x >= 91 && x <= 96) || (x >= 123 && x <= 126))
+                hasSpecChar = true;
+
+            //has number
+            if(x >= 48 && x <= 57)
+                hasNumber = true;
+        }
+        return result && hasCap && hasNumber && hasSpecChar;
     }
 
     /**
@@ -241,34 +289,49 @@ public class HomeScreen extends AppCompatActivity
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean>
+    public class UserLoginTask extends AsyncTask<String, Void, Boolean>
     {
 
         private final String mEmail;
         private final String mPassword;
+        private final Boolean mFlag;
 
-        UserLoginTask(String email, String password)
+        UserLoginTask(String email, String password, Boolean flag)
         {
             mEmail = email;
             mPassword = password;
+            mFlag = flag;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params)
+        protected Boolean doInBackground(String... params)
         {
-            usrDets = null;
+            System.out.println("Creating Data Access Object");
+            customerDets = null;
+            driverDets = null;
+            DataAccess DA = new DataAccess();
             try
             {
-               DataAcess DA = new DataAcess();
-                usrDets = DA.checkUserLogin(mEmail,mPassword);
+                //is checked = 1 : driver, else : customer
+                if(mFlag)
+                {
+                    System.out.println("Logging in as Driver");
+                    driverDets = DA.checkDriverLogin(mEmail, mPassword);
+                }
+                else
+                {
+                    System.out.println("Logging in as Customer");
+                    customerDets = DA.checkCustomerLogin(mEmail, mPassword);
+                }
                 Thread.sleep(2000);
 
             } catch (InterruptedException e)
             {
+                System.out.println("Login Failed");
                 return false;
             }
 
-            return (usrDets != null ? true : false);
+            return (customerDets != null || driverDets != null) ? true : false;
         }
 
         @Override
@@ -279,8 +342,19 @@ public class HomeScreen extends AppCompatActivity
 
             if (success)
             {
+                System.out.println("Login successful! ");
+                if(customerDets != null)
+                {
+                    startNextActivity(CUSTOMER);
+                }
+                else
+                {
+                    startNextActivity(DRIVER);
+                }
                 finish();
-            } else {
+            }
+            else
+            {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
@@ -299,21 +373,23 @@ public class HomeScreen extends AppCompatActivity
 
     }
 
-    public void loginBtn(View view)
+    private void startNextActivity(int flag)
     {
-        //TODO: Add intent
-        if(DEBUG){System.out.println("DEBUG: Login Button Button Pressed");}
-        Intent intent = new Intent(this, JobRequest.class);
-       startActivity(intent);
-
-
-    }
-    public void signUp(View view)
-    {
-        //TODO: add intent
-        if(DEBUG){System.out.println("DEBUG: Signup Button Pressed");}
-        //Intent intent = new Intent();
-        //startActivity(intent);
+        System.out.println("Starting next activity ");
+        if(flag == 1)
+        {
+            Intent intent = new Intent(this, ClientMainScreen.class);
+            startActivity(intent);
+        }
+        if(flag == 2)
+        {
+            Intent intent = new Intent(this, DriverMainScreen.class);
+            startActivity(intent);
+        }
+        else
+        {
+            return;
+        }
     }
 }
 

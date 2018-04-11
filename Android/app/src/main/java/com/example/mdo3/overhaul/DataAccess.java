@@ -73,6 +73,7 @@ public class DataAccess {
                 pstmt.setString(1, this.userName);
                 pstmt.setString(2, this.passWord);
                 ResultSet rs = pstmt.executeQuery();
+
                 if (rs.next() ) {
                     int UserId = rs.getInt("id");
                     String UserName = rs.getString("UserName");
@@ -85,6 +86,8 @@ public class DataAccess {
                 }
 
                 conn.close();
+
+
             } catch (Exception e) {System.out.println("Error Logging In: " + e.toString());}
             return null;
         }
@@ -137,6 +140,7 @@ public class DataAccess {
                     pstmt = conn.prepareStatement(query);
                     pstmt.setInt(1, id);
                     rs = pstmt.executeQuery();
+
                     if (rs.next() )
                     {
                         int idVehicle = rs.getInt("id");
@@ -210,12 +214,13 @@ public class DataAccess {
                 pstmt.setString(9, this.expYear);
                 pstmt.setString(10, this.CVV);
                 pstmt.setString(11, this.billingName);
-                ResultSet rs = pstmt.executeQuery();
+                int result = pstmt.executeUpdate();
+                conn.close();
 
-                if(rs.next())
+                if(result == 1)
                     return true;
 
-                conn.close();
+
             } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
             return false;
         }
@@ -284,12 +289,18 @@ public class DataAccess {
                 pstmt.setString(12, this.bankAccountNumber);
                 pstmt.setString(13, this.routingNumber);
                 pstmt.setString(14, this.billingName);
-                ResultSet rs = pstmt.executeQuery();
-
-                if(rs.next())
+                int result = pstmt.executeUpdate();
+                conn.close();
+                if(result == 1)
                     return true;
 
-                conn.close();
+                else
+                {
+                    System.out.println("Problem adding driver");
+                    return false;
+                }
+
+
             } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
             return false;
         }
@@ -328,7 +339,7 @@ public class DataAccess {
                 Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertServiceRequest @idCustomer = ?, @Title = ?, @Description = ?, @TotalWeight = ?, @DatePosted = ?," +
-                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?. @StartLocation = ?, @EndLocation = ? ";
+                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?, @StartLocation = ?, @EndLocation = ? ";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idCustomer);
@@ -339,16 +350,17 @@ public class DataAccess {
                 pstmt.setFloat(6, this.price);
                 pstmt.setBoolean(7, this.loadHelp);
                 pstmt.setBoolean(8, this.unloadHelp);
-                pstmt.setBytes(8, this.picture);
-                pstmt.setString(9, this.startAddress);
-                pstmt.setString(10, this.endAddress);
+                pstmt.setBytes(9, this.picture);
+                pstmt.setString(10, this.startAddress);
+                pstmt.setString(11, this.endAddress);
 
                 ResultSet rs = pstmt.executeQuery();
+                conn.close();
 
                 if(rs.next())
                     return true;
 
-                conn.close();
+
             } catch (Exception e) {System.out.println("Error Adding Transaction: " + e.toString());}
             return false;
         }
@@ -403,12 +415,13 @@ public class DataAccess {
                 pstmt.setString(5, this.comment);
                 pstmt.setFloat(6, this.newDriverAvg);
                 pstmt.setInt(7, this.newDriverCount);
-                ResultSet rs = pstmt.executeQuery();
+                int result = pstmt.executeUpdate();
+                conn.close();
 
-                if(rs.next())
+                if(result == 1)
                     return true;
 
-                conn.close();
+
             } catch (Exception e) {System.out.println("Error Adding Driver Rating: " + e.toString());}
             return false;
         }
@@ -448,6 +461,7 @@ public class DataAccess {
 
                 ArrayList<ServiceRequest> ServiceRequests = new ArrayList<ServiceRequest>();
 
+
                 while(rs.next())
                 {
                     int id = rs.getInt("id");
@@ -473,6 +487,9 @@ public class DataAccess {
                 }
 
                 conn.close();
+                return ServiceRequests;
+
+
             } catch (Exception e) {System.out.println("Error Adding Driver Rating: " + e.toString());}
             return null;
         }

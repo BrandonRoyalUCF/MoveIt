@@ -119,10 +119,12 @@ public class JobRequest extends AppCompatActivity {
                 if (!hasFocus)
                 {
                     String sWeight = mWeight.getText().toString();
-                    float weight = Float.parseFloat(sWeight);
-                    float price = weight * 0.10f;
-                    String sPrice = String.valueOf(price);
-                    mPrice.setText(sPrice);
+                    if (!sWeight.isEmpty()) {
+                        float weight = Float.parseFloat(sWeight);
+                        float price = weight * 0.10f;
+                        String sPrice = String.valueOf(price);
+                        mPrice.setText(sPrice);
+                    }
                 }
             }
         });
@@ -132,7 +134,7 @@ public class JobRequest extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
                 {
-                    if (!mPickupLocation.getText().toString().isEmpty())
+                    if (!mPickupLocation.getText().toString().isEmpty() && !mDestination.getText().toString().isEmpty())
                     {
                         // This value will be the distance between the start and end
                         // once we get Google Maps API in
@@ -153,28 +155,28 @@ public class JobRequest extends AppCompatActivity {
         mLoadHelp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String sPrice = mPrice.getText().toString();
+                float price = Float.parseFloat(sPrice);
                 if (isChecked)
-                {
-                    String sPrice = mPrice.getText().toString();
-                    float price = Float.parseFloat(sPrice);
                     price += 5.0;
-                    sPrice = String.valueOf(price);
-                    mPrice.setText(sPrice);
-                }
+                else
+                    price -= 5.0;
+                sPrice = String.valueOf(price);
+                mPrice.setText(sPrice);
             }
         });
 
         mUnloadHelp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String sPrice = mPrice.getText().toString();
+                float price = Float.parseFloat(sPrice);
                 if (isChecked)
-                {
-                    String sPrice = mPrice.getText().toString();
-                    float price = Float.parseFloat(sPrice);
                     price += 5.0;
-                    sPrice = String.valueOf(price);
-                    mPrice.setText(sPrice);
-                }
+                else
+                    price -= 5.0;
+                sPrice = String.valueOf(price);
+                mPrice.setText(sPrice);
             }
         });
     }
