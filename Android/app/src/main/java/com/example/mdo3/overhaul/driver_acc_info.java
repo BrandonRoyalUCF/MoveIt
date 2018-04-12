@@ -71,20 +71,20 @@ public class driver_acc_info extends AppCompatActivity
         //String BankAccountNumber, String RoutingNumber, String BillingName)
         DataAccess da = new DataAccess();
         Intent pastIntent = getIntent();
-        Boolean result = da.insertDriver(pastIntent.getStringExtra("UserName"),
-                pastIntent.getStringExtra("Password"),
+        Boolean result = da.insertDriver(pastIntent.getStringExtra("email"),
+                pastIntent.getStringExtra("password"),
                 pastIntent.getStringExtra("UserName"),
                 pastIntent.getStringExtra("PhoneNumber"),
-                license,
+                pastIntent.getStringExtra("licenseNumber"),
                 ts,
-                carMake,
-                carModel,
-                carYear,
-                licensePlate,
-                load,
+                pastIntent.getStringExtra("vehicleCompany"),
+                pastIntent.getStringExtra("vehicleModel"),
+                Integer.parseInt(pastIntent.getStringExtra("vehicleYear")),
+                pastIntent.getStringExtra("email"),
+                Integer.parseInt(pastIntent.getStringExtra("loadCapacity")),
                 AccNum,
                 AccRout,
-                pastIntent.getStringExtra("UserName"));
+                pastIntent.getStringExtra("email"));
 
         System.out.println("DEBUG : "  + AccNum);
         System.out.println("DEBUG : "  + AccNum2);

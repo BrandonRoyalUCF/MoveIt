@@ -56,10 +56,11 @@ public class UserRegistration extends Activity {
             Intent intent = new Intent(this, credit_card_info.class);
             intent.putExtra("email",email);
             intent.putExtra("password",password);
-            intent.putExtra("email",email);
+            intent.putExtra("name",name);
             intent.putExtra("address", address);
             intent.putExtra("phone", phone);
             startActivity(intent);
+
         }
     }
     public void initialize(){
@@ -69,18 +70,16 @@ public class UserRegistration extends Activity {
         cpassword = et_cpassword.getText().toString().trim();
         phone = et_phone.getText().toString().trim();
         address = et_address.getText().toString().trim();
+
+
     }
     //validation check
-    public boolean validate()
-    {
+    public boolean validate(){
         boolean valid = true;
 
-        //TODO: something wrong with this statement
-        /*
         if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()||phone.isEmpty()||address.isEmpty()){
             valid = false;
         }
-
         if(email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             valid = false;
         }
@@ -89,7 +88,6 @@ public class UserRegistration extends Activity {
             valid = false;
         }
 
-*/
         return true;
     }
 }

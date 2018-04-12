@@ -73,17 +73,17 @@ public class credit_card_info extends AppCompatActivity
         Timestamp ts = new Timestamp(date.getTime());
         Intent pastIntent = getIntent();
         DataAccess da = new DataAccess();
-        Boolean result = da.insertCustomer(pastIntent.getStringExtra("UserName"),
-                pastIntent.getStringExtra("Password"),
-                pastIntent.getStringExtra("UserName"),
-                pastIntent.getStringExtra("PhoneNumber"),
+        Boolean result = da.insertCustomer(pastIntent.getStringExtra("email"),
+                pastIntent.getStringExtra("password"),
+                pastIntent.getStringExtra("name"),
+                pastIntent.getStringExtra("phone"),
                 ts,
                 ccNumber,
-                pastIntent.getStringExtra("Address"),
+                pastIntent.getStringExtra("address"),
                 ccDate.substring(0,2),
                 ccDate.substring(3,5),
                 ccSCode,
-                pastIntent.getStringExtra("Name"));
+                pastIntent.getStringExtra("name"));
 
 
         System.out.println("DEBUG: " + ccNumber);
@@ -93,7 +93,7 @@ public class credit_card_info extends AppCompatActivity
 
         if(result) {
             Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, DriverMainScreen.class);
+            Intent intent = new Intent(this, ClientMainScreen.class);
             startActivity(intent);
         }
         else
