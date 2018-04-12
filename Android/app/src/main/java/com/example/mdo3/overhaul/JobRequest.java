@@ -88,13 +88,13 @@ public class JobRequest extends AppCompatActivity {
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
-                boolean worked = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                if(!worked)
+                Integer serviceRequestId = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                if(serviceRequestId == null)
                     System.out.println("INSERT FAILED ******************");
 
                 finish();
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
-                myIntent.putExtra("serviceRequestID", 1);
+                myIntent.putExtra("serviceRequestID", serviceRequestId);
                 JobRequest.this.startActivity(myIntent);
             }
         };
