@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -64,10 +66,40 @@ public class credit_card_info extends AppCompatActivity
         ccDate =    mccDate.getText().toString();
         ccType =    dropdown.getSelectedItem().toString();
 
+        //String UserName, String PassWord, String Name, String PhoneNumber, Timestamp DateRegistered,
+        // String CardNumber, String BillingAddress,
+        //String ExpMonth, String ExpYear, String CVV, String BillingName)
+        Date date = new Date();
+        Timestamp ts = new Timestamp(date.getTime());
+        Intent pastIntent = getIntent();
+        DataAccess da = new DataAccess();
+        Boolean result = da.insertCustomer(pastIntent.getStringExtra("UserName"),
+                pastIntent.getStringExtra("Password"),
+                pastIntent.getStringExtra("UserName"),
+                pastIntent.getStringExtra("PhoneNumber"),
+                ts,
+                ccNumber,
+                pastIntent.getStringExtra("Address"),
+                ccDate.substring(0,2),
+                ccDate.substring(3,5),
+                ccSCode,
+                pastIntent.getStringExtra("Name"));
+
+
         System.out.println("DEBUG: " + ccNumber);
         System.out.println("DEBUG: " + ccDate);
         System.out.println("DEBUG: " + ccSCode);
         System.out.println("DEBUG: " + ccType);
+
+        if(result) {
+            Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, DriverMainScreen.class);
+            startActivity(intent);
+        }
+        else
+        {
+            return;
+        }
     }
     public void cancelBtn(View view)
     {
