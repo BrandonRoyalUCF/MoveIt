@@ -35,8 +35,6 @@ AS
 	INSERT INTO [Location](id_ServiceRequest, StartLocation, EndLocation)
 	VALUES (@idServiceRequest, @StartLocation, @EndLocation)
 
-	SELECT SCOPE_IDENTITY()
-
 GO
 
 
