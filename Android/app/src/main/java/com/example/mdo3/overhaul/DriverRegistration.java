@@ -66,7 +66,7 @@ public class DriverRegistration extends Activity {
             Intent intent = new Intent(this, driver_acc_info.class);
             intent.putExtra("email",email);
             intent.putExtra("password",password);
-            intent.putExtra("email",email);
+            intent.putExtra("name",name);
             intent.putExtra("address", address);
             intent.putExtra("phone", phone);
             intent.putExtra("VehicleCompany", vehicleCompany);
@@ -114,10 +114,10 @@ public class DriverRegistration extends Activity {
             valid = false;
         }
         */
-        if(password.equals(cpassword)){
+        if(password.equals(cpassword))
+        {
             valid = false;
         }
-
         return true;
     }
 }

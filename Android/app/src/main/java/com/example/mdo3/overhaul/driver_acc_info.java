@@ -73,18 +73,18 @@ public class driver_acc_info extends AppCompatActivity
         Intent pastIntent = getIntent();
         Boolean result = da.insertDriver(pastIntent.getStringExtra("email"),
                 pastIntent.getStringExtra("password"),
-                pastIntent.getStringExtra("UserName"),
-                pastIntent.getStringExtra("PhoneNumber"),
+                pastIntent.getStringExtra("name"),
+                pastIntent.getStringExtra("phone"),
                 pastIntent.getStringExtra("licenseNumber"),
                 ts,
-                pastIntent.getStringExtra("vehicleCompany"),
+                pastIntent.getStringExtra("VehicleCompany"),
                 pastIntent.getStringExtra("vehicleModel"),
                 Integer.parseInt(pastIntent.getStringExtra("vehicleYear")),
-                pastIntent.getStringExtra("email"),
+                pastIntent.getStringExtra("licenseNumber"),
                 Integer.parseInt(pastIntent.getStringExtra("loadCapacity")),
                 AccNum,
                 AccRout,
-                pastIntent.getStringExtra("email"));
+                pastIntent.getStringExtra("name"));
 
         System.out.println("DEBUG : "  + AccNum);
         System.out.println("DEBUG : "  + AccNum2);
