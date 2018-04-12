@@ -94,6 +94,7 @@ public class JobRequest extends AppCompatActivity {
 
                 finish();
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
+                myIntent.putExtra("serviceRequestID", 1);
                 JobRequest.this.startActivity(myIntent);
             }
         };
