@@ -56,7 +56,7 @@ public class UserRegistration extends Activity {
             Intent intent = new Intent(this, credit_card_info.class);
             intent.putExtra("email",email);
             intent.putExtra("password",password);
-            intent.putExtra("email",email);
+            intent.putExtra("name",name);
             intent.putExtra("address", address);
             intent.putExtra("phone", phone);
             startActivity(intent);
@@ -80,7 +80,7 @@ public class UserRegistration extends Activity {
         if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()||phone.isEmpty()||address.isEmpty()){
             valid = false;
         }
-        if(email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(email.isEmpty()){
             valid = false;
         }
 
