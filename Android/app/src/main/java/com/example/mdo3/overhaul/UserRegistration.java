@@ -80,7 +80,7 @@ public class UserRegistration extends Activity {
         if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()||phone.isEmpty()||address.isEmpty()){
             valid = false;
         }
-        if(email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if(email.isEmpty()){
             valid = false;
         }
 
