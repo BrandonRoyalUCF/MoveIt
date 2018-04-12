@@ -84,6 +84,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vehicle Company"/>
+
+            <EditText
+                android:id="@+id/vehicle_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_marginBottom="10dp"/>
+
 
 
             <TextView
@@ -138,6 +150,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Register"/>
+            <Button
+                android:id="@+id/register_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
 
         </LinearLayout>
 
