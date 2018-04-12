@@ -38,8 +38,8 @@ AS
 	ELSE
 	BEGIN
 
-		INSERT INTO DriverInfo(UserName, [PassWord], [Name], PhoneNumber, DriverLicenseNumber, DateRegistered, IsActive)                      
-		VALUES (@UserName, @PassWord, @Name, @PhoneNumber, @DriverLicenseNumber, @DateRegistered,1)
+		INSERT INTO DriverInfo(UserName, [PassWord], [Name], PhoneNumber, DriverLicenseNumber, DateRegistered, IsActive, AverageRating, NumberRatings)                      
+		VALUES (@UserName, @PassWord, @Name, @PhoneNumber, @DriverLicenseNumber, @DateRegistered,1, 5.0, 1)
 
 		DECLARE @idDriver int = (SELECT SCOPE_IDENTITY())
 
