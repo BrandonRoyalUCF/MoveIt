@@ -56,7 +56,7 @@ public class UserRegistration extends Activity {
             Intent intent = new Intent(this, credit_card_info.class);
             intent.putExtra("email",email);
             intent.putExtra("password",password);
-            intent.putExtra("email",email);
+            intent.putExtra("name",name);
             intent.putExtra("address", address);
             intent.putExtra("phone", phone);
             startActivity(intent);
@@ -88,6 +88,6 @@ public class UserRegistration extends Activity {
             valid = false;
         }
 
-        return valid;
+        return true;
     }
 }
