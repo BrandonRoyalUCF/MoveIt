@@ -1,6 +1,7 @@
 package com.example.mdo3.overhaul;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Patterns;
@@ -16,7 +17,9 @@ import android.widget.Toast;
 public class UserRegistration extends Activity {
     private EditText et_name, et_email, et_password, et_cpassword, et_phone, et_address;
     Button rgbtn;
-    String name,email,password,cpassword;
+    Button cancelbtn;
+
+    String name,email,password,cpassword, phone, address;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +39,13 @@ public class UserRegistration extends Activity {
             }
 
         });
+        cancelbtn = (Button)findViewById(R.id.cancel_registration);
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void register() {
@@ -43,27 +53,37 @@ public class UserRegistration extends Activity {
         if(!validate()){
             Toast.makeText(this, "Signup Failed !", Toast.LENGTH_SHORT).show();
         }else {
-            //create a new record in DB
-            Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, credit_card_info.class);
+            intent.putExtra("email",email);
+            intent.putExtra("password",password);
+            intent.putExtra("email",email);
+            intent.putExtra("address", address);
+            intent.putExtra("phone", phone);
+            startActivity(intent);
+
         }
     }
     public void initialize(){
-        name = et_name.toString().trim();
-        email = et_email.toString().trim();
-        password = et_password.toString().trim();
-        cpassword = et_cpassword.toString().trim();
+        name = et_name.getText().toString().trim();
+        email = et_email.getText().toString().trim();
+        password = et_password.getText().toString().trim();
+        cpassword = et_cpassword.getText().toString().trim();
+        phone = et_phone.getText().toString().trim();
+        address = et_address.getText().toString().trim();
+
 
     }
     //validation check
     public boolean validate(){
         boolean valid = true;
 
-        if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()){
+        if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()||phone.isEmpty()||address.isEmpty()){
             valid = false;
         }
         if(email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             valid = false;
         }
+
         if(password.equals(cpassword)){
             valid = false;
         }
