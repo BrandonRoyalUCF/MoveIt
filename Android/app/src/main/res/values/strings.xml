@@ -42,5 +42,6 @@
     <string name="acc_bank">Bank</string>
     <string name="acc_cancel">Cancel</string>
     <string name="acc_submit">Submit</string>
+    <string name="title_activity_driver_details">driver_details</string>
 
 </resources>
