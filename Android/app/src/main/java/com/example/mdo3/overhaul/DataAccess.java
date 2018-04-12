@@ -261,7 +261,7 @@ public class DataAccess {
                                  String BankAccountNumber, String RoutingNumber, String BillingName)
         {
             this.userName = UserName; this.passWord = PassWord; this.name = Name; this.phoneNumber = PhoneNumber; this.driverLicenseNumber = DriverLicenseNumber; this.dateRegistered = DateRegistered;
-            this.make = CarMake; this.model = CarModel; this.year = CarYear; this.licensePlate = LicensePlateNumber; this.bankAccountNumber = BankAccountNumber; this.routingNumber = RoutingNumber;
+            this.make = CarMake; this.model = CarModel; this.year = CarYear; this.licensePlate = LicensePlateNumber; this.loadCapacity = LoadCapacity; this.bankAccountNumber = BankAccountNumber; this.routingNumber = RoutingNumber;
             this.billingName = BillingName;
         }
 
@@ -570,4 +570,86 @@ public class DataAccess {
         }
     }
 
+
+    public Boolean updateDriver(int IdDriver, String UserName, String PassWord, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered,
+                                String CarMake, String CarModel, int CarYear, String LicensePlateNumber, float LoadCapacity,
+                                String BankAccountNumber, String RoutingNumber, String BillingName)
+    {
+        try{
+            updateDriverAsync id =  new updateDriverAsync(IdDriver, UserName, PassWord, Name, PhoneNumber,DriverLicenseNumber, DateRegistered, CarMake, CarModel,
+                    CarYear, LicensePlateNumber, LoadCapacity, BankAccountNumber, RoutingNumber, BillingName);
+            return id.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class updateDriverAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idDriver;
+        private String userName;
+        private String passWord;
+        private String name;
+        private String phoneNumber;
+        private String driverLicenseNumber;
+        private Timestamp dateRegistered;
+        private String make;
+        private String model;
+        private int year;
+        private String licensePlate;
+        private float loadCapacity;
+        private String bankAccountNumber;
+        private String routingNumber;
+        private String billingName;
+
+        public updateDriverAsync (int IdDriver, String UserName, String PassWord, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered,
+                                 String CarMake, String CarModel, int CarYear, String LicensePlateNumber, float LoadCapacity,
+                                 String BankAccountNumber, String RoutingNumber, String BillingName)
+        {
+            this.idDriver = IdDriver;
+            this.userName = UserName; this.passWord = PassWord; this.name = Name; this.phoneNumber = PhoneNumber; this.driverLicenseNumber = DriverLicenseNumber; this.dateRegistered = DateRegistered;
+            this.make = CarMake; this.model = CarModel; this.year = CarYear; this.licensePlate = LicensePlateNumber; this.loadCapacity = LoadCapacity; this.bankAccountNumber = BankAccountNumber; this.routingNumber = RoutingNumber;
+            this.billingName = BillingName;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_UpdateDriver @UserName = ?, @PassWord = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ?, " +
+                        " @CarMake = ?, @CarModel = ?, @CarYear = ?, @LicensePlateNumber = ?, @LoadCapacity = ?, @BankAccountNumber = ?, @RoutingNumber = ?, @BillingName = ?, @IdDriver = ? ";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.userName);
+                pstmt.setString(2, this.passWord);
+                pstmt.setString(3, this.name);
+                pstmt.setString(4, this.phoneNumber);
+                pstmt.setString(5, this.driverLicenseNumber);
+                pstmt.setTimestamp(6, this.dateRegistered);
+                pstmt.setString(7, this.make);
+                pstmt.setString(8, this.model);
+                pstmt.setInt(9, this.year);
+                pstmt.setString(10, this.licensePlate);
+                pstmt.setFloat(11, this.loadCapacity);
+                pstmt.setString(12, this.bankAccountNumber);
+                pstmt.setString(13, this.routingNumber);
+                pstmt.setString(14, this.billingName);
+                pstmt.setInt(15, this.idDriver);
+                int result = pstmt.executeUpdate();
+                conn.close();
+                if(result == 1)
+                    return true;
+
+                else
+                {
+                    System.out.println("Problem updating driver");
+                    return false;
+                }
+
+
+            } catch (Exception e) {System.out.println("Error Updating User: " + e.toString());}
+            return false;
+        }
+    }
 }
