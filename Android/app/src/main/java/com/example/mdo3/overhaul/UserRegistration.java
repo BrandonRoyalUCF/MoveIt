@@ -88,6 +88,6 @@ public class UserRegistration extends Activity {
             valid = false;
         }
 
-        return valid;
+        return true;
     }
 }

@@ -19,6 +19,7 @@ public class DriverRegistration extends Activity {
     Button rgbtn;
     Button cancelbtn;
     String name,email,password,cpassword,address,phone, vehicleCompany,vehicleModel, vehicleYear, licenseNumber, loadCapacity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,17 +53,20 @@ public class DriverRegistration extends Activity {
         });
     }
 
-    public void register() {
+    public void register()
+    {
         initialize();
         //If the data is invalid throw error
-        if(!validate()){
+
+        if(!validate())
+        {
             Toast.makeText(this, "Signup Failed !", Toast.LENGTH_SHORT).show();
         }else {
             //create a new record in DB
             Intent intent = new Intent(this, driver_acc_info.class);
             intent.putExtra("email",email);
             intent.putExtra("password",password);
-            intent.putExtra("email",email);
+            intent.putExtra("name",name);
             intent.putExtra("address", address);
             intent.putExtra("phone", phone);
             intent.putExtra("VehicleCompany", vehicleCompany);
@@ -71,7 +75,6 @@ public class DriverRegistration extends Activity {
             intent.putExtra("licenseNumber", licenseNumber);
             intent.putExtra("loadCapacity", loadCapacity);
             startActivity(intent);
-
         }
     }
 
@@ -97,16 +100,24 @@ public class DriverRegistration extends Activity {
         if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()){
             valid = false;
         }
+        //TODO: something is wrong with this if statement.
+        /*
+        if(email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            valid = false;
+        }
+
+        if(vehicle_name.isEmpty()||vehicle_number.isEmpty()){
         if(email.isEmpty()){
             valid = false;
         }
         if(vehicleCompany.isEmpty()||vehicleModel.isEmpty() || vehicleYear.isEmpty() || licenseNumber.isEmpty() || loadCapacity.isEmpty()){
             valid = false;
         }
-        if(password.equals(cpassword)){
+        */
+        if(password.equals(cpassword))
+        {
             valid = false;
         }
-
-        return valid;
+        return true;
     }
 }
