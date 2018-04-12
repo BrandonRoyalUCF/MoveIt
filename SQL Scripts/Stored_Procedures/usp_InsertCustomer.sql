@@ -28,7 +28,7 @@ AS
 	
 	IF EXISTS (SELECT 1 FROM CustomerInfo WHERE UserName = @UserName)
 	BEGIN
-		RAISERROR (100,-1,-1, 'Error: The user name already exists in the system.');
+		RAISERROR (200000,-1,-1, 'Error: The user name already exists in the system.');
 	END
 
 	ELSE
@@ -39,8 +39,8 @@ AS
 
 		DECLARE @idCustomer int = (SELECT SCOPE_IDENTITY())
 
-		INSERT INTO CustomerPaymentInfo(CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName)
-		VALUES (@CardNumber, @BillingAddress, @ExpirationMonth, @ExpirationYear, @CVV, @BillingName)
+		INSERT INTO CustomerPaymentInfo(id_Customer, CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName)
+		VALUES (@idCustomer, @CardNumber, @BillingAddress, @ExpirationMonth, @ExpirationYear, @CVV, @BillingName)
 	END
 
 GO

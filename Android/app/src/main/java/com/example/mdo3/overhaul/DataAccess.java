@@ -306,7 +306,7 @@ public class DataAccess {
         }
     }
 
-    public Boolean insertServiceRequest(int idCustomer, String Title, String Description, float Weight, Timestamp DatePosted, float Price,
+    public Integer insertServiceRequest(int idCustomer, String Title, String Description, float Weight, Timestamp DatePosted, float Price,
                                              boolean LoadHelp, boolean UnloadHelp, byte[] Picture, String StartAddress, String EndAddress)
     {
         try{
@@ -317,7 +317,7 @@ public class DataAccess {
         return null;
     }
 
-    private class insertServiceRequestAsync extends AsyncTask<Void, Void, Boolean>
+    private class insertServiceRequestAsync extends AsyncTask<Void, Void, Integer>
     {
 
         private int idCustomer; private String title; private String description; private float weight; private Timestamp datePosted;
@@ -333,7 +333,7 @@ public class DataAccess {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params)
+        protected Integer doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
@@ -358,11 +358,11 @@ public class DataAccess {
                 conn.close();
 
                 if(rs.next())
-                    return true;
+                    return rs.getInt("id");
 
 
             } catch (Exception e) {System.out.println("Error Adding Transaction: " + e.toString());}
-            return false;
+            return null;
         }
     }
 
