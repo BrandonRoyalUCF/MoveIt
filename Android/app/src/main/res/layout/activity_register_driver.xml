@@ -37,16 +37,6 @@
                 android:inputType="textEmailAddress"
                 android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username"/>
-
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -95,24 +85,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="City"/>
-
-            <EditText
-                android:id="@+id/city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Zip Code"/>
+                android:text="Vehicle Model"/>
 
             <EditText
-                android:id="@+id/zip"
+                android:id="@+id/vehicle_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -121,10 +101,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vehicle Name"/>
+                android:text="Vehicle Year"/>
 
             <EditText
-                android:id="@+id/vehicle_name"
+                android:id="@+id/vehicle_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
@@ -133,10 +113,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Vehicle Number"/>
+                android:text="License Plate Number"/>
 
             <EditText
-                android:id="@+id/vehicle_number"
+                android:id="@+id/license_plate_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Load Capacity"/>
+
+            <EditText
+                android:id="@+id/load_capacity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
