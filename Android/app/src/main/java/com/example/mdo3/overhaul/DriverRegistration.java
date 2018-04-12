@@ -13,12 +13,13 @@ import android.widget.Toast;
  * Created by Rohini on 4/2/2018.
  */
 
-public class DriverRegistration extends Activity
-{
-    private EditText et_name, et_email, et_password, et_cpassword, et_phone, et_address, et_vehicleNumber, et_vehicleName;
+public class DriverRegistration extends Activity {
+    private EditText et_name, et_email, et_password, et_cpassword, et_phone, et_address;
+    private EditText et_vehicleCompany, et_vehicleModel, et_vehicleYear, et_licenseNumber, et_loadCapacity;
     Button rgbtn;
-    String name,email,password,cpassword,vehicle_name,vehicle_number;
-    String phoneNumber, address;
+    Button cancelbtn;
+    String name,email,password,cpassword,address,phone, vehicleCompany,vehicleModel, vehicleYear, licenseNumber, loadCapacity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,8 +30,12 @@ public class DriverRegistration extends Activity
         et_cpassword = (EditText) findViewById(R.id.confirm_password);
         et_phone = (EditText) findViewById(R.id.phone);
         et_address = (EditText) findViewById(R.id.address);
-        et_vehicleName = (EditText) findViewById(R.id.vehicle_model);
-        et_vehicleNumber = (EditText) findViewById(R.id.vehicle_year);
+        et_vehicleCompany = (EditText) findViewById(R.id.vehicle_company);
+        et_vehicleModel = (EditText) findViewById(R.id.vehicle_model);
+        et_vehicleYear = (EditText) findViewById(R.id.vehicle_year);
+        et_licenseNumber = (EditText) findViewById(R.id.license_plate_number);
+        et_loadCapacity = (EditText) findViewById(R.id.load_capacity);
+
         rgbtn = (Button)findViewById(R.id.register_user);
         rgbtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -38,6 +43,13 @@ public class DriverRegistration extends Activity
                 register();
             }
 
+        });
+        cancelbtn = (Button)findViewById(R.id.cancel_registration);
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
     }
 
@@ -49,20 +61,20 @@ public class DriverRegistration extends Activity
         if(!validate())
         {
             Toast.makeText(this, "Signup Failed !", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            //(String UserName, String PassWord, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered,
-            //String CarMake, String CarModel, int CarYear, String LicensePlateNumber, float LoadCapacity,
-            //String BankAccountNumber, String RoutingNumber, String BillingName)
+        }else {
+            //create a new record in DB
             Intent intent = new Intent(this, driver_acc_info.class);
-            intent.putExtra("UserName", email);
-            intent.putExtra("Password", password);
-            intent.putExtra("Name", name);
-            intent.putExtra("PhoneNumber", phoneNumber);
-            intent.putExtra("Address", address);
+            intent.putExtra("email",email);
+            intent.putExtra("password",password);
+            intent.putExtra("email",email);
+            intent.putExtra("address", address);
+            intent.putExtra("phone", phone);
+            intent.putExtra("VehicleCompany", vehicleCompany);
+            intent.putExtra("vehicleModel", vehicleModel);
+            intent.putExtra("vehicleYear", vehicleYear);
+            intent.putExtra("licenseNumber", licenseNumber);
+            intent.putExtra("loadCapacity", loadCapacity);
             startActivity(intent);
-            Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -71,10 +83,13 @@ public class DriverRegistration extends Activity
         email = et_email.getText().toString().trim();
         password = et_password.getText().toString().trim();
         cpassword = et_cpassword.getText().toString().trim();
-        vehicle_name = et_vehicleName.getText().toString().trim();
-        vehicle_number = et_vehicleNumber.getText().toString().trim();
-        phoneNumber = et_phone.getText().toString().trim();
         address = et_address.getText().toString().trim();
+        vehicleCompany = et_vehicleCompany.getText().toString().trim();
+        vehicleModel = et_vehicleModel.getText().toString().trim();
+        vehicleYear = et_vehicleYear.getText().toString().trim();
+        licenseNumber = et_licenseNumber.getText().toString().trim();
+        loadCapacity = et_loadCapacity.getText().toString().trim();
+        phone = et_phone.getText().toString().trim();
 
     }
 
@@ -92,6 +107,10 @@ public class DriverRegistration extends Activity
         }
 
         if(vehicle_name.isEmpty()||vehicle_number.isEmpty()){
+        if(email.isEmpty()){
+            valid = false;
+        }
+        if(vehicleCompany.isEmpty()||vehicleModel.isEmpty() || vehicleYear.isEmpty() || licenseNumber.isEmpty() || loadCapacity.isEmpty()){
             valid = false;
         }
         */

@@ -17,7 +17,9 @@ import android.widget.Toast;
 public class UserRegistration extends Activity {
     private EditText et_name, et_email, et_password, et_cpassword, et_phone, et_address;
     Button rgbtn;
-    String name,email,password,cpassword, phone,address;
+    Button cancelbtn;
+
+    String name,email,password,cpassword, phone, address;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +39,13 @@ public class UserRegistration extends Activity {
             }
 
         });
+        cancelbtn = (Button)findViewById(R.id.cancel_registration);
+        cancelbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void register() {
@@ -45,13 +54,12 @@ public class UserRegistration extends Activity {
             Toast.makeText(this, "Signup Failed !", Toast.LENGTH_SHORT).show();
         }else {
             Intent intent = new Intent(this, credit_card_info.class);
-            intent.putExtra("UserName", email);
-            intent.putExtra("Password", password);
-            intent.putExtra("Name", name);
-            intent.putExtra("PhoneNumber", phone);
-            intent.putExtra("Address", address);
+            intent.putExtra("email",email);
+            intent.putExtra("password",password);
+            intent.putExtra("email",email);
+            intent.putExtra("address", address);
+            intent.putExtra("phone", phone);
             startActivity(intent);
-            Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
         }
     }
     public void initialize(){
@@ -69,13 +77,14 @@ public class UserRegistration extends Activity {
 
         //TODO: something wrong with this statement
         /*
-        if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()){
+        if(name.isEmpty() || password.isEmpty() || cpassword.isEmpty()||phone.isEmpty()||address.isEmpty()){
             valid = false;
         }
 
         if(email.isEmpty() || Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             valid = false;
         }
+
         if(password.equals(cpassword)){
             valid = false;
         }
