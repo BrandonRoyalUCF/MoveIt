@@ -261,7 +261,7 @@ public class DataAccess {
                                  String BankAccountNumber, String RoutingNumber, String BillingName)
         {
             this.userName = UserName; this.passWord = PassWord; this.name = Name; this.phoneNumber = PhoneNumber; this.driverLicenseNumber = DriverLicenseNumber; this.dateRegistered = DateRegistered;
-            this.make = CarMake; this.model = CarModel; this.year = CarYear; this.licensePlate = LicensePlateNumber; this.bankAccountNumber = BankAccountNumber; this.routingNumber = RoutingNumber;
+            this.make = CarMake; this.model = CarModel; this.year = CarYear; this.licensePlate = LicensePlateNumber; this.loadCapacity = LoadCapacity; this.bankAccountNumber = BankAccountNumber; this.routingNumber = RoutingNumber;
             this.billingName = BillingName;
         }
 
@@ -495,4 +495,134 @@ public class DataAccess {
         }
     }
 
+    public Queue<Driver> getPossibleDrivers()
+    {
+        try{
+            getPossibleDriversAsync gpd =  new getPossibleDriversAsync();
+            return gpd.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class getPossibleDriversAsync extends AsyncTask<Void, Void, Queue<Driver>>
+    {
+
+        public getPossibleDriversAsync()
+        {
+
+        }
+
+        @Override
+        protected Queue<Driver> doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query =
+
+                        "SELECT DriverInfo.id, DriverInfo.UserName, DriverInfo.Name, DriverInfo.PhoneNumber, DriverInfo.DriverLicenseNumber, DriverInfo.Picture, " +
+                                "DriverInfo.DateRegistered, DriverInfo.IsActive, DriverInfo.AverageRating, DriverInfo.NumberRatings, Vehicle.id [vehicleId], Vehicle.CarMake, Vehicle.CarModel, " +
+                                "Vehicle.CarYear, Vehicle.LicensePlateNumber, Vehicle.LoadCapacity, Vehicle.Picture" +
+                                "FROM DriverInfo" +
+                                "LEFT JOIN Vehicle on Vehicle.id_Driver = DriverInfo.id " +
+                                "WHERE DriverInfo.IsActive = 1";
+
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery();
+
+                Queue<Driver> DriverQueue = new LinkedList<Driver>();
+
+
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    String userName = rs.getString("UserName");
+                    String name = rs.getString("Name");
+                    String phoneNumber = rs.getString("PhoneNumber");
+                    String driverLicenseNumber = rs.getString("DriverLicenseNumber");
+                    byte[] picture = rs.getBytes("Picture");
+                    Timestamp dateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("IsActive");
+                    float averageRating = rs.getFloat("AverageRating");
+                    int numberRatings = rs.getInt("NumberRatings");
+                    int vehicleId = rs.getInt("vehicleId");
+                    String carMake = rs.getString("CarMake");
+                    String carModel = rs.getString("CarModel");
+                    int carYear = rs.getInt("CarYear");
+                    String licensePlateNumber  = rs.getString("LicensePlateNumber");
+                    float loadCapacity = rs.getFloat("LoadCapacity");
+                    byte[] carPicture = rs.getBytes("Picture");
+
+                    Vehicle vh = new Vehicle(vehicleId, id, carMake, carModel, carYear, licensePlateNumber, loadCapacity, carPicture);
+
+                    Driver dr = new Driver(id, userName, name, phoneNumber, driverLicenseNumber, picture, dateRegistered, isActive, averageRating,
+                            numberRatings, vh);
+                    DriverQueue.add(dr);
+                }
+
+                conn.close();
+                return DriverQueue;
+
+
+            } catch (Exception e) {System.out.println("Error Retrieving Drivers: " + e.toString());}
+            return null;
+        }
+    }
+
+
+    public Boolean updateDriverMainInfo(int IdDriver, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered, boolean IsActive)
+    {
+        try{
+            updateDriverMainInfoAsync id =  new updateDriverMainInfoAsync(IdDriver, Name, PhoneNumber,DriverLicenseNumber, DateRegistered, IsActive);
+            return id.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class updateDriverMainInfoAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idDriver;
+        private String name;
+        private String phoneNumber;
+        private String driverLicenseNumber;
+        private Timestamp dateRegistered;
+        private boolean isActive;
+
+        public updateDriverMainInfoAsync (int IdDriver, String Name, String PhoneNumber, String DriverLicenseNumber, Timestamp DateRegistered, boolean IsActive)
+        {
+            this.idDriver = IdDriver; this.name = Name; this.phoneNumber = PhoneNumber; this.driverLicenseNumber = DriverLicenseNumber; this.dateRegistered = DateRegistered;
+            this.isActive = IsActive;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "EXEC dbo.usp_UpdateDriverMainInfo @IdDriver = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ? @IsActive = ?, ";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idDriver);
+                pstmt.setString(2, this.name);
+                pstmt.setString(3, this.phoneNumber);
+                pstmt.setString(4, this.driverLicenseNumber);
+                pstmt.setTimestamp(5, this.dateRegistered);
+                pstmt.setBoolean(6, this.isActive);
+
+                int result = pstmt.executeUpdate();
+                conn.close();
+                if(result == 1)
+                    return true;
+                else
+                {
+                    System.out.println("Problem updating driver info");
+                    return false;
+                }
+
+            } catch (Exception e) {System.out.println("Error Updating info: " + e.toString());}
+            return false;
+        }
+    }
 }
