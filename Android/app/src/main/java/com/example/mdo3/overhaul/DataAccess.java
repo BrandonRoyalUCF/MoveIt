@@ -495,4 +495,79 @@ public class DataAccess {
         }
     }
 
+    public Queue<Driver> getPossibleDrivers()
+    {
+        try{
+            getPossibleDriversAsync gpd =  new getPossibleDriversAsync();
+            return gpd.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class getPossibleDriversAsync extends AsyncTask<Void, Void, Queue<Driver>>
+    {
+
+        public getPossibleDriversAsync()
+        {
+
+        }
+
+        @Override
+        protected Queue<Driver> doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query =
+
+                        "SELECT DriverInfo.id, DriverInfo.UserName, DriverInfo.Name, DriverInfo.PhoneNumber, DriverInfo.DriverLicenseNumber, DriverInfo.Picture, " +
+                                "DriverInfo.DateRegistered, DriverInfo.IsActive, DriverInfo.AverageRating, DriverInfo.NumberRatings, Vehicle.id [vehicleId], Vehicle.CarMake, Vehicle.CarModel, " +
+                                "Vehicle.CarYear, Vehicle.LicensePlateNumber, Vehicle.LoadCapacity, Vehicle.Picture" +
+                                "FROM DriverInfo" +
+                                "LEFT JOIN Vehicle on Vehicle.id_Driver = DriverInfo.id " +
+                                "WHERE DriverInfo.IsActive = 1";
+
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery();
+
+                Queue<Driver> DriverQueue = new LinkedList<Driver>();
+
+
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    String userName = rs.getString("UserName");
+                    String name = rs.getString("Name");
+                    String phoneNumber = rs.getString("PhoneNumber");
+                    String driverLicenseNumber = rs.getString("DriverLicenseNumber");
+                    byte[] picture = rs.getBytes("Picture");
+                    Timestamp dateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("IsActive");
+                    float averageRating = rs.getFloat("AverageRating");
+                    int numberRatings = rs.getInt("NumberRatings");
+                    int vehicleId = rs.getInt("vehicleId");
+                    String carMake = rs.getString("CarMake");
+                    String carModel = rs.getString("CarModel");
+                    int carYear = rs.getInt("CarYear");
+                    String licensePlateNumber  = rs.getString("LicensePlateNumber");
+                    float loadCapacity = rs.getFloat("LoadCapacity");
+                    byte[] carPicture = rs.getBytes("Picture");
+
+                    Vehicle vh = new Vehicle(vehicleId, id, carMake, carModel, carYear, licensePlateNumber, loadCapacity, carPicture);
+
+                    Driver dr = new Driver(id, userName, name, phoneNumber, driverLicenseNumber, picture, dateRegistered, isActive, averageRating,
+                            numberRatings, vh);
+                    DriverQueue.add(dr);
+                }
+
+                conn.close();
+                return DriverQueue;
+
+
+            } catch (Exception e) {System.out.println("Error Retrieving Drivers: " + e.toString());}
+            return null;
+        }
+    }
+
 }
