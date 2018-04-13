@@ -48,7 +48,7 @@ public class DriverRegistration extends Activity {
         cancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                
                 Intent intent = new Intent(DriverRegistration.this, HomeScreen.class);
                 DriverRegistration.this.startActivity(intent);
             }
