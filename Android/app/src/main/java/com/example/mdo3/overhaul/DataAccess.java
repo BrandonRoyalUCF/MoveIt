@@ -603,7 +603,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_UpdateDriverMainInfo @IdDriver = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ? @IsActive = ? ";
+                String query = "EXEC dbo.usp_UpdateDriverMainInfo @IdDriver = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ?, @IsActive = ? ";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idDriver);
