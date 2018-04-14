@@ -1,10 +1,12 @@
 package com.example.mdo3.overhaul;
 
+import java.io.Serializable;
+
 /**
  * Created by Royal on 4/5/2018.
  */
 
-public class Vehicle {
+public class Vehicle implements Serializable{
     private int id;
     private int idDriver;
     private String make;

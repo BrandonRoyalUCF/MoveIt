@@ -1,11 +1,12 @@
 package com.example.mdo3.overhaul;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by Royal on 4/5/2018.
  */
 
-public class Customer {
+public class Customer implements Serializable{
 
     private int id;
     private String userName;

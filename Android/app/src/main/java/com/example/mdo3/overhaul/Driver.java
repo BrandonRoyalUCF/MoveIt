@@ -1,12 +1,13 @@
 package com.example.mdo3.overhaul;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
  * Created by Royal on 3/27/2018.
  */
 
-public class Driver {
+public class Driver implements Serializable{
 
     private int id;
     private String userName;
