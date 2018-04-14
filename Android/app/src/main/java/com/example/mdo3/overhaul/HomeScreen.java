@@ -108,8 +108,6 @@ public class HomeScreen extends AppCompatActivity
         System.out.println("Register new account");
     }
 
-
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -179,6 +177,7 @@ public class HomeScreen extends AppCompatActivity
                 if (driverDets != null)
                 {
                     Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
+                    myIntent.putExtra("Driver", driverDets);
                     HomeScreen.this.startActivity(myIntent);
                 }
             }

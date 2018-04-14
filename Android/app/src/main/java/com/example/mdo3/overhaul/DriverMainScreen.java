@@ -32,6 +32,8 @@ public class DriverMainScreen extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main_screen);
+        Intent myIntent = getIntent();
+        Driver myDriver = (Driver)myIntent.getSerializableExtra("Driver");
 
         //Logout Button
         View.OnClickListener logoutListen = new View.OnClickListener() {
@@ -103,7 +105,7 @@ public class DriverMainScreen extends Activity{
                     if(isChecked)
                     {
                         activitySwh.setText("Active");
-                        updateStatus = da.updateDriverMainInfo(IdDriver, Name, PhoneNumber,DriverLicenseNumber, DateRegistered, true);
+                        updateStatus = da.updateDriverMainInfo(myDriver.getId(), myDriver.getName(), myDriver.getPhoneNumber(),myDriver.getDriverLicenseNumber(), myDriver.getDateRegistered(), true);
                         if(!updateStatus)
                         {
                             System.out.println("isActive not updated to tr");
@@ -112,7 +114,7 @@ public class DriverMainScreen extends Activity{
                     else
                     {
                         activitySwh.setText("Inactive");
-                        updateStatus = da.updateDriverMainInfo(IdDriver, Name, PhoneNumber,DriverLicenseNumber, DateRegistered, false);
+                        updateStatus = da.updateDriverMainInfo(myDriver.getId(), myDriver.getName(), myDriver.getPhoneNumber(),myDriver.getDriverLicenseNumber(), myDriver.getDateRegistered(), false);
                         if(!updateStatus)
                         {
                             System.out.println( "isActive not updated to false" );
