@@ -43,9 +43,11 @@ public class UserRegistration extends Activity {
         cancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Intent intent = new Intent(UserRegistration.this,HomeScreen.class);
+                UserRegistration.this.startActivity(intent);
             }
         });
+
     }
 
     public void register() {
@@ -88,6 +90,6 @@ public class UserRegistration extends Activity {
             valid = false;
         }
 
-        return valid;
+        return true;
     }
 }
