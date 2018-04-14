@@ -17,8 +17,6 @@ public class WaitScreen extends AppCompatActivity {
     private Driver assignedDriver = null;
     private Bundle bundle = getIntent().getExtras();
     private int serviceRequestID = bundle.getInt("serviceRequestID");
-    //private int requestCustomerID = bundle.getInt("userID");
-    //private
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +29,9 @@ public class WaitScreen extends AppCompatActivity {
             //Unable to find driver
             Toast.makeText(WaitScreen.this, "Unable to find driver!", Toast.LENGTH_SHORT).show();
         }
-        if(!assignDriver()) {
+        else if(!assignDriver()) {
             //Failed to assign drive
-            Toast.makeText(WaitScreen.this, "Unable to assign driver!", Toast.LENGTH_SHORT).show();
+            System.out.println("DRIVER ASSIGN FAILED ******************");
         }
         finish();
         Intent intent = new Intent(WaitScreen.this, ClientMainScreen.class);
@@ -60,6 +58,7 @@ public class WaitScreen extends AppCompatActivity {
     //Add 'assignedDriver' to the service request
     private boolean assignDriver() {
         DataAccess da = new DataAccess();
+        int driverId = assignedDriver.getId();
         //Find serviceRequest with id = 'serviceRequestID', add driver to request
         return true;
     }

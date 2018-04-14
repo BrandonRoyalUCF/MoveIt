@@ -84,18 +84,21 @@ public class JobRequest extends AppCompatActivity {
                 isCompleted = false;
 
 
-                Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
-                Integer serviceRequestId = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                if(serviceRequestId == null)
+                Integer serviceRequestIdInteger = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                if(serviceRequestIdInteger == null) {
                     System.out.println("INSERT FAILED ******************");
-
-                finish();
-                Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
-                myIntent.putExtra("serviceRequestID", serviceRequestId);
-                JobRequest.this.startActivity(myIntent);
+                }
+                else {
+                    int serviceRequestId = serviceRequestIdInteger.intValue();
+                    finish();
+                    Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
+                    myIntent.putExtra("serviceRequestID", serviceRequestId);
+                    JobRequest.this.startActivity(myIntent);
+                }
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
