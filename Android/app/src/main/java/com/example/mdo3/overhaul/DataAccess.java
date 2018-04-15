@@ -6,6 +6,8 @@ import java.util.*;
 
 /**
  * Created by Royal on 3/23/2018.
+ * Data Access Class
+ * Currently all insert, edits, deletes, and queries but should split it up
  */
 
 public class DataAccess {
@@ -601,7 +603,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "EXEC dbo.usp_UpdateDriverMainInfo @IdDriver = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ? @IsActive = ?, ";
+                String query = "EXEC dbo.usp_UpdateDriverMainInfo @IdDriver = ?, @Name = ?, @PhoneNumber = ?, @DriverLicenseNumber = ?, @DateRegistered = ?, @IsActive = ? ";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idDriver);
