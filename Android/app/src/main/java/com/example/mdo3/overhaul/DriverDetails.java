@@ -1,5 +1,7 @@
 package com.example.mdo3.overhaul;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +14,7 @@ public class DriverDetails extends AppCompatActivity {
     private TextView tv_name;
     private TextView tv_rating;
     private ImageView iv_picture = null;
-
+    private byte[] picture = new byte[0];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,9 @@ public class DriverDetails extends AppCompatActivity {
     public void initDetails(){
         tv_name.setText("Your Driver");
         tv_rating.setText(Double.toString(4.321));
+        Bitmap bmp = BitmapFactory.decodeByteArray(picture,0,picture.length);
+        if (bmp != null)
+            iv_picture.setImageBitmap(bmp);
     }
 
 }
