@@ -19,6 +19,10 @@ public class WaitScreen extends AppCompatActivity {
         setContentView(R.layout.content_wait_screen);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //begin wait for driver to accept
+        DataAccess da = new DataAccess();
+        //da.waitForAcceptance()
     }
 
     // Cancels Driver Search
