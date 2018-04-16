@@ -13,10 +13,11 @@ import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Queue;
 
 public class JobRequest extends AppCompatActivity {
 
-    private int userId = 1;
+    private int userId = 37;
     private EditText title;
     private EditText description;
     private Timestamp datePosted;
@@ -88,9 +89,14 @@ public class JobRequest extends AppCompatActivity {
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
-                boolean worked = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                if(!worked)
+                int idServiceRequest = -1;
+                idServiceRequest = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                if(idServiceRequest == -1)
                     System.out.println("INSERT FAILED ******************");
+                Queue<Driver> possibleDrivers = da.getPossibleDrivers();
+                System.out.println(possibleDrivers.isEmpty());
+                Driver bestDriver = possibleDrivers.poll();
+                da.insertEventLogServiceRequest(userId, idServiceRequest, bestDriver.getId());
 
                 finish();
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);

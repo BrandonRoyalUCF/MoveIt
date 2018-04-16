@@ -221,7 +221,7 @@ public class HomeScreen extends AppCompatActivity
         Boolean hasNumber = false;
 
         //check for length of password
-        if(password.length() < 4 || password.length() > 15)
+        if(password.length() < 2 || password.length() > 15)
             result = false;
         else
             result = true;
@@ -242,7 +242,8 @@ public class HomeScreen extends AppCompatActivity
             if(x >= 48 && x <= 57)
                 hasNumber = true;
         }
-        return result && hasCap && hasNumber && hasSpecChar;
+        return true;
+        //return result && hasCap && hasNumber && hasSpecChar;
     }
 
     /**
