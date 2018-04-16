@@ -1,5 +1,6 @@
 package com.example.mdo3.overhaul;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -7,7 +8,7 @@ import java.sql.Timestamp;
  * Created by Royal on 3/26/2018.
  */
 
-public class ServiceRequest {
+public class ServiceRequest implements Serializable{
 
     private int id;
     private int idCustomer;

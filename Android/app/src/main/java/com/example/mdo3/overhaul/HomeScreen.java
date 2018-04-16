@@ -108,8 +108,6 @@ public class HomeScreen extends AppCompatActivity
         System.out.println("Register new account");
     }
 
-
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -179,6 +177,7 @@ public class HomeScreen extends AppCompatActivity
                 if (driverDets != null)
                 {
                     Intent myIntent = new Intent(HomeScreen.this, DriverMainScreen.class);
+                    myIntent.putExtra("Driver", driverDets);
                     HomeScreen.this.startActivity(myIntent);
                 }
             }
@@ -190,6 +189,7 @@ public class HomeScreen extends AppCompatActivity
                     if(customerDets != null)
                     {
                         Intent myIntent = new Intent(HomeScreen.this, ClientMainScreen.class);
+                        myIntent.putExtra("Customer", customerDets);
                         HomeScreen.this.startActivity(myIntent);
 
                     }
@@ -334,7 +334,7 @@ public class HomeScreen extends AppCompatActivity
             return (customerDets != null || driverDets != null) ? true : false;
         }
 
-        @Override
+    /*    @Override
         protected void onPostExecute(final Boolean success)
         {
             mAuthTask = null;
@@ -359,36 +359,13 @@ public class HomeScreen extends AppCompatActivity
                 mPasswordView.requestFocus();
             }
         }
+        */
 
         @Override
         protected void onCancelled()
         {
             mAuthTask = null;
             showProgress(false);
-        }
-    }
-
-    public void loginSwitch(View view)
-    {
-
-    }
-
-    private void startNextActivity(int flag)
-    {
-        System.out.println("Starting next activity ");
-        if(flag == 1)
-        {
-            Intent intent = new Intent(this, ClientMainScreen.class);
-            startActivity(intent);
-        }
-        if(flag == 2)
-        {
-            Intent intent = new Intent(this, DriverMainScreen.class);
-            startActivity(intent);
-        }
-        else
-        {
-            return;
         }
     }
 }

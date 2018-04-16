@@ -1,10 +1,12 @@
 package com.example.mdo3.overhaul;
 
+import java.io.Serializable;
+
 /**
  * Created by Royal on 3/26/2018.
  */
 
-public class Location {
+public class Location implements Serializable{
 
     private int id;
     private int transactionId;

@@ -10,6 +10,8 @@ import android.widget.Toast;
 import android.widget.Switch;
 import android.net.Uri;
 
+import java.sql.Timestamp;
+
 /**
  * Created by Wendelyn on 3/25/2018.
  */
@@ -18,12 +20,20 @@ public class DriverMainScreen extends Activity{
     // Set this variable based on whether or not a request is active, and thus whether or not to show the driver map.
     // Ideally this should be set whenever the user moves to this screen, thus the setting for this variable
     // should be within OnClickListeners that send the user here.
+    int IdDriver;
+    String Name;
+    String PhoneNumber;
+    String DriverLicenseNumber;
+    Timestamp DateRegistered;
+    boolean IsActive;
     public boolean requestActive;
     // Note that primitive booleans (lowercase B) will be false if left uninitialized.
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main_screen);
+        Intent myIntent = getIntent();
+        Driver myDriver = (Driver)myIntent.getSerializableExtra("Driver");
 
         //Logout Button
         View.OnClickListener logoutListen = new View.OnClickListener() {
@@ -90,10 +100,27 @@ public class DriverMainScreen extends Activity{
             {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
                 {
+                    DataAccess da = new DataAccess();
+                    boolean updateStatus;
                     if(isChecked)
+                    {
                         activitySwh.setText("Active");
+                        updateStatus = da.updateDriverMainInfo(myDriver.getId(), myDriver.getName(), myDriver.getPhoneNumber(),myDriver.getDriverLicenseNumber(), myDriver.getDateRegistered(), true);
+                        if(!updateStatus)
+                        {
+                            System.out.println("isActive not updated to tr");
+                        }
+                    }
                     else
+                    {
                         activitySwh.setText("Inactive");
+                        updateStatus = da.updateDriverMainInfo(myDriver.getId(), myDriver.getName(), myDriver.getPhoneNumber(),myDriver.getDriverLicenseNumber(), myDriver.getDateRegistered(), false);
+                        if(!updateStatus)
+                        {
+                            System.out.println( "isActive not updated to false" );
+                        }
+                    }
+
                 }
             });
 

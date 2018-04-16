@@ -84,6 +84,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vehicle Company"/>
+
+            <EditText
+                android:id="@+id/vehicle_company"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"/>
+
 
 
             <TextView
@@ -95,19 +106,16 @@
                 android:id="@+id/vehicle_model"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vehicle Year"/>
-
             <EditText
                 android:id="@+id/vehicle_year"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
@@ -119,18 +127,16 @@
                 android:id="@+id/license_plate_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:layout_marginBottom="10dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Load Capacity"/>
+                android:text="Load Capacity in kg"/>
 
             <EditText
                 android:id="@+id/load_capacity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:layout_marginBottom="10dp"/>
 
             <Button
@@ -138,6 +144,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Register"/>
+            <Button
+                android:id="@+id/cancel_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cancel" />
 
         </LinearLayout>
 

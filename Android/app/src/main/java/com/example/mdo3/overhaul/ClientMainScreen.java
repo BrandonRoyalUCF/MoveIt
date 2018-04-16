@@ -28,6 +28,8 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent myIntent = getIntent();
+        Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
         setContentView(R.layout.activity_client_main_screen);
 
         requestActive = true; // Remove this later, just for debugging at the moment.
