@@ -1490,6 +1490,7 @@ public class DataAccess {
             updateServiceRequestCompletedAsync usr =  new updateServiceRequestCompletedAsync(idServiceRequest, isCompleted);
             usr.execute().get();
         } catch (Exception e) {System.out.println(e);}
+        return true;
     }
 
     private class updateServiceRequestCompletedAsync extends AsyncTask<Void, Void, Boolean>
