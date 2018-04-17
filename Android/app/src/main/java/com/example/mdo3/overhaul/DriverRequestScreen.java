@@ -9,7 +9,8 @@ import android.widget.TextView;
 
 public class DriverRequestScreen extends AppCompatActivity {
 
-    //ServiceRequest sr = (ServiceRequest) getIntent().getSerializableExtra("serviceRequest");
+    ServiceRequest sr = (ServiceRequest) getIntent().getSerializableExtra("serviceRequest");
+    Driver driver = (Driver) getIntent().getSerializableExtra("driver");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +33,13 @@ public class DriverRequestScreen extends AppCompatActivity {
         //Accept Button
         View.OnClickListener acceptListen = new View.OnClickListener() {
             @Override
-            // Need to eventually have it actually save data to the database
             public void onClick(View v) {
                 finish();
                 Intent myIntent = new Intent(DriverRequestScreen.this, DriverMainScreen.class);
+                //int driverWhoCompleted = driver.getId();
+                //TODO:Need to set sr.driverWhoCompleted = driverWhoCompleted
+                //TODO:Need to change driverWhoCompleted on sr in database
+
                 DriverRequestScreen.this.startActivity(myIntent);
             }
         };

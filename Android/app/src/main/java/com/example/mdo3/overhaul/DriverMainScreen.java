@@ -20,12 +20,7 @@ public class DriverMainScreen extends Activity{
     // Set this variable based on whether or not a request is active, and thus whether or not to show the driver map.
     // Ideally this should be set whenever the user moves to this screen, thus the setting for this variable
     // should be within OnClickListeners that send the user here.
-    int IdDriver;
-    String Name;
-    String PhoneNumber;
-    String DriverLicenseNumber;
-    Timestamp DateRegistered;
-    boolean IsActive;
+
     public boolean requestActive;
     // Note that primitive booleans (lowercase B) will be false if left uninitialized.
 
@@ -96,7 +91,8 @@ public class DriverMainScreen extends Activity{
             View.OnClickListener queryListen = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ServiceRequest sr = null;
+                    //ServiceRequest sr;
+                    //Get service request
 
                     if(true) {
                         finish();
