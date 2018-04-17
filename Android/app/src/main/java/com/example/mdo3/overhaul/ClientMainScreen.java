@@ -1,10 +1,12 @@
 package com.example.mdo3.overhaul;
 
 import android.app.Activity;
+import android.location.*;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.content.Context;
 import android.content.Intent;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -24,6 +26,8 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
 
     private final Handler mapHandler = new Handler(); // For handling the automatic map refresh.
     private GoogleMap driverMap;
+    public LatLng currentDriver;
+    private boolean trackLoop = false; // For testing/faking purposes.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,9 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
         setContentView(R.layout.activity_client_main_screen);
 
-        requestActive = true; // Remove this later, just for debugging at the moment.
+        // Checks if the currently logged in driver is part of an active request.
+        DataAccess checkRequest = new DataAccess();
+        requestActive = checkRequest.checkForActiveSRById(myCustomer.getId());
 
         MapFragment mapView = (MapFragment) getFragmentManager().findFragmentById(R.id.map_View);
          if (requestActive){
@@ -78,7 +84,7 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
 
-        mapAutoRefresh();
+        if (requestActive){ mapAutoRefresh(); } // If request is not active, then don't bother with the refresh loops.
     }
 
     @Override
@@ -89,9 +95,21 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
             googleMap.setMinZoomPreference(12);
 
             // TODO: Have the LatLng data set here for driver be set to the driver's location, and refreshed every 3 to 5 minutes.
-            LatLng driver = new LatLng(-33.852, 151.211);
-            googleMap.addMarker(new MarkerOptions().position(driver).title("Your Driver"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(driver));
+            // For now it is set to the user's current location.
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            try {
+                android.location.Location location = lm.getLastKnownLocation(Context.LOCATION_SERVICE);
+                currentDriver = new LatLng(location.getLatitude(), location.getLongitude());
+            } catch (SecurityException ex) {
+                // This is in case the user has not given the app Location permissions. Set to UCF by default.
+                currentDriver = new LatLng(28.600706, -81.197837);
+            } catch (Exception ex) {
+                // In case some other exception is thrown.
+                currentDriver = new LatLng(28.600706, -81.197837);
+            }
+
+            googleMap.addMarker(new MarkerOptions().position(currentDriver).title("Your Driver"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentDriver));
 
             driverMap = googleMap;
         } else {
@@ -105,11 +123,20 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         mapHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // TODO: Have the LatLng data set here for driver be set to the driver's location, and refreshed every 3 to 5 minutes.
-                LatLng driver = new LatLng(28.5383, -81.3792);
+                // TODO: Have the LatLng data set here for driver be set to the driver's location.
+                // For now this will just change it by a couple of degrees every refresh.
+
+                if (!trackLoop) {
+                    currentDriver = new LatLng(currentDriver.latitude+0.3,currentDriver.longitude);
+                    trackLoop = true;
+                } else {
+                    currentDriver = new LatLng(currentDriver.latitude-0.3,currentDriver.longitude);
+                    trackLoop = false;
+                }
+
                 driverMap.clear(); // Get rid of the old marker, otherwise they'll just stack up.
-                driverMap.addMarker(new MarkerOptions().position(driver).title("Your Driver"));
-                driverMap.moveCamera(CameraUpdateFactory.newLatLng(driver));
+                driverMap.addMarker(new MarkerOptions().position(currentDriver).title("Your Driver"));
+                driverMap.moveCamera(CameraUpdateFactory.newLatLng(currentDriver));
 
                 mapAutoRefresh(); // Refresh again in a while.
             }
