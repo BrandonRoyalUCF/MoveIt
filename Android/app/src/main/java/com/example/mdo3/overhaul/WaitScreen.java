@@ -91,7 +91,7 @@ public class WaitScreen extends AppCompatActivity {
     //Add 'assignedDriver' to the service request
     private boolean assignDriver() {
         DataAccess da = new DataAccess();
-
+        return true;
     }
     // Cancels Driver Search
     public void CancelSearch()

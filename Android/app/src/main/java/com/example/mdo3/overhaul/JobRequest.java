@@ -116,9 +116,10 @@ public class JobRequest extends AppCompatActivity {
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
-                boolean requestInserted = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                ServiceRequest sr = new ServiceRequest(0, userId, 0, sTitle, sDescription, weight, datePosted, null, price, loadHelp, unloadHelp, null, false, true, sPickupLocation, sDestination);
-                if(!requestInserted) {
+                int requestInserted = -1;
+                requestInserted = da.insertServiceRequest(myCustomer.getId(), sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                ServiceRequest sr = new ServiceRequest(requestInserted, myCustomer.getId(), 0, sTitle, sDescription, weight, datePosted, null, price, loadHelp, unloadHelp, null, false, true, sPickupLocation, sDestination);
+                if(requestInserted == -1) {
                     System.out.println("INSERT FAILED ******************");
                 }
                 else {
@@ -129,21 +130,6 @@ public class JobRequest extends AppCompatActivity {
                 }
                 Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
 
-                //insert a new service request into the database
-                DataAccess da = new DataAccess();
-                int idServiceRequest = -1;
-                idServiceRequest = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                if(idServiceRequest == -1)
-                    System.out.println("INSERT FAILED ******************");
-                Queue<Driver> possibleDrivers = da.getPossibleDrivers();
-                System.out.println(possibleDrivers.isEmpty());
-                Driver bestDriver = possibleDrivers.poll();
-                da.insertEventLogServiceRequest(userId, idServiceRequest, bestDriver.getId());
-
-                finish();
-                Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
-                myIntent.putExtra("ServiceRequest", idServiceRequest);
-                JobRequest.this.startActivity(myIntent);
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
