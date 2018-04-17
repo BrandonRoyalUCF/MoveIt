@@ -86,6 +86,8 @@ public class driver_acc_info extends AppCompatActivity
                 AccRout,
                 pastIntent.getStringExtra("name"));
 
+        Driver driver = da.checkDriverLogin(pastIntent.getStringExtra("email"), pastIntent.getStringExtra("password"));
+
         System.out.println("DEBUG : "  + AccNum);
         System.out.println("DEBUG : "  + AccNum2);
         System.out.println("DEBUG : "  + AccRout);
