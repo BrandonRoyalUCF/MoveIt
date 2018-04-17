@@ -126,10 +126,10 @@ public class JobRequest extends AppCompatActivity {
                     finish();
                     Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
                     myIntent.putExtra("serviceRequest", sr);
+                    myIntent.putExtra("myCustomer", myCustomer);
+                    myIntent.putExtra("serviceRequestId", requestInserted);
                     JobRequest.this.startActivity(myIntent);
                 }
-                Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
-
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
