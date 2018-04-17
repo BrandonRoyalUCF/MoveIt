@@ -1388,58 +1388,6 @@ public class DataAccess {
         }
     }
 
-    public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
-    {
-        try{
-            updateCustomerPaymentInfoAsync ic =  new updateCustomerPaymentInfoAsync(idCustomer, CardNumber, ExpMonth, ExpYear, CVV);
-            return ic.execute().get();
-        } catch (Exception e) {System.out.println(e);}
-        return null;
-    }
-
-    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Customer>
-    {
-        private int idCustomer;
-        private String cardNumber;
-        private String expMonth;
-        private String expYear;
-        private String CVV;
-
-        public updateCustomerPaymentInfoAsync(int IdCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
-        {
-            this.idCustomer = IdCustomer; this.cardNumber = CardNumber; this.expMonth = ExpMonth; this.expYear = ExpYear; this.CVV = CVV;
-        }
-
-        @Override
-        protected Customer doInBackground(Void... params)
-        {
-            try {
-                Connection conn = DataAccess.this.ConnectToDB();
-
-                String query = "UPDATE CustomerPaymentInfo SET CardNumber = ?, ExpirationMonth = ?, ExpirationYear = ?, CVV = ? WHERE id_Customer = ?";
-
-                PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setString(1, this.cardNumber);
-                pstmt.setString(2, this.expMonth);
-                pstmt.setString(3, this.expYear);
-                pstmt.setString(4, this.CVV);
-                pstmt.setInt(5, this.idCustomer);
-
-                int result = pstmt.executeUpdate();
-
-                Customer customer = null;
-                customer = getCustomerById(idCustomer);
-
-                conn.close();
-
-                return customer;
-
-
-            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
-            return null;
-        }
-    }
-
     public Driver updateDriverPaymentInfo(int idDriver, String AccountNumber, String RoutingNumber)
     {
         try{

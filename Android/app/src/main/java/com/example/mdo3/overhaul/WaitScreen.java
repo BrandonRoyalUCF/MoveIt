@@ -55,7 +55,7 @@ public class WaitScreen extends AppCompatActivity {
         };
         Button cancelSearchBtn = (Button) findViewById(R.id.cancelButton);
         cancelSearchBtn.setOnClickListener(cancelListener);
-        
+
         OnClickListener viewDriverListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
