@@ -83,10 +83,6 @@ public class JobRequest extends AppCompatActivity {
 
                 isCompleted = false;
 
-
-                //Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
-
-
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
                 boolean requestInserted = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
