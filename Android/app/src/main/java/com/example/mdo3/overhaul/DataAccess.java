@@ -379,8 +379,6 @@ public class DataAccess {
         }
     }
 
-
-
     public Boolean insertDriverRating(int idDriver, int idCustomerWhoRated, int idServiceRequest, int rating, String comment, float newDriverAvg, int newDriverCount)
     {
         try{
@@ -1166,4 +1164,186 @@ public class DataAccess {
             return false;
         }
     }
+
+    public Driver getDriverById(int idDriver)
+    {
+        try{
+            getDriverByIdAsync gdbi =  new getDriverByIdAsync(idDriver);
+            return gdbi.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class getDriverByIdAsync extends AsyncTask<Void, Void, Driver>
+    {
+        private int idDriver;
+        public getDriverByIdAsync(int IdDriver)
+        {
+            this.idDriver = IdDriver;
+        }
+
+        @Override
+        protected Driver doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AverageRating, NumberRatings FROM DriverInfo WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idDriver);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next() ) {
+                    int id = rs.getInt("id");
+                    String UserName = rs.getString("UserName");
+                    String Name = rs.getString("Name");
+                    String PhoneNumber = rs.getString("PhoneNumber");
+                    String DriverLicenseNumber = rs.getString("DriverLicenseNumber");
+                    byte[] Picture = rs.getBytes("Picture");
+                    Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("isActive");
+                    float AvgRating = rs.getFloat("AverageRating");
+                    int NumRating = rs.getInt("NumberRatings");
+
+                    Vehicle vehicle = null;
+                    query = "SELECT id, CarMake, CarModel, CarYear, LicensePlateNumber, LoadCapacity, Picture FROM Vehicle WHERE id_Driver = ?";
+                    pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(1, id);
+                    rs = pstmt.executeQuery();
+
+                    if (rs.next() )
+                    {
+                        int idVehicle = rs.getInt("id");
+                        String CarMake = rs.getString("CarMake");
+                        String CarModel = rs.getString("CarModel");
+                        int CarYear = rs.getInt("CarYear");
+                        String LicensePlate = rs.getString("LicensePlateNumber");
+                        float LoadCapacity = rs.getFloat("LoadCapacity");
+                        byte[] CarPicture = rs.getBytes("Picture");
+                        vehicle = new Vehicle(idVehicle, id, CarMake, CarModel, CarYear, LicensePlate, LoadCapacity, CarPicture);
+                    }
+                    Driver driver = new Driver(id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AvgRating, NumRating, vehicle);
+                    return driver;
+                }
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Getting Driver: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Customer getCustomerById(int idCustomer)
+    {
+        try{
+            getCustomerByIdAsync gcbi =  new getCustomerByIdAsync(idCustomer);
+            return gcbi.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class getCustomerByIdAsync extends AsyncTask<Void, Void, Customer>
+    {
+        int idCustomer;
+        public getCustomerByIdAsync(int IdCustomer)
+        {
+            this.idCustomer = IdCustomer;
+        }
+
+        @Override
+        protected Customer doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "SELECT id, UserName, Name, PhoneNumber, DateRegistered, isActive FROM CustomerInfo WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idCustomer);
+                ResultSet rs = pstmt.executeQuery();
+
+                if (rs.next() ) {
+                    int UserId = rs.getInt("id");
+                    String UserName = rs.getString("UserName");
+                    String Name = rs.getString("Name");
+                    String PhoneNumber = rs.getString("PhoneNumber");
+                    Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("isActive");
+                    Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
+                    return customer;
+                }
+
+                conn.close();
+
+
+            } catch (Exception e) {System.out.println("Error Getting Customer: " + e.toString());}
+            return null;
+        }
+    }
+
+    public ServiceRequest getServiceRequestById(int idServiceRequest)
+    {
+        try{
+            getServiceRequestByIdAsync gsrbi =  new getServiceRequestByIdAsync(idServiceRequest);
+            return gsrbi.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class getServiceRequestByIdAsync extends AsyncTask<Void, Void, ServiceRequest>
+    {
+        private int idServiceRequest;
+        public getServiceRequestByIdAsync(int IdServiceRequest)
+        {
+            this.idServiceRequest = IdServiceRequest;
+        }
+
+        @Override
+        protected ServiceRequest doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query =
+                        "SELECT ServiceRequest.id, id_Customer, id_DriverWhoCompleted, Title, Description, TotalWeight, DatePosted, DateClosed, Price, LoadHelp, " +
+                                "UnloadHelp, isCompleted, inProgress, StartLocation, EndLocation " +
+                                "FROM ServiceRequest LEFT JOIN Location on Location.id_ServiceRequest = ServiceRequest.id " +
+                                "WHERE ServiceRequest.id = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idServiceRequest);
+                ResultSet rs = pstmt.executeQuery();
+
+                ServiceRequest sr = null;
+
+
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    int idCustomer = rs.getInt("id_Customer");
+                    Integer idDriverWhoCompleted = rs.getInt("id_DriverWhoCompleted");
+                    String title = rs.getString("Title");
+                    String description = rs.getString("Description");
+                    float weight = rs.getFloat("TotalWeight");
+                    Timestamp datePosted = rs.getTimestamp("DatePosted");
+                    Timestamp dateClosed = rs.getTimestamp("DateClosed");
+                    float price = rs.getFloat("Price");
+                    boolean loadHelp = rs.getBoolean("LoadHelp");
+                    boolean unloadHelp = rs.getBoolean("UnloadHelp");
+                    byte[] picture = rs.getBytes("Picture");
+                    boolean isCompleted = rs.getBoolean("isCompleted");
+                    boolean inProgress = rs.getBoolean("inProgress");
+                    String startLocation = rs.getString("StartLocation");
+                    String endLocation = rs.getString("EndLocation");
+
+                    sr = new ServiceRequest(id, idCustomer, idDriverWhoCompleted, title, description, weight, datePosted, dateClosed, price,
+                            loadHelp, unloadHelp, picture, isCompleted, inProgress, startLocation, endLocation);
+                }
+
+                conn.close();
+                return sr;
+
+
+            } catch (Exception e) {System.out.println("Error Getting Service Request: " + e.toString());}
+            return null;
+        }
+    }
+
 }
