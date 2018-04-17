@@ -72,5 +72,14 @@
             android:layout_marginTop="30dp"
             android:text="Edit Vehicle" />
 
+        <Button
+            android:id="@+id/button_queryDB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button_logout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:text="Query" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
