@@ -47,7 +47,7 @@ public class DriverMainScreen extends Activity{
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
 
-        requestActive = false; // Remove later, only for debugging right now.
+        requestActive = true; // Remove later, only for debugging right now.
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
         Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
@@ -96,7 +96,14 @@ public class DriverMainScreen extends Activity{
             View.OnClickListener queryListen = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //ServiceRequest sr = null;
 
+                    if(true) {
+                        finish();
+                        Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
+                        //myIntent.putExtra("serviceRequest", sr);
+                        DriverMainScreen.this.startActivity(myIntent);
+                    }
                 }
             };
             queryBtn.setOnClickListener(queryListen);
@@ -106,6 +113,7 @@ public class DriverMainScreen extends Activity{
             // Hide the buttons and don't give them an OnClick action.
             pickUpBtn.setVisibility(View.INVISIBLE);
             dropOffBtn.setVisibility(View.INVISIBLE);
+            queryBtn.setVisibility(View.INVISIBLE);
 
             // Make sure the buttons are visible
             activitySwh.setVisibility(View.VISIBLE);
