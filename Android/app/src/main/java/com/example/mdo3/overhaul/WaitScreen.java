@@ -13,6 +13,7 @@ import android.widget.Button;
 // Still need to set driver searching functionality (tentative)
 public class WaitScreen extends AppCompatActivity {
 
+    Driver tmpDriver = null;
 
 
     @Override
@@ -39,7 +40,9 @@ public class WaitScreen extends AppCompatActivity {
         cancelSearchBtn.setOnClickListener(cancelListener);
 
         //begin wait for driver to accept
+        // For now, create a dummy variable for the driver info.
         DataAccess da = new DataAccess();
+        tmpDriver = da.getDriverById(0);
         //da.waitForAcceptance()
 
         OnClickListener viewDriverListener = new OnClickListener() {
@@ -47,12 +50,12 @@ public class WaitScreen extends AppCompatActivity {
             public void onClick(View v) {
                 // Links to Driver Details screen
                 Intent intent = new Intent(WaitScreen.this, DriverDetails.class);
+                intent.putExtra("tempDriver", tmpDriver);
                 startActivity(intent);
             }
         };
 
         Button viewDriverBtn = (Button) findViewById(R.id.viewDriverButton);
         viewDriverBtn.setOnClickListener(viewDriverListener);
-
     }
 }
