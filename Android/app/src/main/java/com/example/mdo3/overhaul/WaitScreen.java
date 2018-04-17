@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 // Still need to set driver searching functionality (tentative)
 public class WaitScreen extends AppCompatActivity {
@@ -24,17 +26,33 @@ public class WaitScreen extends AppCompatActivity {
         Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
         ServiceRequest idServiceRequest = (ServiceRequest)myIntent.getSerializableExtra("ServiceRequest");
 
+        OnClickListener cancelListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Links back to client main screen
+                Intent intent = new Intent(WaitScreen.this, ClientMainScreen.class);
+                startActivity(intent);
+            }
+        };
+
+        Button cancelSearchBtn = (Button) findViewById(R.id.cancelButton);
+        cancelSearchBtn.setOnClickListener(cancelListener);
+
         //begin wait for driver to accept
         DataAccess da = new DataAccess();
         //da.waitForAcceptance()
-    }
 
-    // Cancels Driver Search
-    public void CancelSearch(View view)
-    {
-        // Links back to client main screen
-        Intent intent = new Intent(WaitScreen.this, ClientMainScreen.class);
-        startActivity(intent);
-    }
+        OnClickListener viewDriverListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Links to Driver Details screen
+                Intent intent = new Intent(WaitScreen.this, DriverDetails.class);
+                startActivity(intent);
+            }
+        };
 
+        Button viewDriverBtn = (Button) findViewById(R.id.viewDriverButton);
+        viewDriverBtn.setOnClickListener(viewDriverListener);
+
+    }
 }
