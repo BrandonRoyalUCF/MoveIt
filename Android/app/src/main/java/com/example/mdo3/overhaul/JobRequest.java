@@ -45,7 +45,7 @@ import javax.xml.xpath.XPathFactory;
 
 public class JobRequest extends AppCompatActivity {
 
-    private int userId = 37;
+    private int userId;
     private EditText title;
     private EditText description;
     private Timestamp datePosted;
@@ -68,6 +68,9 @@ public class JobRequest extends AppCompatActivity {
         mDestination = (EditText) findViewById(R.id.editTextDestination);
         mWeight = (EditText) findViewById(R.id.editTextWeight);
         mPrice = (EditText) findViewById(R.id.editTextPrice);
+
+        Intent myIntent = getIntent();
+        Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
 
         //Upload Images Button
         View.OnClickListener uploadListen = new View.OnClickListener() {
@@ -125,6 +128,7 @@ public class JobRequest extends AppCompatActivity {
 
                 finish();
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
+                myIntent.putExtra("ServiceRequest", idServiceRequest);
                 JobRequest.this.startActivity(myIntent);
             }
         };

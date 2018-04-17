@@ -98,6 +98,7 @@ public class credit_card_info extends AppCompatActivity
         if(result) {
             Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, ClientMainScreen.class);
+            intent.putExtra("Customer", customer);
             startActivity(intent);
         }
         else
