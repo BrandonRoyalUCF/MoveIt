@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.Arrays;
@@ -13,19 +16,21 @@ import java.util.Arrays;
 
 public class DriverDetails extends AppCompatActivity {
 
+    private ServiceRequest sr;
     private Driver driver;
 
     private TextView tv_name;
     private TextView tv_rating;
     private ImageView iv_picture = null;
     private byte[] picture = new byte[0];
+    private Button backBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_driver_details);
         Intent myIntent = getIntent();
-        driver = (Driver) myIntent.getSerializableExtra("driver");
+        sr = (ServiceRequest) myIntent.getSerializableExtra("serviceRequest");
 
         tv_name = (TextView) findViewById(R.id.viewDriverName);
         tv_rating = (TextView) findViewById(R.id.viewDriverRating);
@@ -36,11 +41,23 @@ public class DriverDetails extends AppCompatActivity {
 
         initDetails();
 
-
+        backBtn = (Button) findViewById(R.id.backButton);
+        OnClickListener backButtonListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Links to Driver Details screen
+                Intent intent = new Intent(DriverDetails.this, WaitScreen.class);
+                intent.putExtra("serviceRequest", sr);
+                startActivity(intent);
+            }
+        };
+        backBtn.setOnClickListener(backButtonListener);
 
     }
 
     public void initDetails(){
+        DataAccess da = new DataAccess();
+        driver = da.getDriverById(sr.getIdDriverWhoCompleted());
         picture = driver.getPicture();
         tv_name.setText(driver.getName());
         tv_rating.setText(Double.toString(driver.getAvgRating()));
@@ -57,5 +74,4 @@ public class DriverDetails extends AppCompatActivity {
             iv_picture.setImageBitmap(bmp);
         }
     }
-
 }
