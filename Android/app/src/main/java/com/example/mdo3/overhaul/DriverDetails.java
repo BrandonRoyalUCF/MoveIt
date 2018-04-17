@@ -25,7 +25,7 @@ public class DriverDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_driver_details);
         Intent myIntent = getIntent();
-        driver = (Driver) myIntent.getSerializableExtra("NAME");
+        driver = (Driver) myIntent.getSerializableExtra("driver");
 
         tv_name = (TextView) findViewById(R.id.viewDriverName);
         tv_rating = (TextView) findViewById(R.id.viewDriverRating);

@@ -50,7 +50,7 @@ public class WaitScreen extends AppCompatActivity {
             public void onClick(View v) {
                 // Links to Driver Details screen
                 Intent intent = new Intent(WaitScreen.this, DriverDetails.class);
-                intent.putExtra("tempDriver", tmpDriver);
+                intent.putExtra("driver", tmpDriver);
                 startActivity(intent);
             }
         };
