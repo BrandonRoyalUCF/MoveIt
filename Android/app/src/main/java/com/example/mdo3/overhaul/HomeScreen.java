@@ -141,6 +141,7 @@ public class HomeScreen extends AppCompatActivity
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
+            Toast.makeText(this, "Password Invalid, Please Try Again", Toast.LENGTH_SHORT).show();
         }
 
         System.out.println("Password valid");
@@ -151,11 +152,13 @@ public class HomeScreen extends AppCompatActivity
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
+            Toast.makeText(this, "Email Invalid, Please Try again", Toast.LENGTH_SHORT).show();
         } else if (!isEmailValid(email))
         {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
+            Toast.makeText(this, "Email Invalid, Please Try again", Toast.LENGTH_SHORT).show();
         }
 
         if (cancel)
@@ -180,6 +183,10 @@ public class HomeScreen extends AppCompatActivity
                     myIntent.putExtra("Driver", driverDets);
                     HomeScreen.this.startActivity(myIntent);
                 }
+                else
+                {
+                    Toast.makeText(this, "Driver Login Failed", Toast.LENGTH_SHORT).show();
+                }
             }
             else
             {
@@ -192,6 +199,10 @@ public class HomeScreen extends AppCompatActivity
                         myIntent.putExtra("Customer", customerDets);
                         HomeScreen.this.startActivity(myIntent);
 
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "Customer Login Failed", Toast.LENGTH_SHORT).show();
                     }
             }
 
@@ -222,7 +233,7 @@ public class HomeScreen extends AppCompatActivity
         Boolean hasNumber = false;
 
         //check for length of password
-        if(password.length() < 4 || password.length() > 15)
+        if(password.length() < 2 || password.length() > 15)
             result = false;
         else
             result = true;
@@ -243,7 +254,9 @@ public class HomeScreen extends AppCompatActivity
             if(x >= 48 && x <= 57)
                 hasNumber = true;
         }
-        return result && hasCap && hasNumber && hasSpecChar;
+        //return true;
+        //return result && hasCap && hasNumber && hasSpecChar;
+        return result;
     }
 
     /**

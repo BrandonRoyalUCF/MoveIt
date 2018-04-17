@@ -48,6 +48,7 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
             public void onClick(View v) {
                 finish();
                 Intent myIntent = new Intent(ClientMainScreen.this, JobRequest.class);
+                myIntent.putExtra("Customer", myCustomer);
                 ClientMainScreen.this.startActivity(myIntent);
             }
         };

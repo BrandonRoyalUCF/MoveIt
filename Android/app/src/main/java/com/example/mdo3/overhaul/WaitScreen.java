@@ -25,6 +25,7 @@ public class WaitScreen extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+<<<<<<< HEAD
         //Create a queue of available drivers, take driver at the head of the queue
         Queue<Driver> driverQueue = findDrivers();
         assignedDriver = driverQueue.poll();
@@ -72,6 +73,15 @@ public class WaitScreen extends AppCompatActivity {
         int driverId = assignedDriver.getId();
         //Find serviceRequest with id = 'serviceRequestID', add driver to request
         return true;
+=======
+        Intent myIntent = getIntent();
+        Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
+        ServiceRequest idServiceRequest = (ServiceRequest)myIntent.getSerializableExtra("ServiceRequest");
+
+        //begin wait for driver to accept
+        DataAccess da = new DataAccess();
+        //da.waitForAcceptance()
+>>>>>>> master
     }
 
     // Cancels Driver Search

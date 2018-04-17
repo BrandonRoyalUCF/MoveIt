@@ -72,8 +72,6 @@ public class UserRegistration extends Activity {
         cpassword = et_cpassword.getText().toString().trim();
         phone = et_phone.getText().toString().trim();
         address = et_address.getText().toString().trim();
-
-
     }
     //validation check
     public boolean validate(){

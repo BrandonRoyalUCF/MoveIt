@@ -85,6 +85,10 @@ public class credit_card_info extends AppCompatActivity
                 ccSCode,
                 pastIntent.getStringExtra("name"));
 
+        Customer customer = da.checkCustomerLogin(pastIntent.getStringExtra("email"), pastIntent.getStringExtra("password"));
+        if(customer == null)
+            System.out.println("*************** Error Getting Customer");
+
 
         System.out.println("DEBUG: " + ccNumber);
         System.out.println("DEBUG: " + ccDate);
@@ -94,6 +98,7 @@ public class credit_card_info extends AppCompatActivity
         if(result) {
             Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, ClientMainScreen.class);
+            intent.putExtra("Customer", customer);
             startActivity(intent);
         }
         else

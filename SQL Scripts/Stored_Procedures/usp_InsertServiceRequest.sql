@@ -24,13 +24,15 @@ CREATE PROCEDURE [dbo].[usp_InsertServiceRequest]
 	@Picture varbinary(MAX),
 
 	@StartLocation varchar(50),
-	@EndLocation varchar(50)
+	@EndLocation varchar(50),
+
+	@idServiceRequest int Output
 AS
 
 	INSERT INTO ServiceRequest(id_Customer, Title, [Description], TotalWeight, DatePosted, Price, LoadHelp, UnloadHelp, Picture, isCompleted, inProgress)
 	VALUES (@idCustomer, @Title, @Description, @TotalWeight, @DatePosted, @Price, @LoadHelp, @UnloadHelp, @Picture, 0, 0)
 
-	DECLARE @idServiceRequest int = (SELECT SCOPE_IDENTITY())
+	SET @idServiceRequest = (SELECT SCOPE_IDENTITY())
 
 	INSERT INTO [Location](id_ServiceRequest, StartLocation, EndLocation)
 	VALUES (@idServiceRequest, @StartLocation, @EndLocation)

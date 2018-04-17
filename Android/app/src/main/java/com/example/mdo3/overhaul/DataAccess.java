@@ -2,6 +2,9 @@ package com.example.mdo3.overhaul;
 import java.sql.*;
 import java.sql.PreparedStatement;
 import android.os.AsyncTask;
+import android.os.SystemClock;
+import java.util.concurrent.TimeUnit;
+
 import java.util.*;
 
 /**
@@ -17,6 +20,12 @@ public class DataAccess {
     final private String dbPassWord = "overhaul123";
     final private String dbName = "OverHaul_Main";
     final private String dbClass = "net.sourceforge.jtds.jdbc.Driver";
+
+    //****ENUMS FOR EVENT DO NOT CHANGE****
+    final private int eventCustomerSubmitedRequest = 1;
+    final private int eventDriverAcceptedRequest = 2;
+    final private int eventDriverArrives = 3;
+    final private int eventTripEnds = 4;
 
     public DataAccess()
     {
@@ -308,7 +317,7 @@ public class DataAccess {
         }
     }
 
-    public Boolean insertServiceRequest(int idCustomer, String Title, String Description, float Weight, Timestamp DatePosted, float Price,
+    public int insertServiceRequest(int idCustomer, String Title, String Description, float Weight, Timestamp DatePosted, float Price,
                                              boolean LoadHelp, boolean UnloadHelp, byte[] Picture, String StartAddress, String EndAddress)
     {
         try{
@@ -316,10 +325,10 @@ public class DataAccess {
                                                     Picture, StartAddress, EndAddress);
             return isr.execute().get();
         } catch (Exception e) {System.out.println(e);}
-        return null;
+        return -1;
     }
 
-    private class insertServiceRequestAsync extends AsyncTask<Void, Void, Boolean>
+    private class insertServiceRequestAsync extends AsyncTask<Void, Void, Integer>
     {
 
         private int idCustomer; private String title; private String description; private float weight; private Timestamp datePosted;
@@ -335,36 +344,38 @@ public class DataAccess {
         }
 
         @Override
-        protected Boolean doInBackground(Void... params)
+        protected Integer doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
                 String query = "EXEC dbo.usp_InsertServiceRequest @idCustomer = ?, @Title = ?, @Description = ?, @TotalWeight = ?, @DatePosted = ?," +
-                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?, @StartLocation = ?, @EndLocation = ? ";
+                                    " @Price = ?, @LoadHelp = ?, @UnloadHelp = ?, @Picture = ?, @StartLocation = ?, @EndLocation = ?, @idServiceRequest = ? ";
+                CallableStatement cs = conn.prepareCall(query);
 
-                PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setInt(1, this.idCustomer);
-                pstmt.setString(2, this.title);
-                pstmt.setString(3, this.description);
-                pstmt.setFloat(4, this.weight);
-                pstmt.setTimestamp(5, this.datePosted);
-                pstmt.setFloat(6, this.price);
-                pstmt.setBoolean(7, this.loadHelp);
-                pstmt.setBoolean(8, this.unloadHelp);
-                pstmt.setBytes(9, this.picture);
-                pstmt.setString(10, this.startAddress);
-                pstmt.setString(11, this.endAddress);
-
-                ResultSet rs = pstmt.executeQuery();
-                conn.close();
-
-                if(rs.next())
-                    return true;
+                //PreparedStatement pstmt = conn.prepareStatement(query);
+                cs.setInt(1, this.idCustomer);
+                cs.setString(2, this.title);
+                cs.setString(3, this.description);
+                cs.setFloat(4, this.weight);
+                cs.setTimestamp(5, this.datePosted);
+                cs.setFloat(6, this.price);
+                cs.setBoolean(7, this.loadHelp);
+                cs.setBoolean(8, this.unloadHelp);
+                cs.setBytes(9, this.picture);
+                cs.setString(10, this.startAddress);
+                cs.setString(11, this.endAddress);
+                cs.registerOutParameter(12, Types.INTEGER);
+                cs.executeUpdate();
+                int idServiceRequest = cs.getInt(12);
+                //ResultSet rs = pstmt.executeQuery();
+                //int idServiceRequest = rs.getInt(1);
+                //return rs.getInt(12);
+                return idServiceRequest;
 
 
             } catch (Exception e) {System.out.println("Error Adding Transaction: " + e.toString());}
-            return false;
+            return -1;
         }
     }
 
@@ -524,8 +535,8 @@ public class DataAccess {
 
                         "SELECT DriverInfo.id, DriverInfo.UserName, DriverInfo.Name, DriverInfo.PhoneNumber, DriverInfo.DriverLicenseNumber, DriverInfo.Picture, " +
                                 "DriverInfo.DateRegistered, DriverInfo.IsActive, DriverInfo.AverageRating, DriverInfo.NumberRatings, Vehicle.id [vehicleId], Vehicle.CarMake, Vehicle.CarModel, " +
-                                "Vehicle.CarYear, Vehicle.LicensePlateNumber, Vehicle.LoadCapacity, Vehicle.Picture" +
-                                "FROM DriverInfo" +
+                                "Vehicle.CarYear, Vehicle.LicensePlateNumber, Vehicle.LoadCapacity, Vehicle.Picture " +
+                                "FROM DriverInfo " +
                                 "LEFT JOIN Vehicle on Vehicle.id_Driver = DriverInfo.id " +
                                 "WHERE DriverInfo.IsActive = 1";
 
@@ -624,6 +635,534 @@ public class DataAccess {
                 }
 
             } catch (Exception e) {System.out.println("Error Updating info: " + e.toString());}
+            return false;
+        }
+    }
+
+    public Driver waitForAcceptance(int idServiceRequest, int idCustomer)
+    {
+        try{
+            waitForAcceptanceAsync wfa =  new waitForAcceptanceAsync(idServiceRequest, idCustomer);
+            return wfa.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class waitForAcceptanceAsync extends AsyncTask<Void, Void, Driver>
+    {
+        private int idServiceRequest;
+        private int idCustomer;
+        final private int eventDriverAcceptedRequest = 2;
+
+        public waitForAcceptanceAsync (int IdServiceRequest, int IdCustomer)
+        {
+            this.idServiceRequest = IdServiceRequest;
+            this.idCustomer = IdCustomer;
+        }
+
+        @Override
+        protected Driver doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                final int MaxTimeInMilliSeconds = 30000;
+                double ellapsedTime = 0.0;
+                long startTime = SystemClock.elapsedRealtime();
+                long endTime = SystemClock.elapsedRealtime();
+                int count = 0;
+                int idDriver = -1;
+                int idEventLog = -1;
+                while((endTime - startTime) < MaxTimeInMilliSeconds && count < 20)
+                {
+                    count++;
+
+                    String query = "SELECT id, idDriver FROM EventLog where idCustomer = ? and idServiceRequest = ? and idEvent = ? and isActive = 1 ";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(1, this.idCustomer);
+                    pstmt.setInt(2, this.idServiceRequest);
+                    pstmt.setInt(3, this.eventDriverAcceptedRequest);
+
+                    ResultSet rs= pstmt.executeQuery();
+                    if(rs.next())
+                    {
+                        idDriver = rs.getInt("idDriver");
+                        idEventLog = rs.getInt("id");
+                        break;
+                    }
+
+                    endTime = SystemClock.elapsedRealtime();
+                }
+                if(idDriver == -1 || idEventLog == -1)
+                {
+                    conn.close();
+                    return null;
+                }
+
+
+                //Update the Event to not active since it was used
+                String query2 = "Update EventLog SET isActive = 0 where id = ? ";
+                PreparedStatement pstmt2 = conn.prepareStatement(query2);
+                pstmt2.setInt(1, idEventLog);
+                int result = pstmt2.executeUpdate();
+
+                //get the Driver profile for the customer to see
+                String query3 = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AverageRating, NumberRatings FROM DriverInfo WHERE DriverInfo.id = ? ";
+                PreparedStatement pstmt3 = conn.prepareStatement(query3);
+                pstmt3.setInt(1, idDriver);
+                ResultSet rs = pstmt3.executeQuery();
+                if (rs.next() ) {
+                    int id = rs.getInt("id");
+                    String UserName = rs.getString("UserName");
+                    String Name = rs.getString("Name");
+                    String PhoneNumber = rs.getString("PhoneNumber");
+                    String DriverLicenseNumber = rs.getString("DriverLicenseNumber");
+                    byte[] Picture = rs.getBytes("Picture");
+                    Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("isActive");
+                    float AvgRating = rs.getFloat("AverageRating");
+                    int NumRating = rs.getInt("NumberRatings");
+
+                    Vehicle vehicle = null;
+                    query3 = "SELECT id, CarMake, CarModel, CarYear, LicensePlateNumber, LoadCapacity, Picture FROM Vehicle WHERE id_Driver = ?";
+                    pstmt3 = conn.prepareStatement(query3);
+                    pstmt3.setInt(1, id);
+                    rs = pstmt3.executeQuery();
+
+                    if (rs.next()) {
+                        int idVehicle = rs.getInt("id");
+                        String CarMake = rs.getString("CarMake");
+                        String CarModel = rs.getString("CarModel");
+                        int CarYear = rs.getInt("CarYear");
+                        String LicensePlate = rs.getString("LicensePlateNumber");
+                        float LoadCapacity = rs.getFloat("LoadCapacity");
+                        byte[] CarPicture = rs.getBytes("Picture");
+                        vehicle = new Vehicle(idVehicle, id, CarMake, CarModel, CarYear, LicensePlate, LoadCapacity, CarPicture);
+                    }
+                    Driver driver = new Driver(id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AvgRating, NumRating, vehicle);
+                    conn.close();
+                    return driver;
+                }
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
+            return null;
+        }
+    }
+
+    public ServiceRequest waitForRequest(int idDriver)
+    {
+        try{
+            waitForRequestAsync wfr =  new waitForRequestAsync(idDriver);
+            return wfr.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class waitForRequestAsync extends AsyncTask<Void, Void, ServiceRequest>
+    {
+        private int idDriver;
+        final private int eventCustomerSubmittedRequest = 1;
+        final private int eventDriverAcceptedRequest = 2;
+
+
+        public waitForRequestAsync (int IdDriver)
+        {
+            this.idDriver = IdDriver;
+        }
+
+        @Override
+        protected ServiceRequest doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                final int MaxTimeInMilliSeconds = 10000;
+                double ellapsedTime = 0.0;
+                long startTime = SystemClock.elapsedRealtime();
+                long endTime = SystemClock.elapsedRealtime();
+                int count = 0;
+
+                int idServiceRequest = -1;
+                int idEventLog = -1;
+                while((endTime - startTime) < MaxTimeInMilliSeconds && count < 20)
+                {
+                    count++;
+
+                    String query = "SELECT id, idServiceRequest FROM EventLog where idDriver = ? and idServiceRequest = ? and idEvent = ? and isActive = 1 ";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(1, this.idDriver);
+                    pstmt.setInt(3, this.eventCustomerSubmittedRequest);
+
+                    ResultSet rs= pstmt.executeQuery();
+                    if(rs.next())
+                    {
+                        idServiceRequest = rs.getInt("idServiceRequest");
+                        idEventLog = rs.getInt("id");
+                        break;
+                    }
+
+                    endTime = SystemClock.elapsedRealtime();
+                }
+                if(idServiceRequest == -1 || idEventLog == -1)
+                {
+                    conn.close();
+                    return null;
+                }
+
+                //Update the Event to not active since it was used
+                String query2 = "Update EventLog SET isActive = 0 where id = ? ";
+                PreparedStatement pstmt2 = conn.prepareStatement(query2);
+                pstmt2.setInt(1, idEventLog);
+                int result = pstmt2.executeUpdate();
+
+                //get the ServiceRequest for the driver to see
+                String query3 =
+                        "SELECT ServiceRequest.id, id_Customer, id_DriverWhoCompleted, Title, Description, TotalWeight, DatePosted, DateClosed, Price, LoadHelp, " +
+                                "UnloadHelp, isCompleted, inProgress, StartLocation, EndLocation " +
+                                "FROM ServiceRequest LEFT JOIN Location on Location.id_ServiceRequest = ServiceRequest.id" +
+                                "WHERE ServiceRequest.id = ?";
+
+                PreparedStatement pstmt3 = conn.prepareStatement(query3);
+                pstmt3.setInt(1, idServiceRequest);
+                ResultSet rs = pstmt3.executeQuery();
+                ServiceRequest sr = null;
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    int idCustomer = rs.getInt("id_Customer");
+                    Integer idDriverWhoCompleted = rs.getInt("id_DriverWhoCompleted");
+                    String title = rs.getString("Title");
+                    String description = rs.getString("Description");
+                    float weight = rs.getFloat("TotalWeight");
+                    Timestamp datePosted = rs.getTimestamp("DatePosted");
+                    Timestamp dateClosed = rs.getTimestamp("DateClosed");
+                    float price = rs.getFloat("Price");
+                    boolean loadHelp = rs.getBoolean("LoadHelp");
+                    boolean unloadHelp = rs.getBoolean("UnloadHelp");
+                    byte[] picture = rs.getBytes("Picture");
+                    boolean isCompleted = rs.getBoolean("isCompleted");
+                    boolean inProgress = rs.getBoolean("inProgress");
+                    String startLocation = rs.getString("StartLocation");
+                    String endLocation = rs.getString("EndLocation");
+
+                    sr = new ServiceRequest(id, idCustomer, idDriverWhoCompleted, title, description, weight, datePosted, dateClosed, price,
+                            loadHelp, unloadHelp, picture, isCompleted, inProgress, startLocation, endLocation);
+                }
+
+                //insert new event into event log saying that the driver accepted the service request
+                //right now the driver will auto accept the service request
+                String query4 = "INSERT INTO EventLog (idServiceRequest, idCustomer, idDriver, idEvent, Description, isActive) " +
+                        " VALUES (?, ?, ?, ?, ?, ?)" ;
+                PreparedStatement pstmt4 = conn.prepareStatement(query4);
+                pstmt4.setInt(1, idServiceRequest);
+                pstmt4.setInt(2, sr.getIdCustomer());
+                pstmt4.setInt(3, this.idDriver);
+                pstmt4.setInt(4, this.eventDriverAcceptedRequest);
+                pstmt4.setString(5, "Driver Accepted the Request");
+                pstmt4.setBoolean(6, true);
+                int result4 = pstmt4.executeUpdate();
+
+                conn.close();
+                return sr;
+
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Boolean insertEventLogServiceRequest(int IdCustomer, int IdServiceRequest, int IdDriver)
+    {
+        try{
+            insertEventLogServiceRequestAsync ielsr =  new insertEventLogServiceRequestAsync(IdCustomer, IdServiceRequest, IdDriver);
+            return ielsr.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class insertEventLogServiceRequestAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idCustomer;
+        private int idServiceRequest;
+        private int idDriver;
+        final private int eventCustomerSubmittedRequest = 1;
+
+
+
+        public insertEventLogServiceRequestAsync (int IdCustomer, int IdServiceRequest, int IdDriver)
+        {
+            this.idDriver = IdDriver;
+            this.idCustomer = IdCustomer;
+            this.idServiceRequest = IdServiceRequest;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "INSERT INTO EventLog (idServiceRequest, idCustomer, idDriver, idEvent, Description, isActive) " +
+                        " VALUES (?, ?, ?, ?, ?, ?)" ;
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idServiceRequest);
+                pstmt.setInt(2, this.idCustomer);
+                pstmt.setInt(3, this.idDriver);
+                pstmt.setInt(4, this.eventCustomerSubmittedRequest);
+                pstmt.setString(5, "Customer Submitted A Service Request");
+                pstmt.setBoolean(6, true);
+                int result = pstmt.executeUpdate();
+
+
+                conn.close();
+                return true;
+
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
+            return false;
+        }
+    }
+
+    public Boolean waitForDriverArrival(int IdServiceRequest, int IdDriver, int IdCustomer)
+    {
+        try{
+            waitForDriverArrivalAsync wfda =  new waitForDriverArrivalAsync(IdCustomer, IdServiceRequest, IdDriver);
+            return wfda.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class waitForDriverArrivalAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idServiceRequest;
+        private int idCustomer;
+        private int idDriver;
+        final private int eventDriverArrived = 3;
+
+        public waitForDriverArrivalAsync (int IdCustomer, int IdServiceRequest, int IdDriver)
+        {
+            this.idServiceRequest = IdServiceRequest;
+            this.idCustomer = IdCustomer;
+            this.idDriver = IdDriver;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                final int MaxTimeInMilliSeconds = 30000;
+                double ellapsedTime = 0.0;
+                long startTime = SystemClock.elapsedRealtime();
+                long endTime = SystemClock.elapsedRealtime();
+                int count = 0;
+                int idEventLog = -1;
+                while((endTime - startTime) < MaxTimeInMilliSeconds && count < 20)
+                {
+                    count++;
+
+                    String query = "SELECT id FROM EventLog where idCustomer = ? and idServiceRequest = ? and idEvent = ? and isActive = 1 ";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(1, this.idCustomer);
+                    pstmt.setInt(2, this.idServiceRequest);
+                    pstmt.setInt(3, this.eventDriverArrived);
+
+                    ResultSet rs= pstmt.executeQuery();
+                    if(rs.next())
+                    {
+                        idEventLog = rs.getInt("id");
+                        break;
+                    }
+
+                    endTime = SystemClock.elapsedRealtime();
+                    TimeUnit.SECONDS.sleep(1);
+                }
+                if(idEventLog == -1)
+                {
+                    conn.close();
+                    return false;
+                }
+
+
+                //Update the Event to not active since it was used
+                String query2 = "Update EventLog SET isActive = 0 where id = ? ";
+                PreparedStatement pstmt2 = conn.prepareStatement(query2);
+                pstmt2.setInt(1, idEventLog);
+                int result = pstmt2.executeUpdate();
+
+                return true;
+
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Boolean waitForTripEnd(int IdServiceRequest)
+    {
+        try{
+            waitForTripEndAsync wfte =  new waitForTripEndAsync(IdServiceRequest);
+            return wfte.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class waitForTripEndAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idServiceRequest;
+        final private int eventTripEnded = 4;
+
+        public waitForTripEndAsync (int IdServiceRequest)
+        {
+            this.idServiceRequest = IdServiceRequest;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                final int MaxTimeInMilliSeconds = 30000;
+                double ellapsedTime = 0.0;
+                long startTime = SystemClock.elapsedRealtime();
+                long endTime = SystemClock.elapsedRealtime();
+                int count = 0;
+                int idEventLog = -1;
+                while((endTime - startTime) < MaxTimeInMilliSeconds && count < 20)
+                {
+                    count++;
+
+                    String query = "SELECT id FROM EventLog where idServiceRequest = ? and idEvent = ? and isActive = 1 ";
+                    PreparedStatement pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(2, this.idServiceRequest);
+                    pstmt.setInt(3, this.eventTripEnded);
+
+                    ResultSet rs= pstmt.executeQuery();
+                    if(rs.next())
+                    {
+                        idEventLog = rs.getInt("id");
+                        break;
+                    }
+
+                    endTime = SystemClock.elapsedRealtime();
+                    TimeUnit.SECONDS.sleep(1);
+                }
+                if(idEventLog == -1)
+                {
+                    conn.close();
+                    return false;
+                }
+
+
+                //Update the Event to not active since it was used
+                String query2 = "Update EventLog SET isActive = 0 where id = ? ";
+                PreparedStatement pstmt2 = conn.prepareStatement(query2);
+                pstmt2.setInt(1, idEventLog);
+                int result = pstmt2.executeUpdate();
+
+                return true;
+
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Boolean insertEventLogDriverArrived(int IdCustomer, int IdServiceRequest, int IdDriver)
+    {
+        try{
+            insertEventLogDriverArrivedAsync ieda =  new insertEventLogDriverArrivedAsync(IdCustomer, IdServiceRequest, IdDriver);
+            return ieda.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class insertEventLogDriverArrivedAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idCustomer;
+        private int idServiceRequest;
+        private int idDriver;
+        final private int eventDriverArrived = 3;
+
+
+
+        public insertEventLogDriverArrivedAsync (int IdCustomer, int IdServiceRequest, int IdDriver)
+        {
+            this.idDriver = IdDriver;
+            this.idCustomer = IdCustomer;
+            this.idServiceRequest = IdServiceRequest;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "INSERT INTO EventLog (idServiceRequest, idCustomer, idDriver, idEvent, Description, isActive) " +
+                        " VALUES (?, ?, ?, ?, ?, ?)" ;
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idServiceRequest);
+                pstmt.setInt(2, this.idCustomer);
+                pstmt.setInt(3, this.idDriver);
+                pstmt.setInt(4, this.eventDriverArrived);
+                pstmt.setString(5, "Driver Has Arrived");
+                pstmt.setBoolean(6, true);
+                int result = pstmt.executeUpdate();
+
+
+                conn.close();
+                return true;
+
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
+            return false;
+        }
+    }
+
+    public Boolean insertEventLogTripEnded(int IdCustomer, int IdServiceRequest, int IdDriver)
+    {
+        try{
+            insertEventLogTripEndedAsync iete =  new insertEventLogTripEndedAsync(IdCustomer, IdServiceRequest, IdDriver);
+            return iete.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class insertEventLogTripEndedAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idCustomer;
+        private int idServiceRequest;
+        private int idDriver;
+        final private int eventTripEnded = 4;
+
+
+
+        public insertEventLogTripEndedAsync (int IdCustomer, int IdServiceRequest, int IdDriver)
+        {
+            this.idDriver = IdDriver;
+            this.idCustomer = IdCustomer;
+            this.idServiceRequest = IdServiceRequest;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "INSERT INTO EventLog (idServiceRequest, idCustomer, idDriver, idEvent, Description, isActive) " +
+                        " VALUES (?, ?, ?, ?, ?, ?)" ;
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idServiceRequest);
+                pstmt.setInt(2, this.idCustomer);
+                pstmt.setInt(3, this.idDriver);
+                pstmt.setInt(4, this.eventTripEnded);
+                pstmt.setString(5, "Driver Has Arrived");
+                pstmt.setBoolean(6, true);
+                int result = pstmt.executeUpdate();
+
+
+                conn.close();
+                return true;
+
+            } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
             return false;
         }
     }
