@@ -640,19 +640,19 @@ public class DataAccess {
     public Driver checkIfDriverAccepted(int idServiceRequest, int idCustomer)
     {
         try{
-            waitForAcceptanceAsync wfa =  new waitForAcceptanceAsync(idServiceRequest, idCustomer);
+            checkIfDriverAcceptedAsync wfa =  new checkIfDriverAcceptedAsync(idServiceRequest, idCustomer);
             return wfa.execute().get();
         } catch (Exception e) {System.out.println(e);}
         return null;
     }
 
-    private class waitForAcceptanceAsync extends AsyncTask<Void, Void, Driver>
+    private class checkIfDriverAcceptedAsync extends AsyncTask<Void, Void, Driver>
     {
         private int idServiceRequest;
         private int idCustomer;
         final private int eventDriverAcceptedRequest = 2;
 
-        public waitForAcceptanceAsync (int IdServiceRequest, int IdCustomer)
+        public checkIfDriverAcceptedAsync (int IdServiceRequest, int IdCustomer)
         {
             this.idServiceRequest = IdServiceRequest;
             this.idCustomer = IdCustomer;
@@ -1388,58 +1388,6 @@ public class DataAccess {
         }
     }
 
-    public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
-    {
-        try{
-            updateCustomerPaymentInfoAsync ic =  new updateCustomerPaymentInfoAsync(idCustomer, CardNumber, ExpMonth, ExpYear, CVV);
-            return ic.execute().get();
-        } catch (Exception e) {System.out.println(e);}
-        return null;
-    }
-
-    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Customer>
-    {
-        private int idCustomer;
-        private String cardNumber;
-        private String expMonth;
-        private String expYear;
-        private String CVV;
-
-        public updateCustomerPaymentInfoAsync(int IdCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
-        {
-            this.idCustomer = IdCustomer; this.cardNumber = CardNumber; this.expMonth = ExpMonth; this.expYear = ExpYear; this.CVV = CVV;
-        }
-
-        @Override
-        protected Customer doInBackground(Void... params)
-        {
-            try {
-                Connection conn = DataAccess.this.ConnectToDB();
-
-                String query = "UPDATE CustomerPaymentInfo SET CardNumber = ?, ExpirationMonth = ?, ExpirationYear = ?, CVV = ? WHERE id_Customer = ?";
-
-                PreparedStatement pstmt = conn.prepareStatement(query);
-                pstmt.setString(1, this.cardNumber);
-                pstmt.setString(2, this.expMonth);
-                pstmt.setString(3, this.expYear);
-                pstmt.setString(4, this.CVV);
-                pstmt.setInt(5, this.idCustomer);
-
-                int result = pstmt.executeUpdate();
-
-                Customer customer = null;
-                customer = getCustomerById(idCustomer);
-
-                conn.close();
-
-                return customer;
-
-
-            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
-            return null;
-        }
-    }
-
     public Driver updateDriverPaymentInfo(int idDriver, String AccountNumber, String RoutingNumber)
     {
         try{
@@ -1526,8 +1474,6 @@ public class DataAccess {
                     return true;
                 }
 
-
-
                 conn.close();
                 return false;
 
@@ -1538,6 +1484,45 @@ public class DataAccess {
         }
     }
 
+    public Boolean updateServiceRequestCompleted(int idServiceRequest, boolean isCompleted)
+    {
+        try{
+            updateServiceRequestCompletedAsync usr =  new updateServiceRequestCompletedAsync(idServiceRequest, isCompleted);
+            usr.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+    }
 
+    private class updateServiceRequestCompletedAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idServiceRequest;
+        private boolean isCompleted;
+
+        public updateServiceRequestCompletedAsync(int IdServiceRequest, boolean IsCompleted)
+        {
+            this.idServiceRequest = IdServiceRequest;
+            this.isCompleted = IsCompleted;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "UPDATE ServiceRequest SET isCompleted = ? WHERE id = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setBoolean(1, this.isCompleted);
+                pstmt.setInt(2, this.idServiceRequest);
+
+                ResultSet rs = pstmt.executeQuery();
+
+                conn.close();
+                return true;
+
+            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            return true;
+        }
+    }
 
 }
