@@ -113,8 +113,6 @@ public class JobRequest extends AppCompatActivity {
                 String sPrice = mPrice.getText().toString();
                 float price = Float.parseFloat(sPrice);
 
-<<<<<<< HEAD
-                isCompleted = false;
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
@@ -129,7 +127,6 @@ public class JobRequest extends AppCompatActivity {
                     myIntent.putExtra("serviceRequest", sr);
                     JobRequest.this.startActivity(myIntent);
                 }
-=======
                 Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
 
                 //insert a new service request into the database
@@ -147,7 +144,6 @@ public class JobRequest extends AppCompatActivity {
                 Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
                 myIntent.putExtra("ServiceRequest", idServiceRequest);
                 JobRequest.this.startActivity(myIntent);
->>>>>>> master
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
