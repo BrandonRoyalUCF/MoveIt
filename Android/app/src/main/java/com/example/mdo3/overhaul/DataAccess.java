@@ -379,8 +379,6 @@ public class DataAccess {
         }
     }
 
-
-
     public Boolean insertDriverRating(int idDriver, int idCustomerWhoRated, int idServiceRequest, int rating, String comment, float newDriverAvg, int newDriverCount)
     {
         try{
@@ -1164,6 +1162,72 @@ public class DataAccess {
 
             } catch (Exception e) {System.out.println("Error With Event Log: " + e.toString());}
             return false;
+        }
+    }
+
+    public Driver getDriverById(int idDriver)
+    {
+        try{
+            getDriverByIdAsync gdbi =  new getDriverByIdAsync(idDriver);
+            return gdbi.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class getDriverByIdAsync extends AsyncTask<Void, Void, Driver>
+    {
+        private int idDriver;
+        public getDriverByIdAsync(int IdDriver)
+        {
+            this.idDriver = IdDriver;
+        }
+
+        @Override
+        protected Driver doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AverageRating, NumberRatings FROM DriverInfo WHERE id = ?";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idDriver);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next() ) {
+                    int id = rs.getInt("id");
+                    String UserName = rs.getString("UserName");
+                    String Name = rs.getString("Name");
+                    String PhoneNumber = rs.getString("PhoneNumber");
+                    String DriverLicenseNumber = rs.getString("DriverLicenseNumber");
+                    byte[] Picture = rs.getBytes("Picture");
+                    Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
+                    boolean isActive = rs.getBoolean("isActive");
+                    float AvgRating = rs.getFloat("AverageRating");
+                    int NumRating = rs.getInt("NumberRatings");
+
+                    Vehicle vehicle = null;
+                    query = "SELECT id, CarMake, CarModel, CarYear, LicensePlateNumber, LoadCapacity, Picture FROM Vehicle WHERE id_Driver = ?";
+                    pstmt = conn.prepareStatement(query);
+                    pstmt.setInt(1, id);
+                    rs = pstmt.executeQuery();
+
+                    if (rs.next() )
+                    {
+                        int idVehicle = rs.getInt("id");
+                        String CarMake = rs.getString("CarMake");
+                        String CarModel = rs.getString("CarModel");
+                        int CarYear = rs.getInt("CarYear");
+                        String LicensePlate = rs.getString("LicensePlateNumber");
+                        float LoadCapacity = rs.getFloat("LoadCapacity");
+                        byte[] CarPicture = rs.getBytes("Picture");
+                        vehicle = new Vehicle(idVehicle, id, CarMake, CarModel, CarYear, LicensePlate, LoadCapacity, CarPicture);
+                    }
+                    Driver driver = new Driver(id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AvgRating, NumRating, vehicle);
+                    return driver;
+                }
+
+                conn.close();
+            } catch (Exception e) {System.out.println("Error Logging In: " + e.toString());}
+            return null;
         }
     }
 }
