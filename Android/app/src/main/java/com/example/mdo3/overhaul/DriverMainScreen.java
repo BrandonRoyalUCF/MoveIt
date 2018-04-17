@@ -20,12 +20,7 @@ public class DriverMainScreen extends Activity{
     // Set this variable based on whether or not a request is active, and thus whether or not to show the driver map.
     // Ideally this should be set whenever the user moves to this screen, thus the setting for this variable
     // should be within OnClickListeners that send the user here.
-    int IdDriver;
-    String Name;
-    String PhoneNumber;
-    String DriverLicenseNumber;
-    Timestamp DateRegistered;
-    boolean IsActive;
+
     public boolean requestActive;
     // Note that primitive booleans (lowercase B) will be false if left uninitialized.
 
@@ -47,13 +42,15 @@ public class DriverMainScreen extends Activity{
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
 
-        requestActive = false; // Remove later, only for debugging right now.
+        requestActive = true; // Remove later, only for debugging right now.
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
         Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
         Button editVehicleBtn = (Button) findViewById(R.id.button_edit_vehicle);
         Button pickUpBtn = (Button) findViewById(R.id.button_pickup);
         Button dropOffBtn = (Button) findViewById(R.id.button_dropoff);
+        Button queryBtn = (Button) findViewById(R.id.button_queryDB);
+
         if (requestActive){
             // Hide regular driver settings
             activitySwh.setVisibility(View.INVISIBLE);
@@ -89,10 +86,30 @@ public class DriverMainScreen extends Activity{
                 }
             };
             dropOffBtn.setOnClickListener(dropOffListen);
+
+            queryBtn.setVisibility(View.VISIBLE);
+            View.OnClickListener queryListen = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //ServiceRequest sr;
+                    //Get service request
+
+                    if(true) {
+                        finish();
+                        Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
+                        //myIntent.putExtra("serviceRequest", sr);
+                        DriverMainScreen.this.startActivity(myIntent);
+                    }
+                }
+            };
+            queryBtn.setOnClickListener(queryListen);
+
+
         } else {
             // Hide the buttons and don't give them an OnClick action.
             pickUpBtn.setVisibility(View.INVISIBLE);
             dropOffBtn.setVisibility(View.INVISIBLE);
+            queryBtn.setVisibility(View.INVISIBLE);
 
             // Make sure the buttons are visible
             activitySwh.setVisibility(View.VISIBLE);

@@ -19,7 +19,7 @@
             android:layout_below="@+id/button_accept"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="17dp"
-            tools:text="Decline" />
+            android:text="Decline" />
 
         <Button
             android:id="@+id/button_accept"
@@ -28,7 +28,7 @@
             android:layout_below="@+id/scrollView2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            tools:text="Accept" />
+            android:text="Accept" />
 
         <ScrollView
             android:id="@+id/scrollView2"

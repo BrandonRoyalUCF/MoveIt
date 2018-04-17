@@ -113,23 +113,23 @@ public class JobRequest extends AppCompatActivity {
                 String sPrice = mPrice.getText().toString();
                 float price = Float.parseFloat(sPrice);
 
-                Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
 
                 //insert a new service request into the database
                 DataAccess da = new DataAccess();
-                int idServiceRequest = -1;
-                idServiceRequest = da.insertServiceRequest(userId, sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                if(idServiceRequest == -1)
+                int requestInserted = -1;
+                requestInserted = da.insertServiceRequest(myCustomer.getId(), sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
+                ServiceRequest sr = new ServiceRequest(requestInserted, myCustomer.getId(), 0, sTitle, sDescription, weight, datePosted, null, price, loadHelp, unloadHelp, null, false, true, sPickupLocation, sDestination);
+                if(requestInserted == -1) {
                     System.out.println("INSERT FAILED ******************");
-                Queue<Driver> possibleDrivers = da.getPossibleDrivers();
-                System.out.println(possibleDrivers.isEmpty());
-                Driver bestDriver = possibleDrivers.poll();
-                da.insertEventLogServiceRequest(userId, idServiceRequest, bestDriver.getId());
+                }
+                else {
+                    finish();
+                    Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
+                    myIntent.putExtra("serviceRequest", sr);
+                    JobRequest.this.startActivity(myIntent);
+                }
+                Toast.makeText(JobRequest.this, "Not ready for requests yet!", Toast.LENGTH_SHORT).show();
 
-                finish();
-                Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
-                myIntent.putExtra("ServiceRequest", idServiceRequest);
-                JobRequest.this.startActivity(myIntent);
             }
         };
         Button sendBtn = (Button) findViewById(R.id.button_send);
