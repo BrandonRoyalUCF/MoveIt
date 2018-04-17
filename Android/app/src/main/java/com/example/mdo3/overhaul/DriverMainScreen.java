@@ -54,6 +54,8 @@ public class DriverMainScreen extends Activity{
         Button editVehicleBtn = (Button) findViewById(R.id.button_edit_vehicle);
         Button pickUpBtn = (Button) findViewById(R.id.button_pickup);
         Button dropOffBtn = (Button) findViewById(R.id.button_dropoff);
+        Button queryBtn = (Button) findViewById(R.id.button_queryDB);
+
         if (requestActive){
             // Hide regular driver settings
             activitySwh.setVisibility(View.INVISIBLE);
@@ -89,6 +91,17 @@ public class DriverMainScreen extends Activity{
                 }
             };
             dropOffBtn.setOnClickListener(dropOffListen);
+
+            queryBtn.setVisibility(View.VISIBLE);
+            View.OnClickListener queryListen = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            };
+            queryBtn.setOnClickListener(queryListen);
+
+
         } else {
             // Hide the buttons and don't give them an OnClick action.
             pickUpBtn.setVisibility(View.INVISIBLE);
