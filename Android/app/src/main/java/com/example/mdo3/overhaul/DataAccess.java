@@ -775,7 +775,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                final int MaxTimeInMilliSeconds = 30000;
+                final int MaxTimeInMilliSeconds = 10000;
                 double ellapsedTime = 0.0;
                 long startTime = SystemClock.elapsedRealtime();
                 long endTime = SystemClock.elapsedRealtime();
