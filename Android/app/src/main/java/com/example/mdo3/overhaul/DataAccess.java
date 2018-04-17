@@ -637,7 +637,7 @@ public class DataAccess {
         }
     }
 
-    public Driver waitForAcceptance(int idServiceRequest, int idCustomer)
+    public Driver checkIfDriverAccepted(int idServiceRequest, int idCustomer)
     {
         try{
             waitForAcceptanceAsync wfa =  new waitForAcceptanceAsync(idServiceRequest, idCustomer);
@@ -664,33 +664,23 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                final int MaxTimeInMilliSeconds = 30000;
-                double ellapsedTime = 0.0;
-                long startTime = SystemClock.elapsedRealtime();
-                long endTime = SystemClock.elapsedRealtime();
-                int count = 0;
                 int idDriver = -1;
                 int idEventLog = -1;
-                while((endTime - startTime) < MaxTimeInMilliSeconds && count < 20)
+
+
+                String query = "SELECT id, idDriver FROM EventLog where idCustomer = ? and idServiceRequest = ? and idEvent = ? and isActive = 1 ";
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idCustomer);
+                pstmt.setInt(2, this.idServiceRequest);
+                pstmt.setInt(3, this.eventDriverAcceptedRequest);
+
+                ResultSet rss = pstmt.executeQuery();
+                if(rss.next())
                 {
-                    count++;
-
-                    String query = "SELECT id, idDriver FROM EventLog where idCustomer = ? and idServiceRequest = ? and idEvent = ? and isActive = 1 ";
-                    PreparedStatement pstmt = conn.prepareStatement(query);
-                    pstmt.setInt(1, this.idCustomer);
-                    pstmt.setInt(2, this.idServiceRequest);
-                    pstmt.setInt(3, this.eventDriverAcceptedRequest);
-
-                    ResultSet rs= pstmt.executeQuery();
-                    if(rs.next())
-                    {
-                        idDriver = rs.getInt("idDriver");
-                        idEventLog = rs.getInt("id");
-                        break;
-                    }
-
-                    endTime = SystemClock.elapsedRealtime();
+                    idDriver = rss.getInt("idDriver");
+                    idEventLog = rss.getInt("id");
                 }
+
                 if(idDriver == -1 || idEventLog == -1)
                 {
                     conn.close();
@@ -1345,5 +1335,209 @@ public class DataAccess {
             return null;
         }
     }
+
+    public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
+    {
+        try{
+            updateCustomerPaymentInfoAsync ic =  new updateCustomerPaymentInfoAsync(idCustomer, CardNumber, ExpMonth, ExpYear, CVV);
+            return ic.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Customer>
+    {
+        private int idCustomer;
+        private String cardNumber;
+        private String expMonth;
+        private String expYear;
+        private String CVV;
+
+        public updateCustomerPaymentInfoAsync(int IdCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
+        {
+            this.idCustomer = IdCustomer; this.cardNumber = CardNumber; this.expMonth = ExpMonth; this.expYear = ExpYear; this.CVV = CVV;
+        }
+
+        @Override
+        protected Customer doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "UPDATE CustomerPaymentInfo SET CardNumber = ?, ExpirationMonth = ?, ExpirationYear = ?, CVV = ? WHERE id_Customer = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.cardNumber);
+                pstmt.setString(2, this.expMonth);
+                pstmt.setString(3, this.expYear);
+                pstmt.setString(4, this.CVV);
+                pstmt.setInt(5, this.idCustomer);
+
+                int result = pstmt.executeUpdate();
+
+                Customer customer = null;
+                customer = getCustomerById(idCustomer);
+
+                conn.close();
+
+                return customer;
+
+
+            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
+    {
+        try{
+            updateCustomerPaymentInfoAsync ic =  new updateCustomerPaymentInfoAsync(idCustomer, CardNumber, ExpMonth, ExpYear, CVV);
+            return ic.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Customer>
+    {
+        private int idCustomer;
+        private String cardNumber;
+        private String expMonth;
+        private String expYear;
+        private String CVV;
+
+        public updateCustomerPaymentInfoAsync(int IdCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
+        {
+            this.idCustomer = IdCustomer; this.cardNumber = CardNumber; this.expMonth = ExpMonth; this.expYear = ExpYear; this.CVV = CVV;
+        }
+
+        @Override
+        protected Customer doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "UPDATE CustomerPaymentInfo SET CardNumber = ?, ExpirationMonth = ?, ExpirationYear = ?, CVV = ? WHERE id_Customer = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.cardNumber);
+                pstmt.setString(2, this.expMonth);
+                pstmt.setString(3, this.expYear);
+                pstmt.setString(4, this.CVV);
+                pstmt.setInt(5, this.idCustomer);
+
+                int result = pstmt.executeUpdate();
+
+                Customer customer = null;
+                customer = getCustomerById(idCustomer);
+
+                conn.close();
+
+                return customer;
+
+
+            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Driver updateDriverPaymentInfo(int idDriver, String AccountNumber, String RoutingNumber)
+    {
+        try{
+            updateDriverPaymentInfoAsync ud =  new updateDriverPaymentInfoAsync(idDriver, AccountNumber, RoutingNumber);
+            return ud.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class updateDriverPaymentInfoAsync extends AsyncTask<Void, Void, Driver>
+    {
+        private int idDriver;
+        private String accountNumber;
+        private String routingNumber;
+
+        public updateDriverPaymentInfoAsync(int IdDriver, String AccountNumber, String RoutingNumber)
+        {
+            this.idDriver = IdDriver; this.accountNumber = AccountNumber; this.routingNumber = RoutingNumber;
+        }
+
+        @Override
+        protected Driver doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "UPDATE DriverPaymentInfo SET BankAccountNumber = ?, RoutingNumber = ? WHERE id_Driver = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.accountNumber);
+                pstmt.setString(2, this.routingNumber);
+                pstmt.setInt(5, this.idDriver);
+
+                int result = pstmt.executeUpdate();
+
+                Driver driver = null;
+                driver = getDriverById(idDriver);
+
+                conn.close();
+
+                return driver;
+
+
+            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            return null;
+        }
+    }
+
+    public Boolean checkForActiveSRById(int id)
+    {
+        try{
+            checkForActiveSRByIdASync cfsrbi =  new checkForActiveSRByIdASync(id);
+            return cfsrbi.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return null;
+    }
+
+    private class checkForActiveSRByIdASync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int id;
+
+        public checkForActiveSRByIdASync(int Id)
+        {
+            this.id = Id;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "SELECT 1 FROM EventLog WHERE (id_Driver = ? OR id_Customer = ?) and isActive = 1";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.id);
+                pstmt.setInt(2, this.id);
+
+                ResultSet rs = pstmt.executeQuery();
+
+                if(rs.next())
+                {
+                    conn.close();
+                    return true;
+                }
+
+
+
+                conn.close();
+                return false;
+
+
+
+            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            return false;
+        }
+    }
+
+
 
 }
