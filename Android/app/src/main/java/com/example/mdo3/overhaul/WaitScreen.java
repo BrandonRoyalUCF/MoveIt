@@ -14,14 +14,10 @@ import android.view.View.OnClickListener;
 
 // Still need to set driver searching functionality (tentative)
 public class WaitScreen extends AppCompatActivity {
-
-<<<<<<< HEAD
-    Driver tmpDriver = null;
-
-=======
     private Driver assignedDriver = null;
     private ServiceRequest sr = (ServiceRequest) getIntent().getSerializableExtra("ServiceRequest");
->>>>>>> myersWilliam
+    private Customer myCustomer = (Customer) getIntent().getSerializableExtra("myCustomer");
+    private int serviceRequestId = (int) getIntent().getIntExtra("serviceRequestId", -1);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +29,8 @@ public class WaitScreen extends AppCompatActivity {
         //Create a queue of available drivers, take driver at the head of the queue
         Queue<Driver> driverQueue = findDrivers();
         assignedDriver = driverQueue.poll();
+        DataAccess da = new DataAccess();
+        da.insertEventLogServiceRequest(serviceRequestId, myCustomer.getId(), assignedDriver.getId());
 
         //If there are no available drivers, cancel the request and return
         if(assignedDriver == null)
@@ -57,30 +55,18 @@ public class WaitScreen extends AppCompatActivity {
         };
         Button cancelSearchBtn = (Button) findViewById(R.id.cancelButton);
         cancelSearchBtn.setOnClickListener(cancelListener);
-
-<<<<<<< HEAD
-        //begin wait for driver to accept
-        // For now, create a dummy variable for the driver info.
-        DataAccess da = new DataAccess();
-        tmpDriver = da.getDriverById(0);
-        //da.waitForAcceptance()
-
-=======
->>>>>>> myersWilliam
+        
         OnClickListener viewDriverListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Links to Driver Details screen
                 Intent intent = new Intent(WaitScreen.this, DriverDetails.class);
-                intent.putExtra("driver", tmpDriver);
+                intent.putExtra("driver", assignedDriver);
                 startActivity(intent);
             }
         };
         Button viewDriverBtn = (Button) findViewById(R.id.viewDriverButton);
         viewDriverBtn.setOnClickListener(viewDriverListener);
-<<<<<<< HEAD
-=======
-
         //Query Button
         View.OnClickListener queryListen = new View.OnClickListener() {
             @Override
@@ -117,6 +103,5 @@ public class WaitScreen extends AppCompatActivity {
         Intent intent = new Intent(WaitScreen.this, ClientMainScreen.class);
         startActivity(intent);
         //TODO: indicate in database that the service request was not completed
->>>>>>> myersWilliam
     }
 }
