@@ -123,12 +123,13 @@ public class JobRequest extends AppCompatActivity {
                     System.out.println("INSERT FAILED ******************");
                 }
                 else {
-                    finish();
                     Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);
                     myIntent.putExtra("serviceRequest", sr);
                     myIntent.putExtra("myCustomer", myCustomer);
                     myIntent.putExtra("serviceRequestId", requestInserted);
                     JobRequest.this.startActivity(myIntent);
+                    finish();
+
                 }
             }
         };
@@ -140,9 +141,10 @@ public class JobRequest extends AppCompatActivity {
             @Override
             // Need to eventually have it actually save data to the database
             public void onClick(View v) {
-                finish();
                 Intent myIntent = new Intent(JobRequest.this, ClientMainScreen.class);
                 JobRequest.this.startActivity(myIntent);
+                finish();
+
             }
         };
         Button cancelBtn = (Button) findViewById(R.id.button_cancel);
@@ -157,8 +159,13 @@ public class JobRequest extends AppCompatActivity {
                     if (!sWeight.isEmpty()) {
                         double weight = Double.parseDouble(sWeight);
                         double price = weight * 0.10f;
+                        String sPrice = mPrice.getText().toString();
+                        if (!sPrice.isEmpty()) {
+                            double oldPrice = Double.parseDouble(sPrice);
+                            price += oldPrice;
+                        }
                         price = round(price, 2);
-                        String sPrice = String.valueOf(price);
+                        sPrice = String.valueOf(price);
                         mPrice.setText(sPrice);
                     }
                 }
