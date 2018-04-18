@@ -42,7 +42,9 @@ public class DriverMainScreen extends Activity{
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
 
-        requestActive = true; // Remove later, only for debugging right now.
+        // Checks if the currently logged in driver is part of an active request.
+        DataAccess checkRequest = new DataAccess();
+        requestActive = checkRequest.checkForActiveSRById(myDriver.getId());
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
         Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
