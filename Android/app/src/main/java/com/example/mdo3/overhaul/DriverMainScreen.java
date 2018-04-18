@@ -31,6 +31,9 @@ public class DriverMainScreen extends Activity{
         myDriver = (Driver)myIntent.getSerializableExtra("Driver");
         sr = (ServiceRequest) myIntent.getSerializableExtra("serviceRequest");
 
+
+        requestActive = myIntent.getBooleanExtra("isActive", false);
+
         //Logout Button
         View.OnClickListener logoutListen = new View.OnClickListener() {
             @Override
@@ -42,13 +45,6 @@ public class DriverMainScreen extends Activity{
         };
         Button logoutBtn = (Button) findViewById(R.id.button_logout);
         logoutBtn.setOnClickListener(logoutListen);
-
-        // Checks if the currently logged in driver is part of an active request.
-        DataAccess checkRequest = new DataAccess();
-        requestActive = checkRequest.checkForActiveSRById(myDriver.getId());
-
-        //TODO: Remove this overwrite of requestActive. Just for debugging.
-        requestActive = myIntent.getBooleanExtra("isActive", false);
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
         Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
@@ -154,24 +150,25 @@ public class DriverMainScreen extends Activity{
                 DataAccess da = new DataAccess();
                 sr = da.waitForRequest(myDriver.getId());
 
-                sr = null;
-
-
-                if(sr != null) {
+                // Checks if the currently logged in driver is part of an active request.
+                if(da.checkForActiveSRById(myDriver.getId())) {
+                    Intent updateLayoutIntent = new Intent(DriverMainScreen.this, DriverMainScreen.class);
+                    updateLayoutIntent.putExtra("serviceRequest", sr);
+                    updateLayoutIntent.putExtra("Driver", myDriver);
+                    updateLayoutIntent.putExtra("isActive", true);
+                    DriverMainScreen.this.startActivity(updateLayoutIntent);
+                    finish();
+                }
+                // Don't check for active job if the driver is already active
+                else if(sr != null) {
                     Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
                     myIntent.putExtra("serviceRequest", sr);
                     myIntent.putExtra("Driver", myDriver);
                     DriverMainScreen.this.startActivity(myIntent);
                     finish();
                 }
-                else { //TODO: Replace the else code with a notification that no service requests were found. This code is for debugging.
-                    /*sr = new ServiceRequest(0, 0, myDriver.getId(), "Created on DriverMainScreen", "This is a test", 0, null, null, 1, false, false, null, false, true, "123 Testing", "456 This is a test");
-                    Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
-                    myIntent.putExtra("serviceRequest", sr);
-                    myIntent.putExtra("Driver", myDriver);
-                    DriverMainScreen.this.startActivity(myIntent);
-                    finish();*/
-                    System.out.println("NO REQUEST FOUND!");
+                else {
+                    Toast.makeText(getApplicationContext(),"No requests found.",Toast.LENGTH_SHORT).show();
                 }
             }
         };
