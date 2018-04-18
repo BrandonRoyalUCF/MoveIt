@@ -84,7 +84,7 @@ public class DriverRequestScreen extends AppCompatActivity {
 
 
         String jobDescriptionText = "Weight: " + weight + " lbs\nPickup Location: " + pickupLocation
-                + "\nDropoffLocation: " + dropoffLocation + "\nDescription: " + description + "\n";
+                + "\nDropoffLocation: " + dropoffLocation + "\n\nDescription: " + description + "\n";
         return jobDescriptionText;
     }
 }
