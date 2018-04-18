@@ -75,10 +75,10 @@ public class DriverRequestScreen extends AppCompatActivity {
             description = sr.getDescription();
         }
         else {
-            weight = 1337;
-            pickupLocation = "Pick up that stuff here.";
-            dropoffLocation = "Drop off that stuff here.";
-            description = "This is a moving job. Move my stuff lol.";
+            weight = 0;
+            pickupLocation = " ";
+            dropoffLocation = " ";
+            description = "ERROR: No job request.";
         }
 
 

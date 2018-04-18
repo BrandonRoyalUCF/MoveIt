@@ -9,8 +9,6 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.Switch;
 import android.net.Uri;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 
 /**
  * Created by Wendelyn on 3/25/2018.
@@ -50,7 +48,7 @@ public class DriverMainScreen extends Activity{
         requestActive = checkRequest.checkForActiveSRById(myDriver.getId());
 
         //TODO: Remove this overwrite of requestActive. Just for debugging.
-        //requestActive = myIntent.getBooleanExtra("isActive", false);
+        requestActive = myIntent.getBooleanExtra("isActive", false);
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
         Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
