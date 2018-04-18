@@ -775,10 +775,10 @@ public class DataAccess {
                 {
                     count++;
 
-                    String query = "SELECT id, idServiceRequest FROM EventLog where idDriver = ? and idServiceRequest = ? and idEvent = ? and isActive = 1 ";
+                    String query = "SELECT id, idServiceRequest FROM EventLog where idDriver = ? and idEvent = ? and isActive = 1 ";
                     PreparedStatement pstmt = conn.prepareStatement(query);
                     pstmt.setInt(1, this.idDriver);
-                    pstmt.setInt(3, this.eventCustomerSubmittedRequest);
+                    pstmt.setInt(2, this.eventCustomerSubmittedRequest);
 
                     ResultSet rs= pstmt.executeQuery();
                     if(rs.next())
