@@ -9,8 +9,8 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.Switch;
 import android.net.Uri;
-
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  * Created by Wendelyn on 3/25/2018.
@@ -21,6 +21,8 @@ public class DriverMainScreen extends Activity{
     // Ideally this should be set whenever the user moves to this screen, thus the setting for this variable
     // should be within OnClickListeners that send the user here.
 
+    private ServiceRequest sr;
+    private Driver myDriver;
     public boolean requestActive;
     // Note that primitive booleans (lowercase B) will be false if left uninitialized.
 
@@ -28,7 +30,9 @@ public class DriverMainScreen extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_main_screen);
         Intent myIntent = getIntent();
-        Driver myDriver = (Driver)myIntent.getSerializableExtra("Driver");
+        myDriver = (Driver)myIntent.getSerializableExtra("Driver");
+        sr = (ServiceRequest) myIntent.getSerializableExtra("serviceRequest");
+        requestActive = myIntent.getBooleanExtra("isActive", false);
 
         //Logout Button
         View.OnClickListener logoutListen = new View.OnClickListener() {
@@ -89,29 +93,11 @@ public class DriverMainScreen extends Activity{
             };
             dropOffBtn.setOnClickListener(dropOffListen);
 
-            queryBtn.setVisibility(View.VISIBLE);
-            View.OnClickListener queryListen = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //ServiceRequest sr;
-                    //Get service request
-
-                    if(true) {
-                        finish();
-                        Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
-                        //myIntent.putExtra("serviceRequest", sr);
-                        DriverMainScreen.this.startActivity(myIntent);
-                    }
-                }
-            };
-            queryBtn.setOnClickListener(queryListen);
-
 
         } else {
             // Hide the buttons and don't give them an OnClick action.
             pickUpBtn.setVisibility(View.INVISIBLE);
             dropOffBtn.setVisibility(View.INVISIBLE);
-            queryBtn.setVisibility(View.INVISIBLE);
 
             // Make sure the buttons are visible
             activitySwh.setVisibility(View.VISIBLE);
@@ -161,5 +147,25 @@ public class DriverMainScreen extends Activity{
             };
             editVehicleBtn.setOnClickListener(vehicleListen);
         }
+
+        View.OnClickListener queryListen = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataAccess da = new DataAccess();
+                sr = da.waitForRequest(myDriver.getId());
+
+                if(sr != null) {
+                    Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
+                    myIntent.putExtra("serviceRequest", sr);
+                    myIntent.putExtra("Driver", myDriver);
+                    DriverMainScreen.this.startActivity(myIntent);
+                    finish();
+                }
+                else {
+                    Toast.makeText(DriverMainScreen.this, "No requests found!", Toast.LENGTH_SHORT);
+                }
+            }
+        };
+        queryBtn.setOnClickListener(queryListen);
     }
 }

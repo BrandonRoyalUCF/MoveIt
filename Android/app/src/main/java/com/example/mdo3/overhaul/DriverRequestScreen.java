@@ -9,22 +9,25 @@ import android.widget.TextView;
 
 public class DriverRequestScreen extends AppCompatActivity {
 
-    ServiceRequest sr = (ServiceRequest) getIntent().getSerializableExtra("serviceRequest");
-    Driver driver = (Driver) getIntent().getSerializableExtra("driver");
+    private ServiceRequest sr;
+    private Driver driver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_request_screen);
+        sr = (ServiceRequest) getIntent().getSerializableExtra("serviceRequest");
+        driver = (Driver) getIntent().getSerializableExtra("Driver");
+
 
         //Decline Button
         View.OnClickListener declineListen = new View.OnClickListener() {
             @Override
             // Need to eventually have it actually save data to the database
             public void onClick(View v) {
-                finish();
                 Intent myIntent = new Intent(DriverRequestScreen.this, DriverMainScreen.class);
                 DriverRequestScreen.this.startActivity(myIntent);
+                finish();
             }
         };
         Button declineBtn = (Button) findViewById(R.id.button_decline);
@@ -34,18 +37,26 @@ public class DriverRequestScreen extends AppCompatActivity {
         View.OnClickListener acceptListen = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
                 Intent myIntent = new Intent(DriverRequestScreen.this, DriverMainScreen.class);
-                //int driverWhoCompleted = driver.getId();
                 //TODO:Need to set sr.driverWhoCompleted = driverWhoCompleted
                 //TODO:Need to change driverWhoCompleted on sr in database
-
+                if(sr != null)
+                {
+                    DataAccess da = new DataAccess();
+                    da.insertEventLogDriverArrived(sr.getIdCustomer(), sr.getId(), sr.getIdDriverWhoCompleted());
+                }
+                else {
+                    System.out.println("Could not accept job. Service request is NULL!");
+                }
+                myIntent.putExtra("serviceRequest", sr);
+                myIntent.putExtra("Driver", driver);
+                myIntent.putExtra("isActive", true);
                 DriverRequestScreen.this.startActivity(myIntent);
+                finish();
             }
         };
         Button acceptBtn = (Button) findViewById(R.id.button_accept);
         acceptBtn.setOnClickListener(acceptListen);
-
         TextView jobDescriptionText = (TextView) this.findViewById(R.id.text_jobDescription);
         String jobDescription = createJobDescriptionText();
         jobDescriptionText.setText(jobDescription);
@@ -53,18 +64,27 @@ public class DriverRequestScreen extends AppCompatActivity {
     }
 
     private String createJobDescriptionText() {
-        /*
-        int weight = sr.getWeight();
-        String pickupLocation = sr.getStartLocation();
-        String dropoffLocation = sr.getEndLocation();
-        String description = sr.getDescription(); */
+        float weight;
+        String pickupLocation;
+        String dropoffLocation;
+        String description;
+        if(sr != null) {
+            weight = sr.getWeight();
+            pickupLocation = sr.getStartLocation();
+            dropoffLocation = sr.getEndLocation();
+            description = sr.getDescription();
+        }
+        else {
+            weight = 1337;
+            pickupLocation = "Pick up that stuff here.";
+            dropoffLocation = "Drop off that stuff here.";
+            description = "This is a moving job. Move my stuff lol.";
+        }
 
-        int weight = 50;
-        String pickupLocation = "123 Main Street";
-        String dropoffLocation = "456 Other Avenue";
-        String description = "Moving lol. Need to move some stuff. Pls help.";
 
-        String jobDescriptionText = "Weight: " + weight + " lbs\nPickup Location: " + pickupLocation + "\nDropoffLocation: " + dropoffLocation + "\nDescription: " + description + "\n";
+
+        String jobDescriptionText = "Weight: " + weight + " lbs\nPickup Location: " + pickupLocation
+                + "\nDropoffLocation: " + dropoffLocation + "\nDescription: " + description + "\n";
         return jobDescriptionText;
     }
 }
