@@ -154,7 +154,7 @@ public class DriverMainScreen extends Activity{
             @Override
             public void onClick(View v) {
                 DataAccess da = new DataAccess();
-                sr = da.waitForRequest(myDriver.getId());
+                ServiceRequest srTemp = da.waitForRequest(myDriver.getId());
 
                 // Checks if the currently logged in driver is part of an active request.
                 if(da.checkForActiveSRById(myDriver.getId())) {
@@ -166,9 +166,9 @@ public class DriverMainScreen extends Activity{
                     finish();
                 }
                 // Don't check for active job if the driver is already active
-                else if(sr != null) {
+                else if(srTemp != null) {
                     Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
-                    myIntent.putExtra("serviceRequest", sr);
+                    myIntent.putExtra("serviceRequest", srTemp);
                     myIntent.putExtra("Driver", myDriver);
                     DriverMainScreen.this.startActivity(myIntent);
                     finish();
