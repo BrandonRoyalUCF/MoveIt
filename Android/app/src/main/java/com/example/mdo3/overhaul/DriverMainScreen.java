@@ -53,7 +53,7 @@ public class DriverMainScreen extends Activity{
         logoutBtn.setOnClickListener(logoutListen);
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
-        Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
+        //Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
         Button editVehicleBtn = (Button) findViewById(R.id.button_edit_vehicle);
         Button pickUpBtn = (Button) findViewById(R.id.button_pickup);
         Button dropOffBtn = (Button) findViewById(R.id.button_dropoff);
@@ -62,7 +62,7 @@ public class DriverMainScreen extends Activity{
         if (requestActive){
             // Hide regular driver settings
             activitySwh.setVisibility(View.INVISIBLE);
-            changeAccBtn.setVisibility(View.INVISIBLE);
+            //changeAccBtn.setVisibility(View.INVISIBLE);
             editVehicleBtn.setVisibility(View.INVISIBLE);
 
             // Make sure the buttons are visible, and that they send the user to Google Maps
@@ -131,14 +131,14 @@ public class DriverMainScreen extends Activity{
                 }
             });
 
-            changeAccBtn.setVisibility(View.VISIBLE);
-            View.OnClickListener changeListen = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(DriverMainScreen.this, "Coming soon!", Toast.LENGTH_SHORT).show();
-                }
-            };
-            changeAccBtn.setOnClickListener(changeListen);
+            //changeAccBtn.setVisibility(View.VISIBLE);
+//            View.OnClickListener changeListen = new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(DriverMainScreen.this, "Coming soon!", Toast.LENGTH_SHORT).show();
+//                }
+//            };
+            //changeAccBtn.setOnClickListener(changeListen);
 
             editVehicleBtn.setVisibility(View.VISIBLE);
             View.OnClickListener vehicleListen = new View.OnClickListener() {
