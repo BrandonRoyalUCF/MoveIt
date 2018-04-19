@@ -43,14 +43,15 @@
         <activity android:name=".DriverActiveJobScreen" />
         <activity
             android:name=".credit_card_info"
-            android:parentActivityName=".HomeScreen"></activity>
+            android:parentActivityName=".HomeScreen" />
         <activity
             android:name=".driver_acc_info"
-            android:parentActivityName=".HomeScreen"></activity>
+            android:parentActivityName=".HomeScreen" />
         <activity
             android:name=".DriverDetails"
             android:label="@string/title_activity_driver_details"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".UpdateCustomerInformation"></activity>
     </application>
 
 </manifest>

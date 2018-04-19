@@ -43,5 +43,6 @@
     <string name="acc_cancel">Cancel</string>
     <string name="acc_submit">Submit</string>
     <string name="title_activity_driver_details">driver_details</string>
+    <string name="title_activity_update_customer_information">UpdateCustomerInformation</string>
 
 </resources>

@@ -92,8 +92,29 @@ public class DataAccess {
                     String PhoneNumber = rs.getString("PhoneNumber");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
                     boolean isActive = rs.getBoolean("isActive");
-                    Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
-                    return customer;
+
+                    //Query Customer Credit Card
+                    String query2 = "SELECT CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName FROM CustomerPaymentInfo WHERE id_Customer = ?";
+                    pstmt = conn.prepareStatement(query2);
+                    pstmt.setString(1, String.valueOf(UserId));
+                    rs = pstmt.executeQuery();
+
+                    if(rs.next())
+                    {
+                        String ccNum = rs.getString("CardNumber");
+                        String ccBilling = rs.getString("BillingAddress");
+                        String ccExpMonth = rs.getString("ExpirationMonth");
+                        String ccExpYear = rs.getString("ExpirationYear");
+                        String ccCCV = rs.getString("CVV");
+
+                        Customer customer = new Customer(UserId, UserName,
+                                Name, PhoneNumber,
+                                DateRegistered, isActive,
+                                ccNum, ccBilling,
+                                ccExpMonth, ccExpYear,
+                                ccCCV);
+                        return customer;
+                    }
                 }
 
                 conn.close();
@@ -1256,8 +1277,29 @@ public class DataAccess {
                     String PhoneNumber = rs.getString("PhoneNumber");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
                     boolean isActive = rs.getBoolean("isActive");
-                    Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
-                    return customer;
+
+                    //Query Customer Credit Card
+                    String query2 = "SELECT CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName FROM CustomerPaymentInfo WHERE id_Customer = ?";
+                    pstmt = conn.prepareStatement(query2);
+                    pstmt.setString(1, String.valueOf(UserId));
+                    rs = pstmt.executeQuery();
+
+                    if(rs.next())
+                    {
+                        String ccNum = rs.getString("CardNumber");
+                        String ccBilling = rs.getString("BillingAddress");
+                        String ccExpMonth = rs.getString("ExpirationMonth");
+                        String ccExpYear = rs.getString("ExpirationYear");
+                        String ccCCV = rs.getString("CVV");
+
+                        Customer customer = new Customer(UserId, UserName,
+                                Name, PhoneNumber,
+                                DateRegistered, isActive,
+                                ccNum, ccBilling,
+                                ccExpMonth, ccExpYear,
+                                ccCCV);
+                        return customer;
+                    }
                 }
 
                 conn.close();
