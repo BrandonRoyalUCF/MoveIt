@@ -1,6 +1,8 @@
 package com.example.mdo3.overhaul;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -45,6 +48,9 @@ import javax.xml.xpath.XPathFactory;
 
 public class JobRequest extends AppCompatActivity {
 
+    private final int PICK_IMAGE_REQUEST = 1;
+    private final int RESULT_OK = 1;
+
     private int userId;
     private EditText title;
     private EditText description;
@@ -55,6 +61,7 @@ public class JobRequest extends AppCompatActivity {
     private EditText mDestination;
     private EditText mWeight;
     private EditText mPrice;
+    private byte[] picture = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +83,14 @@ public class JobRequest extends AppCompatActivity {
         View.OnClickListener uploadListen = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Intent intent = new Intent();
+                // Show only images, filter out everything else
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                // Always show the chooser (if there are multiple options available)
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+
                 // Just a placeholder so I can test that clicking on this button actually works.
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 0);
@@ -118,7 +133,7 @@ public class JobRequest extends AppCompatActivity {
                 DataAccess da = new DataAccess();
                 int requestInserted = -1;
                 requestInserted = da.insertServiceRequest(myCustomer.getId(), sTitle, sDescription, weight, datePosted, price, loadHelp, unloadHelp, null, sPickupLocation, sDestination);
-                ServiceRequest sr = new ServiceRequest(requestInserted, myCustomer.getId(), 0, sTitle, sDescription, weight, datePosted, null, price, loadHelp, unloadHelp, null, false, true, sPickupLocation, sDestination);
+                ServiceRequest sr = new ServiceRequest(requestInserted, myCustomer.getId(), 0, sTitle, sDescription, weight, datePosted, null, price, loadHelp, unloadHelp, picture, false, true, sPickupLocation, sDestination);
                 if(requestInserted == -1) {
                     System.out.println("INSERT FAILED ******************");
                     Intent intent = new Intent(JobRequest.this, ClientMainScreen.class);
@@ -254,6 +269,25 @@ public class JobRequest extends AppCompatActivity {
         return dist * 1.5;
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 
     public static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
