@@ -90,11 +90,6 @@ public class JobRequest extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 // Always show the chooser (if there are multiple options available)
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-
-                // Just a placeholder so I can test that clicking on this button actually works.
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 0);
-                Toast.makeText(JobRequest.this, "Not ready for images yet!", Toast.LENGTH_SHORT).show();
             }
         };
 
