@@ -1199,7 +1199,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AverageRating, NumberRatings FROM DriverInfo WHERE id = ?";
+                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, IsActive, AverageRating, NumberRatings FROM DriverInfo WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idDriver);
                 ResultSet rs = pstmt.executeQuery();
@@ -1211,7 +1211,7 @@ public class DataAccess {
                     String DriverLicenseNumber = rs.getString("DriverLicenseNumber");
                     byte[] Picture = rs.getBytes("Picture");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
-                    boolean isActive = rs.getBoolean("isActive");
+                    boolean isActive = rs.getBoolean("IActive");
                     float AvgRating = rs.getFloat("AverageRating");
                     int NumRating = rs.getInt("NumberRatings");
 
@@ -1265,7 +1265,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT id, UserName, Name, PhoneNumber, DateRegistered, isActive FROM CustomerInfo WHERE id = ?";
+                String query = "SELECT id, UserName, Name, PhoneNumber, DateRegistered, IsActive FROM CustomerInfo WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idCustomer);
                 ResultSet rs = pstmt.executeQuery();
@@ -1276,7 +1276,7 @@ public class DataAccess {
                     String Name = rs.getString("Name");
                     String PhoneNumber = rs.getString("PhoneNumber");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
-                    boolean isActive = rs.getBoolean("isActive");
+                    boolean isActive = rs.getBoolean("IsActive");
 
                     //Query Customer Credit Card
                     String query2 = "SELECT CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName FROM CustomerPaymentInfo WHERE id_Customer = ?";
