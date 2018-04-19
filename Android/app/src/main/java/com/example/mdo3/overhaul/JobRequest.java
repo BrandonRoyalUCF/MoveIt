@@ -154,9 +154,10 @@ public class JobRequest extends AppCompatActivity {
         //Cancel Button
         View.OnClickListener cancelListen = new View.OnClickListener() {
             @Override
-            // Need to eventually have it actually save data to the database
+            // Abandon the request and go back to the main screen
             public void onClick(View v) {
                 Intent myIntent = new Intent(JobRequest.this, ClientMainScreen.class);
+                myIntent.putExtra("myCustomer", myCustomer);
                 JobRequest.this.startActivity(myIntent);
                 finish();
 
@@ -275,7 +276,6 @@ public class JobRequest extends AppCompatActivity {
 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -284,6 +284,7 @@ public class JobRequest extends AppCompatActivity {
 
 
 
+    // Convert degrees to radians and radians to degrees. Used to convert map degrees to miles.
     public static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
@@ -293,6 +294,7 @@ public class JobRequest extends AppCompatActivity {
         return (rad * 180.0 / Math.PI);
     }
 
+    // Round to two decimal places for displaying price
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -301,11 +303,10 @@ public class JobRequest extends AppCompatActivity {
         return bd.doubleValue();
     }
 
+    //Fetch the latitude and longitude from the given address from the google maps server
+    // This must be done Async otherwise it will crash the app
     private class getLatLongAsync extends AsyncTask<Void, Void, LatLng>
     {
-        private String latitude;
-        private String longitude;
-
         private String address;
 
         public getLatLongAsync(String address)
@@ -313,12 +314,12 @@ public class JobRequest extends AppCompatActivity {
             this.address = address;
         }
 
-
         @Override
         protected LatLng doInBackground(Void... params)
         {
             Double lat = 0.0;
             Double lon = 0.0;
+            // Go to google maps with the given address and our API key
             try {
                 URL obj = new URL(
                         "https://maps.googleapis.com/maps/api/geocode/json?address=" + this.address
@@ -339,7 +340,7 @@ public class JobRequest extends AppCompatActivity {
                     }
                     in.close();
 
-                    // print result
+                    // Fetch the latitude and longitude from the retrieved JSON
                     JSONObject json = new JSONObject(response.toString());
                     JSONArray results = json.getJSONArray("results");
                     JSONObject addressComponents = results.getJSONObject(0);
@@ -350,7 +351,7 @@ public class JobRequest extends AppCompatActivity {
                     lon = location.getDouble("lng");
 
                 } else {
-                    System.out.println("GET request not worked");
+                    System.out.println("GET request failed");
                 }
             }
             catch (Exception e)

@@ -32,6 +32,7 @@ public class UserRegistration extends Activity {
         et_phone = (EditText) findViewById(R.id.phone);
         et_address = (EditText) findViewById(R.id.address);
         rgbtn = (Button)findViewById(R.id.register_user);
+
         rgbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -40,6 +41,7 @@ public class UserRegistration extends Activity {
 
         });
         cancelbtn = (Button)findViewById(R.id.cancel_registration);
+        // Cancel the registration process and return to the home screen
         cancelbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +52,7 @@ public class UserRegistration extends Activity {
 
     }
 
+    // Save our information and continue to add a credit card
     public void register() {
         initialize();
         if(!validate()){
@@ -88,6 +91,6 @@ public class UserRegistration extends Activity {
             valid = false;
         }
 
-        return true;
+        return valid;
     }
 }

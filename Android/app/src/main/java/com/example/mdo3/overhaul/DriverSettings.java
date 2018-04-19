@@ -1,6 +1,7 @@
 package com.example.mdo3.overhaul;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,11 +17,14 @@ public class DriverSettings extends AppCompatActivity {
         //Save Button
         View.OnClickListener saveListen = new View.OnClickListener() {
             @Override
-            // Need to eventually have it actually save data to the database
+            // TODO: Peel the driver's information from the xml and send it to the database
             public void onClick(View v) {
-                finish();
+                DataAccess da = new DataAccess();
+                /*da.updateDriverMainInfo();
+                da.updateDriverPaymentInfo();*/
                 Intent myIntent = new Intent(DriverSettings.this, DriverMainScreen.class);
                 DriverSettings.this.startActivity(myIntent);
+                finish();
             }
         };
         Button saveBtn = (Button) findViewById(R.id.button_save);

@@ -23,7 +23,7 @@ public class DriverRequestScreen extends AppCompatActivity {
         //Decline Button
         View.OnClickListener declineListen = new View.OnClickListener() {
             @Override
-            // Need to eventually have it actually save data to the database
+            // We reject the job and the job goes to the next person in the queue.
             public void onClick(View v) {
                 Intent myIntent = new Intent(DriverRequestScreen.this, DriverMainScreen.class);
                 DriverRequestScreen.this.startActivity(myIntent);

@@ -25,6 +25,15 @@ public class driver_acc_info extends AppCompatActivity
     private String AccRout;
     private String AccBank;
 
+    private String mUser;
+    private String mLicense;
+    private String mMake;
+    private String mModel;
+    private int mYear;
+    private String mLicensePlate;
+    private float mLoad;
+    private byte[] mPicture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -36,6 +45,15 @@ public class driver_acc_info extends AppCompatActivity
         mAccNum2 = (EditText) findViewById(R.id.acc_number2);
         mAccNum = (EditText) findViewById(R.id.acc_number);
 
+        /*mUser = (EditText) findViewById(R.id.acc_user);
+        mLicense = (EditText) findViewById(R.id.acc_license);
+        mMake = (EditText) findViewById(R.id.acc_make);
+        mModel = (EditText) findViewById(R.id.acc_model);
+        mYear = (EditText) findViewById(R.id.acc_year);
+        mLicensePlate = (EditText) findViewById(R.id.acc_license_plate);
+        mLoad = (EditText) findViewById(R.id.acc_load);*/
+
+
         //Create back arrow on the tool bar to send back to homescreen
         Toolbar toolbar = (Toolbar) findViewById(R.id.acc_toolbar);
         setSupportActionBar(toolbar);
@@ -45,13 +63,18 @@ public class driver_acc_info extends AppCompatActivity
 
     public void submitBtn(View view)
     {
-        String user = "user";
-        String license = "123-123-123-123";
-        String carMake = "Tesla";
-        String carModel = "Model X";
-        int carYear = 2018;
-        String licensePlate = "I<3U";
-        float load = 1000;
+        // The vehicles are not ready to be added but when they are uncomment this code and it will pull the information
+
+        /*String user = mUser.getText().toString();
+        String license = mLicense.getText().toString();
+        String make = mMake.getText().toString();
+        String model = mModel.getText().toString();
+        String sYear = mYear.getText().toString();
+        String licensePlate = mLicensePlate.getText().toString();
+        String sLoad = mLoad.getText().toString();
+
+        int year = Integer.valueOf(sYear);
+        float load = Float.parseFloat(sLoad);*/
 
         Date date = new Date();
         Timestamp ts = new Timestamp(date.getTime());
@@ -71,6 +94,7 @@ public class driver_acc_info extends AppCompatActivity
         //String BankAccountNumber, String RoutingNumber, String BillingName)
         DataAccess da = new DataAccess();
         Intent pastIntent = getIntent();
+        // Insert the Driver into the database
         Boolean result = da.insertDriver(pastIntent.getStringExtra("email"),
                 pastIntent.getStringExtra("password"),
                 pastIntent.getStringExtra("name"),
@@ -88,6 +112,18 @@ public class driver_acc_info extends AppCompatActivity
 
         Driver driver = da.checkDriverLogin(pastIntent.getStringExtra("email"), pastIntent.getStringExtra("password"));
 
+
+        // Insert the vehicle into the database
+
+        /*Vehicle myVehicle = new Vehicle(driver.getId(), make, model, year, licensePlate, load, mPicture);
+        boolean success = da.insertDriverVehicle(myVehicle);
+
+        if (success)
+            Toast.makeText(this, "Vehicle insert successful !", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Vehicle insert failed !", Toast.LENGTH_SHORT).show();*/
+
+
         System.out.println("DEBUG : "  + AccNum);
         System.out.println("DEBUG : "  + AccNum2);
         System.out.println("DEBUG : "  + AccRout);
@@ -102,16 +138,19 @@ public class driver_acc_info extends AppCompatActivity
         }
         else
         {
+            Toast.makeText(this, "Signup failed !", Toast.LENGTH_SHORT).show();
 
         }
     }
 
+    // Cancel registration
     public void cancelBtn(View view)
     {
         Intent intent = new Intent(this, HomeScreen.class);
         startActivity(intent);
     }
 
+    // Go back to the first screen of registration
     @Override
     public boolean onSupportNavigateUp()
     {

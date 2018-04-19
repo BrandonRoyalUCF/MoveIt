@@ -131,15 +131,6 @@ public class DriverMainScreen extends Activity{
                 }
             });
 
-            //changeAccBtn.setVisibility(View.VISIBLE);
-//            View.OnClickListener changeListen = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(DriverMainScreen.this, "Coming soon!", Toast.LENGTH_SHORT).show();
-//                }
-//            };
-            //changeAccBtn.setOnClickListener(changeListen);
-
             editVehicleBtn.setVisibility(View.VISIBLE);
             View.OnClickListener vehicleListen = new View.OnClickListener() {
                 @Override

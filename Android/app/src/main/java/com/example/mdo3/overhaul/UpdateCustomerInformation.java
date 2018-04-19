@@ -57,11 +57,11 @@ public class UpdateCustomerInformation extends AppCompatActivity
 
     public void submitBtn (View view)
     {
-        //public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
-        String num = null;
-        String month = null;
-        String year = null;
-        String ccscode = null;
+        // Pull the data from the xml and submit it to the database
+        String num;
+        String month;
+        String year;
+        String ccscode;
 
         System.out.println("DEBUG: Submit Button Pressed");
 
@@ -77,6 +77,7 @@ public class UpdateCustomerInformation extends AppCompatActivity
 
         DataAccess da = new DataAccess();
 
+        // Update our payment information
         Boolean res = da.updateCustomerPaymentInfo(customer.getId(),
                 x,
                 y,
@@ -96,6 +97,7 @@ public class UpdateCustomerInformation extends AppCompatActivity
         startActivity(intent);
     }
 
+    // Cancel the update
     public void cancelBtn (View view)
     {
         Intent intent = new Intent (this, ClientMainScreen.class);

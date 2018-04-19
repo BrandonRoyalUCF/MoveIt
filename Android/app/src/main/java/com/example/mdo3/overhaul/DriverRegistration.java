@@ -120,6 +120,6 @@ public class DriverRegistration extends Activity {
         {
             valid = false;
         }
-        return true;
+        return valid;
     }
 }

@@ -389,9 +389,6 @@ public class DataAccess {
                 cs.registerOutParameter(12, Types.INTEGER);
                 cs.executeUpdate();
                 int idServiceRequest = cs.getInt(12);
-                //ResultSet rs = pstmt.executeQuery();
-                //int idServiceRequest = rs.getInt(1);
-                //return rs.getInt(12);
                 return idServiceRequest;
 
 
@@ -1487,6 +1484,16 @@ public class DataAccess {
         return false;
     }
 
+    public Boolean updateDriverVehicleInfo(Vehicle vehicle)
+    {
+        try{
+            updateDriverVehicleInfoAsync ud =  new updateDriverVehicleInfoAsync(vehicle.getIdDriver(), vehicle.getMake(),
+                                                vehicle.getModel(), vehicle.getYear(), vehicle.getLicensePlate(), vehicle.getLoadCapacity());
+            return ud.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
     private class updateDriverVehicleInfoAsync extends AsyncTask<Void, Void, Boolean>
     {
         private int idDriver;
@@ -1526,6 +1533,70 @@ public class DataAccess {
 
 
             } catch (Exception e) {System.out.println("Error Updating Driver Vehicle: " + e.toString());}
+            return false;
+        }
+    }
+
+    public Boolean insertDriverVehicle(int idDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity, byte[] picture)
+    {
+        try{
+            insertDriverVehicleAsync id =  new insertDriverVehicleAsync(idDriver, Make, Model, Year, LicensePlate, LoadCapacity, picture);
+            return id.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    public Boolean insertDriverVehicle(Vehicle vehicle)
+    {
+        try{
+            insertDriverVehicleAsync id =  new insertDriverVehicleAsync(vehicle.getIdDriver(), vehicle.getMake(),
+                    vehicle.getModel(), vehicle.getYear(), vehicle.getLicensePlate(), vehicle.getLoadCapacity(), vehicle.getPicture());
+            return id.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class insertDriverVehicleAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idDriver;
+        private String make;
+        private String model;
+        private int year;
+        private String licensePlate;
+        private float loadCapacity;
+        private byte[] picture;
+
+        public insertDriverVehicleAsync(int IdDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity, byte[] picture)
+        {
+            this.idDriver = IdDriver; this.make = Make; this.model = Model; this.year = Year; this.licensePlate = LicensePlate;
+            this.loadCapacity = LoadCapacity; this.picture = picture;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "INSERT INTO Vehicle (id_Driver, CarMake, CarModel, CarYear, LicensePlate, LoadCapacity, Picture) " +
+                " VALUES (?, ?, ?, ?, ?, ?, ?)" ;
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setInt(1, this.idDriver);
+                pstmt.setString(2, this.make);
+                pstmt.setString(3, this.model);
+                pstmt.setInt(4, this.year);
+                pstmt.setString(5, this.licensePlate);
+                pstmt.setFloat(6, this.loadCapacity);
+                pstmt.setBytes(7, this.picture);
+
+                int result = pstmt.executeUpdate();
+
+                conn.close();
+
+                return true;
+
+            } catch (Exception e) {System.out.println("Error Inserting Driver Vehicle: " + e.toString());}
             return false;
         }
     }

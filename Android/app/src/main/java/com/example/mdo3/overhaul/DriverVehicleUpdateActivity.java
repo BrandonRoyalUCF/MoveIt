@@ -17,7 +17,7 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
     private TextView phoneNumber;
     private TextView dateReg;
 
-    private EditText vComp;
+    private EditText vMake;
     private EditText vModel;
     private EditText vYear;
     private EditText vTag;
@@ -43,23 +43,24 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
     }
     public void submitBtn (View view)
     {
-        //public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
-        String comp = null;
-        String model = null;
-        String year = null;
-        String tag = null;
-        String load = null;
+        //Peel all the info from the xml and send it to the database
+        String make;
+        String model;
+        String year;
+        String tag;
+        String load;
+        byte[] picture = new byte[0];
 
         System.out.println("DEBUG: Submit Button Pressed");
 
-        comp = vComp.getText().toString();
+        make = vMake.getText().toString();
         model = vModel.getText().toString();
         year = vYear.getText().toString();
         tag = vTag.getText().toString();
         load = vLoad.getText().toString();
 
-
-        String x = (comp != null && !comp.isEmpty()) ? comp : driver.getVehicle().getMake();
+        // Error check the inputs, if they are wrong, don't update
+        String x = (make != null && !make.isEmpty()) ? make : driver.getVehicle().getMake();
         String y = (model != null && !model.isEmpty()) ? model : driver.getVehicle().getModel();
         int z = (year != null && !year.isEmpty()) ? Integer.parseInt(year) : driver.getVehicle().getYear();
         String xx = (tag != null && !tag.isEmpty()) ? tag : driver.getVehicle().getLicensePlate();
@@ -67,12 +68,8 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
 
         DataAccess da = new DataAccess();
 
-        boolean res = da.updateDriverVehicleInfo(driver.getId(),
-                x,
-                y,
-                z,
-                xx,
-                yy);
+        Vehicle myVehicle = new Vehicle(driver.getId(), x, y, z, xx, yy, picture);
+        boolean res = da.updateDriverVehicleInfo(myVehicle);
         System.out.println(res);
         Driver result = da.getDriverById(driver.getId());
 
@@ -87,6 +84,7 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // Go back to the driver main screen
     public void cancelBtn (View view)
     {
         Intent intent = new Intent (this, DriverMainScreen.class);

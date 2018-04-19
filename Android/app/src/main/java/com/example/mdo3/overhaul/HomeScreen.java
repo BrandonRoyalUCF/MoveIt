@@ -28,23 +28,15 @@ import java.util.Date;
  */
 public class HomeScreen extends AppCompatActivity
 {
-
-    private static final int REQUEST_READ_CONTACTS = 0;
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     private UserLoginTask mAuthTask = null;
     private EditText mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
     private Switch loginSwitch;
-    private boolean DEBUG = true;
     private Customer customerDets = null;
     private Driver driverDets = null;
 
-    private final int CUSTOMER = 1;
-    private final int DRIVER = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +83,6 @@ public class HomeScreen extends AppCompatActivity
         OnClickListener loginListen = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Currently hardcoded login process. Once we get the process of confirming accounts via the database
-                // set up, we would replace this whole if-block with a call to the function that actually handles the
-                // login processing (or whatever else may be required). Setting the Intent may still be required.
-
-                // Currently the credentials are based off of one of the dummy credentials listed with the other main variables.
-
-
                 attemptLogin();
             }
         };
@@ -210,6 +195,7 @@ public class HomeScreen extends AppCompatActivity
         }
     }
 
+    // Checks if the entered items are valid to even attempt to sign in
     private boolean isEmailValid(String email)
     {
         Boolean result = false;
@@ -254,8 +240,11 @@ public class HomeScreen extends AppCompatActivity
             if(x >= 48 && x <= 57)
                 hasNumber = true;
         }
-        //return true;
-        //return result && hasCap && hasNumber && hasSpecChar;
+
+        // Makes sure the password is strong
+        if (hasNumber && hasCap && hasSpecChar)
+            result = true;
+
         return result;
     }
 
@@ -346,33 +335,6 @@ public class HomeScreen extends AppCompatActivity
 
             return (customerDets != null || driverDets != null) ? true : false;
         }
-
-    /*    @Override
-        protected void onPostExecute(final Boolean success)
-        {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success)
-            {
-                System.out.println("Login successful! ");
-                if(customerDets != null)
-                {
-                    startNextActivity(CUSTOMER);
-                }
-                else
-                {
-                    startNextActivity(DRIVER);
-                }
-                finish();
-            }
-            else
-            {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
-            }
-        }
-        */
 
         @Override
         protected void onCancelled()

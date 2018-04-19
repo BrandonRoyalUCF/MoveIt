@@ -28,7 +28,7 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
     private final Handler mapHandler = new Handler(); // For handling the automatic map refresh.
     private GoogleMap driverMap;
     public LatLng currentDriver;
-    private boolean trackLoop = false; // For testing/faking purposes.
+    private boolean trackLoop = false; // For testing purposes.
     private boolean insertFailed = false;
 
     @Override
@@ -41,14 +41,11 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         setContentView(R.layout.activity_client_main_screen);
         TextView errorText = (TextView) findViewById(R.id.errorText);
 
+        // If the service request insert failed, show the error message.
         if (insertFailed)
-        {
             errorText.setVisibility(View.VISIBLE);
-        }
         else
-        {
             errorText.setVisibility(View.INVISIBLE);
-        }
 
         // Checks if the currently logged in driver is part of an active request.
         DataAccess checkRequest = new DataAccess();
@@ -161,10 +158,5 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
                 mapAutoRefresh(); // Refresh again in a while.
             }
         }, 180000); // Refresh every 3 minutes. 180000 milliseconds = 3 minutes.
-    }
-
-    private void editAccount()
-    {
-
     }
 }

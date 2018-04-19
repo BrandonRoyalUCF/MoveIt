@@ -33,14 +33,12 @@
         <activity android:name=".DriverMainScreen" />
         <activity android:name=".DriverSettings" />
         <activity android:name=".ClientMainScreen" />
-        <activity android:name=".ClientSettings" />
         <activity android:name=".JobRequest" />
         <activity android:name=".UserRegistration" />
         <activity android:name=".DriverRegistration" />
         <activity android:name=".DriverRequestScreen" />
         <activity android:name=".WaitScreen" />
         <activity android:name=".RateScreen" />
-        <activity android:name=".DriverActiveJobScreen" />
         <activity
             android:name=".credit_card_info"
             android:parentActivityName=".HomeScreen" />

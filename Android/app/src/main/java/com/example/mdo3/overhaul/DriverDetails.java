@@ -42,6 +42,7 @@ public class DriverDetails extends AppCompatActivity {
 
         initDetails();
 
+        // Go back to the wait screen
         backBtn = (Button) findViewById(R.id.backButton);
         OnClickListener backButtonListener = new OnClickListener() {
             @Override
@@ -56,6 +57,7 @@ public class DriverDetails extends AppCompatActivity {
 
     }
 
+    // Load the driver's details
     public void initDetails(){
         DataAccess da = new DataAccess();
         if (driver == null)

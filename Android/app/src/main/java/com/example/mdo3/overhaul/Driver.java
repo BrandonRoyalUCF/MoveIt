@@ -47,4 +47,14 @@ public class Driver implements Serializable{
     public Vehicle getVehicle() {return this.vehicle;}
     public byte[] getPicture() {return this.picture;}
 
+    public void setUserName(String userName) { this.userName = userName; }
+    public void setName(String name) { this.name = name; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setDriverLicenseNumber(String driverLicenseNumber) { this.driverLicenseNumber = driverLicenseNumber; }
+    public void setDateRegistered() { this.dateRegistered = new Timestamp(System.currentTimeMillis()); }
+    public void setAvgRating(float avgRating) { this.avgRating = avgRating; }
+    public void setNumRating(int numRating) { this.numRating = numRating; }
+    public void setVehicle(Vehicle vehicle) { this.vehicle = vehicle; }
+    public void setPicture(byte[] picture) { this.picture = picture; }
+
 }

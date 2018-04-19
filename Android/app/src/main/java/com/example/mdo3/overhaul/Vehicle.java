@@ -16,9 +16,22 @@ public class Vehicle implements Serializable{
     private float loadCapacity;
     private byte[] picture;
 
+    // For retrieving a vehicle from the database
     public Vehicle(int Id, int IdDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity, byte[] Picture)
     {
         this.id = Id;
+        this.idDriver = IdDriver;
+        this.make = Make;
+        this.model = Model;
+        this.year = Year;
+        this.licensePlate = LicensePlate;
+        this.loadCapacity = LoadCapacity;
+        this.picture = Picture;
+    }
+
+    // For uploading a vehicle for the first time
+    public Vehicle(int IdDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity, byte[] Picture)
+    {
         this.idDriver = IdDriver;
         this.make = Make;
         this.model = Model;
@@ -36,4 +49,11 @@ public class Vehicle implements Serializable{
     public String getLicensePlate() {return this.licensePlate;}
     public float getLoadCapacity() {return this.loadCapacity;}
     public byte[] getPicture() {return this.picture;}
+
+    public void setMake(String make) { this.make = make; }
+    public void setModel(String model) { this.model = model; }
+    public void setYear(int year) { this.year = year; }
+    public void setLicensePlate(String licensePlate) { this.licensePlate = licensePlate; }
+    public void setLoadCapacity(float loadCapacity) { this.loadCapacity = loadCapacity; }
+    public void setPicture(byte[] picture) { this.picture = picture; }
 }

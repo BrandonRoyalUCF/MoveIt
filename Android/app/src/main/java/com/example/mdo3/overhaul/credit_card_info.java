@@ -30,9 +30,6 @@ public class credit_card_info extends AppCompatActivity
 
     private Spinner dropdown;
 
-    private Customer customer = null;
-    private String flag = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -54,9 +51,6 @@ public class credit_card_info extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        Intent intent = getIntent();
-        
     }
 
     private String[] createSpinner()
@@ -72,13 +66,14 @@ public class credit_card_info extends AppCompatActivity
         ccDate =    mccDate.getText().toString();
         ccType =    dropdown.getSelectedItem().toString();
 
-        //String UserName, String PassWord, String Name, String PhoneNumber, Timestamp DateRegistered,
+        // String UserName, String PassWord, String Name, String PhoneNumber, Timestamp DateRegistered,
         // String CardNumber, String BillingAddress,
-        //String ExpMonth, String ExpYear, String CVV, String BillingName)
+        // String ExpMonth, String ExpYear, String CVV, String BillingName)
         Date date = new Date();
         Timestamp ts = new Timestamp(date.getTime());
         Intent pastIntent = getIntent();
         DataAccess da = new DataAccess();
+        // Register the customer in the database
         Boolean result = da.insertCustomer(pastIntent.getStringExtra("email"),
                 pastIntent.getStringExtra("password"),
                 pastIntent.getStringExtra("name"),
@@ -91,10 +86,10 @@ public class credit_card_info extends AppCompatActivity
                 ccSCode,
                 pastIntent.getStringExtra("name"));
 
+        // Immediately log them ins
         Customer customer = da.checkCustomerLogin(pastIntent.getStringExtra("email"), pastIntent.getStringExtra("password"));
         if(customer == null)
             System.out.println("*************** Error Getting Customer");
-
 
         System.out.println("DEBUG: " + ccNumber);
         System.out.println("DEBUG: " + ccDate);
@@ -109,7 +104,7 @@ public class credit_card_info extends AppCompatActivity
         }
         else
         {
-            return;
+            Toast.makeText(this, "Signup failed!", Toast.LENGTH_SHORT).show();
         }
     }
     public void cancelBtn(View view)
