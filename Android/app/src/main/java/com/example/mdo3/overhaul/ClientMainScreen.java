@@ -28,7 +28,6 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
     private final Handler mapHandler = new Handler(); // For handling the automatic map refresh.
     private GoogleMap driverMap;
     public LatLng currentDriver;
-    private boolean trackLoop = false; // For testing purposes.
     private boolean insertFailed = false;
 
     @Override
@@ -111,19 +110,8 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
             googleMap.setMaxZoomPreference(12);
             googleMap.setMinZoomPreference(12);
 
-            // TODO: Have the LatLng data set here for driver be set to the driver's location, and refreshed every 3 to 5 minutes.
-            // For now it is set to the user's current location.
-            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            try {
-                android.location.Location location = lm.getLastKnownLocation(Context.LOCATION_SERVICE);
-                currentDriver = new LatLng(location.getLatitude(), location.getLongitude());
-            } catch (SecurityException ex) {
-                // This is in case the user has not given the app Location permissions. Set to UCF by default.
-                currentDriver = new LatLng(28.600706, -81.197837);
-            } catch (Exception ex) {
-                // In case some other exception is thrown.
-                currentDriver = new LatLng(28.600706, -81.197837);
-            }
+            // If we had more time, we would have this check the driver's device for their current location coordinates.
+            currentDriver = new LatLng(28.600706, -81.197837);
 
             googleMap.addMarker(new MarkerOptions().position(currentDriver).title("Your Driver"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(currentDriver));
@@ -140,16 +128,9 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         mapHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // TODO: Have the LatLng data set here for driver be set to the driver's location.
-                // For now this will just change it by a couple of degrees every refresh.
+                // If we had more time, we would have this check the driver's device for new location coordinates.
 
-                if (!trackLoop) {
-                    currentDriver = new LatLng(currentDriver.latitude+0.3,currentDriver.longitude);
-                    trackLoop = true;
-                } else {
-                    currentDriver = new LatLng(currentDriver.latitude-0.3,currentDriver.longitude);
-                    trackLoop = false;
-                }
+                // currentDriver = new LatLng( driver's new latitude , driver's new longitude);
 
                 driverMap.clear(); // Get rid of the old marker, otherwise they'll just stack up.
                 driverMap.addMarker(new MarkerOptions().position(currentDriver).title("Your Driver"));

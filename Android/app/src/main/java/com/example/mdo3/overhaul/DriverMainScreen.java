@@ -31,7 +31,6 @@ public class DriverMainScreen extends Activity{
         myDriver = (Driver)myIntent.getSerializableExtra("Driver");
         sr = (ServiceRequest) myIntent.getSerializableExtra("serviceRequest");
 
-
         requestActive = myIntent.getBooleanExtra("isActive", false);
 
         //Logout Button
@@ -53,7 +52,6 @@ public class DriverMainScreen extends Activity{
         logoutBtn.setOnClickListener(logoutListen);
 
         Switch activitySwh = (Switch) findViewById(R.id.switch_active);
-        //Button changeAccBtn = (Button) findViewById(R.id.button_change_account);
         Button editVehicleBtn = (Button) findViewById(R.id.button_edit_vehicle);
         Button pickUpBtn = (Button) findViewById(R.id.button_pickup);
         Button dropOffBtn = (Button) findViewById(R.id.button_dropoff);
@@ -62,7 +60,6 @@ public class DriverMainScreen extends Activity{
         if (requestActive){
             // Hide regular driver settings
             activitySwh.setVisibility(View.INVISIBLE);
-            //changeAccBtn.setVisibility(View.INVISIBLE);
             editVehicleBtn.setVisibility(View.INVISIBLE);
 
             // Make sure the buttons are visible, and that they send the user to Google Maps
@@ -72,8 +69,7 @@ public class DriverMainScreen extends Activity{
                 @Override
                 public void onClick(View v) {
                     // Go to Google Maps with directions to pick-up address.
-                    // TODO: Replace the string in the Uri.encode with whatever string was put in for the request's pick-up location.
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + Uri.encode("University of Central Florida"));
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + Uri.encode(sr.getStartLocation()));
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
@@ -86,8 +82,7 @@ public class DriverMainScreen extends Activity{
                 @Override
                 public void onClick(View v) {
                     // Go to Google Maps with drop-off address.
-                    // TODO: Replace the string in the Uri.encode with whatever string was put in for the request's drop-off location.
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + Uri.encode("Epcot"));
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + Uri.encode(sr.getEndLocation()));
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
