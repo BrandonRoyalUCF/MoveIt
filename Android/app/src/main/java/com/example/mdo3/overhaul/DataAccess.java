@@ -1460,7 +1460,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT 1 FROM EventLog WHERE (id_Driver = ? OR id_Customer = ?) and isActive = 1";
+                String query = "SELECT 1 FROM EventLog WHERE (idDriver = ? OR idCustomer = ?) and isActive = 1";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.id);
@@ -1479,7 +1479,7 @@ public class DataAccess {
 
 
 
-            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            } catch (Exception e) {System.out.println("Error checking for active sr by id: " + e.toString());}
             return false;
         }
     }
