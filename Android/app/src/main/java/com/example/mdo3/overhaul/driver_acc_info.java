@@ -97,6 +97,7 @@ public class driver_acc_info extends AppCompatActivity
         if(result) {
             Toast.makeText(this, "Signup successful !", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, DriverMainScreen.class);
+            intent.putExtra("Driver", driver);
             startActivity(intent);
         }
         else
