@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,8 +32,15 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
         Intent intent = getIntent();
         driver = (Driver) intent.getSerializableExtra("Driver");
 
+        OnClickListener sbmt_button = new OnClickListener(){
+            public void onClick(View v)
+            {
+                submitBtn(v);
+            }
+        };
+        Button updateacct = (Button) findViewById(R.id.updateacct);
+        updateacct.setOnClickListener(sbmt_button);
     }
-
     public void submitBtn (View view)
     {
         //public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
@@ -52,13 +61,13 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
 
         String x = (comp != null && !comp.isEmpty()) ? comp : driver.getVehicle().getMake();
         String y = (model != null && !model.isEmpty()) ? model : driver.getVehicle().getModel();
-        String z = (year != null && !year.isEmpty()) ? year : Integer.toString(driver.getVehicle().getYear());
+        int z = (year != null && !year.isEmpty()) ? Integer.parseInt(year) : driver.getVehicle().getYear();
         String xx = (tag != null && !tag.isEmpty()) ? tag : driver.getVehicle().getLicensePlate();
-        String yy = (load != null && !load.isEmpty()) ? load : Float.toString(driver.getVehicle().getLoadCapacity());
+        float yy = (load != null && !load.isEmpty()) ? Float.parseFloat(load) : driver.getVehicle().getLoadCapacity();
 
         DataAccess da = new DataAccess();
 
-        Boolean res = da.updateDriverVehicleInfo(driver.getId(),
+        boolean res = da.updateDriverVehicleInfo(driver.getId(),
                 x,
                 y,
                 z,

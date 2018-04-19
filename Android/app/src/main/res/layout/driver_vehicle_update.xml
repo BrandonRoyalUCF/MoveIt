@@ -74,11 +74,11 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"/>
 
-    <Button
-        android:id="@+id/register_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Update"/>
+            <Button
+                android:id="@+id/updateacct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update" />
     <Button
         android:id="@+id/cancel_registration"
         android:layout_width="match_parent"
