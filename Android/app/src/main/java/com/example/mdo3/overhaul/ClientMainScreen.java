@@ -52,7 +52,7 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
 
         // Checks if the currently logged in driver is part of an active request.
         DataAccess checkRequest = new DataAccess();
-        if(checkRequest != null)
+        if(checkRequest != null && myCustomer != null)
             requestActive = checkRequest.checkForActiveSRById(myCustomer.getId());
 
         MapFragment mapView = (MapFragment) getFragmentManager().findFragmentById(R.id.map_View);

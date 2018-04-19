@@ -42,7 +42,8 @@ public class WaitScreen extends AppCompatActivity {
         Queue<Driver> driverQueue = findDrivers();
         assignedDriver = driverQueue.poll();
         DataAccess da = new DataAccess();
-        da.insertEventLogServiceRequest(myCustomer.getId(), serviceRequestId, assignedDriver.getId());
+        if (assignedDriver != null)
+            da.insertEventLogServiceRequest(myCustomer.getId(), serviceRequestId, assignedDriver.getId());
 
         //If there are no available drivers, cancel the request and return
         if(assignedDriver == null)
