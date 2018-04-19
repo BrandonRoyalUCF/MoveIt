@@ -52,25 +52,25 @@ public class DriverVehicleUpdateActivity extends AppCompatActivity {
 
         String x = (comp != null && !comp.isEmpty()) ? comp : driver.getVehicle().getMake();
         String y = (model != null && !model.isEmpty()) ? model : driver.getVehicle().getModel();
-       // String z = (year != null && !year.isEmpty()) ? year : driver.getVehicle().getYear();
+        String z = (year != null && !year.isEmpty()) ? year : Integer.toString(driver.getVehicle().getYear());
         String xx = (tag != null && !tag.isEmpty()) ? tag : driver.getVehicle().getLicensePlate();
-        //String yy = (load != null && !load.isEmpty()) ? load : driver.getVehicle().getLoadCapacity();
+        String yy = (load != null && !load.isEmpty()) ? load : Float.toString(driver.getVehicle().getLoadCapacity());
 
         DataAccess da = new DataAccess();
 
-//        Boolean res = da.updateDriverVehicle(driver.getId(),
-//                x,
-//                y,
-//                z,
-//                xx,
-//                yy);
-//        System.out.println(res);
+        Boolean res = da.updateDriverVehicleInfo(driver.getId(),
+                x,
+                y,
+                z,
+                xx,
+                yy);
+        System.out.println(res);
         Driver result = da.getDriverById(driver.getId());
 
 
         System.out.println("DEBUG: Done");
         System.out.println("DEBUG: Starting new activity");
-        Intent intent = new Intent(this, DriverMainScreen.class);
+        Intent intent = new Intent(DriverVehicleUpdateActivity.this, DriverMainScreen.class);
         if(result != null)
             intent.putExtra("Driver", result);
         else
