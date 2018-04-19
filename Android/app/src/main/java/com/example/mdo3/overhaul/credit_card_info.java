@@ -30,6 +30,9 @@ public class credit_card_info extends AppCompatActivity
 
     private Spinner dropdown;
 
+    private Customer customer = null;
+    private String flag = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -51,6 +54,9 @@ public class credit_card_info extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Intent intent = getIntent();
+        
     }
 
     private String[] createSpinner()
