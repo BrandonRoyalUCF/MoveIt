@@ -847,7 +847,7 @@ public class DataAccess {
                     float price = rs.getFloat("Price");
                     boolean loadHelp = rs.getBoolean("LoadHelp");
                     boolean unloadHelp = rs.getBoolean("UnloadHelp");
-                    byte[] picture = rs.getBytes("Picture");
+                    byte[] picture = null;
                     boolean isCompleted = rs.getBoolean("isCompleted");
                     boolean inProgress = rs.getBoolean("inProgress");
                     String startLocation = rs.getString("StartLocation");
