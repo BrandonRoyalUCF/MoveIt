@@ -38,6 +38,12 @@ public class DriverMainScreen extends Activity{
         View.OnClickListener logoutListen = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DataAccess da = new DataAccess();
+                boolean updateStatus = da.updateDriverMainInfo(myDriver.getId(), myDriver.getName(), myDriver.getPhoneNumber(),myDriver.getDriverLicenseNumber(), myDriver.getDateRegistered(), false);
+                if(!updateStatus)
+                {
+                    System.out.println( "isActive not updated to false" );
+                }
                 finish();
                 Intent myIntent = new Intent(DriverMainScreen.this, HomeScreen.class);
                 DriverMainScreen.this.startActivity(myIntent);
