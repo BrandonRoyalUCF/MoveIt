@@ -1378,7 +1378,7 @@ public class DataAccess {
         }
     }
 
-    public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
+    public Boolean updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
     {
         try{
             updateCustomerPaymentInfoAsync ic =  new updateCustomerPaymentInfoAsync(idCustomer, CardNumber, ExpMonth, ExpYear, CVV);
@@ -1387,7 +1387,7 @@ public class DataAccess {
         return null;
     }
 
-    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Customer>
+    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Boolean>
     {
         private int idCustomer;
         private String cardNumber;
@@ -1401,7 +1401,7 @@ public class DataAccess {
         }
 
         @Override
-        protected Customer doInBackground(Void... params)
+        protected Boolean doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
@@ -1417,16 +1417,16 @@ public class DataAccess {
 
                 int result = pstmt.executeUpdate();
 
-                Customer customer = null;
-                customer = getCustomerById(idCustomer);
+                //Customer customer = null;
+                //customer = getCustomerById(idCustomer);
 
                 conn.close();
 
-                return customer;
+                return true;
 
 
             } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
-            return null;
+            return false;
         }
     }
 

@@ -76,11 +76,15 @@ public class UpdateCustomerInformation extends AppCompatActivity
         String xx = (ccscode != null && !ccscode.isEmpty()) ? ccscode : customer.getCcSCode();
 
         DataAccess da = new DataAccess();
-        Customer result = da.updateCustomerPaymentInfo(customer.getId(),
+
+        Boolean res = da.updateCustomerPaymentInfo(customer.getId(),
                 x,
                 y,
                 z,
                 xx);
+        System.out.println(res);
+        Customer result = da.getCustomerById(customer.getId());
+
 
         System.out.println("DEBUG: Done");
         System.out.println("DEBUG: Starting new activity");
