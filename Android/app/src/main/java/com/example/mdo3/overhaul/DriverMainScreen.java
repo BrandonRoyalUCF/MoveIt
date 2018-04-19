@@ -143,8 +143,12 @@ public class DriverMainScreen extends Activity{
             editVehicleBtn.setVisibility(View.VISIBLE);
             View.OnClickListener vehicleListen = new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(DriverMainScreen.this, "Also coming soon!", Toast.LENGTH_SHORT).show();
+                public void onClick(View v)             {
+                    //Edit Driver Vehicle Information
+                    //passing driver previous information
+                    Intent intent = new Intent(DriverMainScreen.this, DriverVehicleUpdateActivity.class);
+                    intent.putExtra("Driver", myDriver);
+                    startActivity(intent);
                 }
             };
             editVehicleBtn.setOnClickListener(vehicleListen);
