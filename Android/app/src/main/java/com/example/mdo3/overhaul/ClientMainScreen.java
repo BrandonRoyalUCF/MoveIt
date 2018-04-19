@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import android.os.Handler;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ClientMainScreen extends Activity implements OnMapReadyCallback{
@@ -28,17 +29,31 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
     private GoogleMap driverMap;
     public LatLng currentDriver;
     private boolean trackLoop = false; // For testing/faking purposes.
+    private boolean insertFailed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent myIntent = getIntent();
         Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
+        insertFailed = myIntent.getBooleanExtra("InsertError", false);
+
         setContentView(R.layout.activity_client_main_screen);
+        TextView errorText = (TextView) findViewById(R.id.errorText);
+
+        if (insertFailed)
+        {
+            errorText.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            errorText.setVisibility(View.INVISIBLE);
+        }
 
         // Checks if the currently logged in driver is part of an active request.
         DataAccess checkRequest = new DataAccess();
-        requestActive = checkRequest.checkForActiveSRById(myCustomer.getId());
+        if(checkRequest != null)
+            requestActive = checkRequest.checkForActiveSRById(myCustomer.getId());
 
         MapFragment mapView = (MapFragment) getFragmentManager().findFragmentById(R.id.map_View);
          if (requestActive){
@@ -64,9 +79,14 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
         //Edit Account Button
         OnClickListener accountListen = new OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // Just a placeholder for now
-                Toast.makeText(ClientMainScreen.this, "Edit account info later!", Toast.LENGTH_SHORT).show();
+            public void onClick(View v)
+            {
+                //Edit Customer Credit Card Information
+                //Send flag to credit_card_info to know the user is editing information
+                //passing customer previous information
+                Intent intent = new Intent(ClientMainScreen.this, UpdateCustomerInformation.class);
+                intent.putExtra("Customer", myCustomer);
+                startActivity(intent);
             }
         };
         Button accountBtn = (Button) findViewById(R.id.button_edit_account);
@@ -141,5 +161,10 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
                 mapAutoRefresh(); // Refresh again in a while.
             }
         }, 180000); // Refresh every 3 minutes. 180000 milliseconds = 3 minutes.
+    }
+
+    private void editAccount()
+    {
+
     }
 }

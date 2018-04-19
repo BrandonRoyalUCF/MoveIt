@@ -92,8 +92,29 @@ public class DataAccess {
                     String PhoneNumber = rs.getString("PhoneNumber");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
                     boolean isActive = rs.getBoolean("isActive");
-                    Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
-                    return customer;
+
+                    //Query Customer Credit Card
+                    String query2 = "SELECT CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName FROM CustomerPaymentInfo WHERE id_Customer = ?";
+                    pstmt = conn.prepareStatement(query2);
+                    pstmt.setString(1, String.valueOf(UserId));
+                    rs = pstmt.executeQuery();
+
+                    if(rs.next())
+                    {
+                        String ccNum = rs.getString("CardNumber");
+                        String ccBilling = rs.getString("BillingAddress");
+                        String ccExpMonth = rs.getString("ExpirationMonth");
+                        String ccExpYear = rs.getString("ExpirationYear");
+                        String ccCCV = rs.getString("CVV");
+
+                        Customer customer = new Customer(UserId, UserName,
+                                Name, PhoneNumber,
+                                DateRegistered, isActive,
+                                ccNum, ccBilling,
+                                ccExpMonth, ccExpYear,
+                                ccCCV);
+                        return customer;
+                    }
                 }
 
                 conn.close();
@@ -1178,7 +1199,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, isActive, AverageRating, NumberRatings FROM DriverInfo WHERE id = ?";
+                String query = "SELECT id, UserName, Name, PhoneNumber, DriverLicenseNumber, Picture, DateRegistered, IsActive, AverageRating, NumberRatings FROM DriverInfo WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idDriver);
                 ResultSet rs = pstmt.executeQuery();
@@ -1190,7 +1211,7 @@ public class DataAccess {
                     String DriverLicenseNumber = rs.getString("DriverLicenseNumber");
                     byte[] Picture = rs.getBytes("Picture");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
-                    boolean isActive = rs.getBoolean("isActive");
+                    boolean isActive = rs.getBoolean("IActive");
                     float AvgRating = rs.getFloat("AverageRating");
                     int NumRating = rs.getInt("NumberRatings");
 
@@ -1244,7 +1265,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT id, UserName, Name, PhoneNumber, DateRegistered, isActive FROM CustomerInfo WHERE id = ?";
+                String query = "SELECT id, UserName, Name, PhoneNumber, DateRegistered, IsActive FROM CustomerInfo WHERE id = ?";
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.idCustomer);
                 ResultSet rs = pstmt.executeQuery();
@@ -1255,9 +1276,30 @@ public class DataAccess {
                     String Name = rs.getString("Name");
                     String PhoneNumber = rs.getString("PhoneNumber");
                     Timestamp DateRegistered = rs.getTimestamp("DateRegistered");
-                    boolean isActive = rs.getBoolean("isActive");
-                    Customer customer = new Customer(UserId, UserName, Name, PhoneNumber, DateRegistered, isActive);
-                    return customer;
+                    boolean isActive = rs.getBoolean("IsActive");
+
+                    //Query Customer Credit Card
+                    String query2 = "SELECT CardNumber, BillingAddress, ExpirationMonth, ExpirationYear, CVV, BillingName FROM CustomerPaymentInfo WHERE id_Customer = ?";
+                    pstmt = conn.prepareStatement(query2);
+                    pstmt.setString(1, String.valueOf(UserId));
+                    rs = pstmt.executeQuery();
+
+                    if(rs.next())
+                    {
+                        String ccNum = rs.getString("CardNumber");
+                        String ccBilling = rs.getString("BillingAddress");
+                        String ccExpMonth = rs.getString("ExpirationMonth");
+                        String ccExpYear = rs.getString("ExpirationYear");
+                        String ccCCV = rs.getString("CVV");
+
+                        Customer customer = new Customer(UserId, UserName,
+                                Name, PhoneNumber,
+                                DateRegistered, isActive,
+                                ccNum, ccBilling,
+                                ccExpMonth, ccExpYear,
+                                ccCCV);
+                        return customer;
+                    }
                 }
 
                 conn.close();
@@ -1336,7 +1378,7 @@ public class DataAccess {
         }
     }
 
-    public Customer updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
+    public Boolean updateCustomerPaymentInfo(int idCustomer, String CardNumber, String ExpMonth, String ExpYear, String CVV)
     {
         try{
             updateCustomerPaymentInfoAsync ic =  new updateCustomerPaymentInfoAsync(idCustomer, CardNumber, ExpMonth, ExpYear, CVV);
@@ -1345,7 +1387,7 @@ public class DataAccess {
         return null;
     }
 
-    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Customer>
+    private class updateCustomerPaymentInfoAsync extends AsyncTask<Void, Void, Boolean>
     {
         private int idCustomer;
         private String cardNumber;
@@ -1359,7 +1401,7 @@ public class DataAccess {
         }
 
         @Override
-        protected Customer doInBackground(Void... params)
+        protected Boolean doInBackground(Void... params)
         {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
@@ -1375,16 +1417,16 @@ public class DataAccess {
 
                 int result = pstmt.executeUpdate();
 
-                Customer customer = null;
-                customer = getCustomerById(idCustomer);
+                //Customer customer = null;
+                //customer = getCustomerById(idCustomer);
 
                 conn.close();
 
-                return customer;
+                return true;
 
 
             } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
-            return null;
+            return false;
         }
     }
 
@@ -1460,7 +1502,7 @@ public class DataAccess {
             try {
                 Connection conn = DataAccess.this.ConnectToDB();
 
-                String query = "SELECT 1 FROM EventLog WHERE (id_Driver = ? OR id_Customer = ?) and isActive = 1";
+                String query = "SELECT 1 FROM EventLog WHERE (idDriver = ? OR idCustomer = ?) and isActive = 1";
 
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setInt(1, this.id);
@@ -1479,7 +1521,7 @@ public class DataAccess {
 
 
 
-            } catch (Exception e) {System.out.println("Error Adding User: " + e.toString());}
+            } catch (Exception e) {System.out.println("Error checking for active sr by id: " + e.toString());}
             return false;
         }
     }
