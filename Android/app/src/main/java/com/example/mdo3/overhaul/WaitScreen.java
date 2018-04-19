@@ -57,22 +57,13 @@ public class WaitScreen extends AppCompatActivity {
             CancelSearch();
         }
 
-        if (assignedDriver == null)
-        {
-            queryBtn.setVisibility(View.VISIBLE);
-            cancelSearchBtn.setVisibility(View.VISIBLE);
-            viewDriverBtn.setVisibility(View.INVISIBLE);
-            completeBtn.setVisibility(View.INVISIBLE);
-            waitText.setText("Please Wait While We Find You A Driver!");
-        }
-        else
-        {
-            queryBtn.setVisibility(View.INVISIBLE);
-            cancelSearchBtn.setVisibility(View.INVISIBLE);
-            viewDriverBtn.setVisibility(View.VISIBLE);
-            completeBtn.setVisibility(View.VISIBLE);
-            waitText.setText("Driver Found!");
-        }
+
+        queryBtn.setVisibility(View.VISIBLE);
+        cancelSearchBtn.setVisibility(View.VISIBLE);
+        viewDriverBtn.setVisibility(View.INVISIBLE);
+        completeBtn.setVisibility(View.INVISIBLE);
+        waitText.setText("Please Wait While We Find You A Driver!");
+
 
         OnClickListener cancelListener = new OnClickListener() {
             @Override
