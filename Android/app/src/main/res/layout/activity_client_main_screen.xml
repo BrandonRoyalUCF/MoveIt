@@ -52,6 +52,16 @@
             android:layout_marginTop="39dp"
             android:text="Edit Account" />
 
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/map_View"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="38dp"
+            android:text="There was an error. Please try again."
+            android:textColor="@android:color/holo_red_dark" />
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import android.os.Handler;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ClientMainScreen extends Activity implements OnMapReadyCallback{
@@ -28,13 +29,26 @@ public class ClientMainScreen extends Activity implements OnMapReadyCallback{
     private GoogleMap driverMap;
     public LatLng currentDriver;
     private boolean trackLoop = false; // For testing/faking purposes.
+    private boolean insertFailed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent myIntent = getIntent();
         Customer myCustomer = (Customer)myIntent.getSerializableExtra("Customer");
+        insertFailed = myIntent.getBooleanExtra("InsertError", false);
+
         setContentView(R.layout.activity_client_main_screen);
+        TextView errorText = (TextView) findViewById(R.id.errorText);
+
+        if (insertFailed)
+        {
+            errorText.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            errorText.setVisibility(View.INVISIBLE);
+        }
 
         // Checks if the currently logged in driver is part of an active request.
         DataAccess checkRequest = new DataAccess();

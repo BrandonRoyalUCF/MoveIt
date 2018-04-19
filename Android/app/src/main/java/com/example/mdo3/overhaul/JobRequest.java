@@ -121,6 +121,11 @@ public class JobRequest extends AppCompatActivity {
                 ServiceRequest sr = new ServiceRequest(requestInserted, myCustomer.getId(), 0, sTitle, sDescription, weight, datePosted, null, price, loadHelp, unloadHelp, null, false, true, sPickupLocation, sDestination);
                 if(requestInserted == -1) {
                     System.out.println("INSERT FAILED ******************");
+                    Intent intent = new Intent(JobRequest.this, ClientMainScreen.class);
+                    intent.putExtra("Customer", myCustomer);
+                    intent.putExtra("InsertError", true);
+                    startActivity(intent);
+                    finish();
                 }
                 else {
                     Intent myIntent = new Intent(JobRequest.this, WaitScreen.class);

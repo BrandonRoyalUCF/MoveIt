@@ -31,6 +31,7 @@ public class DriverDetails extends AppCompatActivity {
         setContentView(R.layout.content_driver_details);
         Intent myIntent = getIntent();
         sr = (ServiceRequest) myIntent.getSerializableExtra("serviceRequest");
+        driver = (Driver) myIntent.getSerializableExtra("Driver");
 
         tv_name = (TextView) findViewById(R.id.viewDriverName);
         tv_rating = (TextView) findViewById(R.id.viewDriverRating);
@@ -57,14 +58,15 @@ public class DriverDetails extends AppCompatActivity {
 
     public void initDetails(){
         DataAccess da = new DataAccess();
-        driver = da.getDriverById(sr.getIdDriverWhoCompleted());
+        if (driver == null)
+            driver = da.getDriverById(sr.getIdDriverWhoCompleted());
         picture = driver.getPicture();
         tv_name.setText(driver.getName());
         tv_rating.setText(Double.toString(driver.getAvgRating()));
-        Bitmap bmp = BitmapFactory.decodeByteArray(picture,0,picture.length);
-        if (bmp != null)
+        Bitmap bmp;
+        try {
+            bmp = BitmapFactory.decodeByteArray(picture,0,picture.length);
             iv_picture.setImageBitmap(bmp);
-        else {
             // Create a 100x100 blank picture
             byte[] blankPicture = new byte[10000];
             for (int i=0; i<blankPicture.length; i++){
@@ -72,6 +74,9 @@ public class DriverDetails extends AppCompatActivity {
             }
             bmp = BitmapFactory.decodeByteArray(blankPicture,0,blankPicture.length);
             iv_picture.setImageBitmap(bmp);
+        }
+        catch (Exception e) {
+            System.out.println("No picture was found: " + e.getMessage());
         }
     }
 }
