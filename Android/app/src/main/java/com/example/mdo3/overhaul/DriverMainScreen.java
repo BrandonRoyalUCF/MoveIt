@@ -143,8 +143,12 @@ public class DriverMainScreen extends Activity{
             editVehicleBtn.setVisibility(View.VISIBLE);
             View.OnClickListener vehicleListen = new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(DriverMainScreen.this, "Also coming soon!", Toast.LENGTH_SHORT).show();
+                public void onClick(View v)             {
+                    //Edit Driver Vehicle Information
+                    //passing driver previous information
+                    Intent intent = new Intent(DriverMainScreen.this, DriverVehicleUpdateActivity.class);
+                    intent.putExtra("Driver", myDriver);
+                    startActivity(intent);
                 }
             };
             editVehicleBtn.setOnClickListener(vehicleListen);
@@ -154,7 +158,7 @@ public class DriverMainScreen extends Activity{
             @Override
             public void onClick(View v) {
                 DataAccess da = new DataAccess();
-                sr = da.waitForRequest(myDriver.getId());
+                ServiceRequest srTemp = da.waitForRequest(myDriver.getId());
 
                 // Checks if the currently logged in driver is part of an active request.
                 if(da.checkForActiveSRById(myDriver.getId())) {
@@ -166,9 +170,9 @@ public class DriverMainScreen extends Activity{
                     finish();
                 }
                 // Don't check for active job if the driver is already active
-                else if(sr != null) {
+                else if(srTemp != null) {
                     Intent myIntent = new Intent(DriverMainScreen.this, DriverRequestScreen.class);
-                    myIntent.putExtra("serviceRequest", sr);
+                    myIntent.putExtra("serviceRequest", srTemp);
                     myIntent.putExtra("Driver", myDriver);
                     DriverMainScreen.this.startActivity(myIntent);
                     finish();

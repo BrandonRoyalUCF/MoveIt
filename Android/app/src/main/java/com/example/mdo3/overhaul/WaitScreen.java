@@ -31,7 +31,7 @@ public class WaitScreen extends AppCompatActivity {
         sr = (ServiceRequest) getIntent().getSerializableExtra("serviceRequest");
         myCustomer = (Customer) getIntent().getSerializableExtra("myCustomer");
         serviceRequestId = (int) getIntent().getIntExtra("serviceRequestId", -1);
-        setContentView(R.layout.activity_wait_screen);
+        setContentView(R.layout.content_wait_screen);
         cancelSearchBtn = (Button) findViewById(R.id.cancelButton);
         viewDriverBtn = (Button) findViewById(R.id.viewDriverButton);
         queryBtn = (ImageButton) findViewById(R.id.button_queryDB);
