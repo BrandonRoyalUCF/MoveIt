@@ -1461,7 +1461,7 @@ public class DataAccess {
                 PreparedStatement pstmt = conn.prepareStatement(query);
                 pstmt.setString(1, this.accountNumber);
                 pstmt.setString(2, this.routingNumber);
-                pstmt.setInt(5, this.idDriver);
+                pstmt.setInt(3, this.idDriver);
 
                 int result = pstmt.executeUpdate();
 
@@ -1477,6 +1477,59 @@ public class DataAccess {
             return null;
         }
     }
+
+    public Boolean updateDriverVehicleInfo(int idDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity)
+    {
+        try{
+            updateDriverVehicleInfoAsync ud =  new updateDriverVehicleInfoAsync(idDriver, Make, Model, Year, LicensePlate, LoadCapacity);
+            return ud.execute().get();
+        } catch (Exception e) {System.out.println(e);}
+        return false;
+    }
+
+    private class updateDriverVehicleInfoAsync extends AsyncTask<Void, Void, Boolean>
+    {
+        private int idDriver;
+        private String make;
+        private String model;
+        private int year;
+        private String licensePlate;
+        private float loadCapacity;
+
+        public updateDriverVehicleInfoAsync(int IdDriver, String Make, String Model, int Year, String LicensePlate, float LoadCapacity)
+        {
+            this.idDriver = IdDriver; this.make = Make; this.model = Model; this.year = Year; this.licensePlate = LicensePlate;
+            this.loadCapacity = LoadCapacity;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try {
+                Connection conn = DataAccess.this.ConnectToDB();
+
+                String query = "UPDATE Vehicle SET CarMake = ?, CarModel = ?, CarYear = ?, LicensePlate = ?, LoadCapacity = ? WHERE id_Driver = ?";
+
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, this.make);
+                pstmt.setString(2, this.model);
+                pstmt.setInt(3, this.year);
+                pstmt.setString(4, this.licensePlate);
+                pstmt.setFloat(4, this.loadCapacity);
+                pstmt.setInt(5, this.idDriver);
+
+                int result = pstmt.executeUpdate();
+
+                conn.close();
+
+                return true;
+
+
+            } catch (Exception e) {System.out.println("Error Updating Driver Vehicle: " + e.toString());}
+            return false;
+        }
+    }
+
 
     public Boolean checkForActiveSRById(int id)
     {
