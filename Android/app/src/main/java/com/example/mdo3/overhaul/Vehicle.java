@@ -34,6 +34,6 @@ public class Vehicle implements Serializable{
     public String getModel() {return this.model;}
     public int getYear() {return this.year;}
     public String getLicensePlate() {return this.licensePlate;}
-    private float getLoadCapacity() {return this.loadCapacity;}
+    public float getLoadCapacity() {return this.loadCapacity;}
     public byte[] getPicture() {return this.picture;}
 }
