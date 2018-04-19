@@ -46,7 +46,7 @@ public class DriverDetails extends AppCompatActivity {
         OnClickListener backButtonListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Links to Driver Details screen
+                finish();
                 Intent intent = new Intent(DriverDetails.this, WaitScreen.class);
                 intent.putExtra("serviceRequest", sr);
                 startActivity(intent);
