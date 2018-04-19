@@ -826,9 +826,9 @@ public class DataAccess {
                 //get the ServiceRequest for the driver to see
                 String query3 =
                         "SELECT ServiceRequest.id, id_Customer, id_DriverWhoCompleted, Title, Description, TotalWeight, DatePosted, DateClosed, Price, LoadHelp, " +
-                                "UnloadHelp, isCompleted, inProgress, StartLocation, EndLocation " +
-                                "FROM ServiceRequest LEFT JOIN Location on Location.id_ServiceRequest = ServiceRequest.id" +
-                                "WHERE ServiceRequest.id = ?";
+                                " UnloadHelp, isCompleted, inProgress, StartLocation, EndLocation " +
+                                " FROM ServiceRequest LEFT JOIN Location on Location.id_ServiceRequest = ServiceRequest.id " +
+                                " WHERE ServiceRequest.id = ? ";
 
                 PreparedStatement pstmt3 = conn.prepareStatement(query3);
                 pstmt3.setInt(1, idServiceRequest);
