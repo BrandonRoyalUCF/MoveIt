@@ -157,7 +157,7 @@ public class JobRequest extends AppCompatActivity {
             // Abandon the request and go back to the main screen
             public void onClick(View v) {
                 Intent myIntent = new Intent(JobRequest.this, ClientMainScreen.class);
-                myIntent.putExtra("myCustomer", myCustomer);
+                myIntent.putExtra("Customer", myCustomer);
                 JobRequest.this.startActivity(myIntent);
                 finish();
 
